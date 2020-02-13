@@ -12,8 +12,8 @@
   "private": false,
   "peerDependencies": {
     "@sencha/ext-web-components-{toolkit}{bundle}": "~7.2.0",
-    "@angular/compiler": "~9.0.0",
-    "@angular/core": "~9.0.0",
+    "@angular/compiler": "~9.0.1",
+    "@angular/core": "~9.0.1",
     "tslib": "^1.10.0"
   },
   "dependencies": {
@@ -23,14 +23,14 @@
     "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@angular/core": "~9.0.0",
-    "@angular/common": "~9.0.0",
-    "@angular/platform-browser": "~9.0.0",
-    "@angular/platform-browser-dynamic": "~9.0.0",
+    "@angular/core": "~9.0.1",
+    "@angular/common": "~9.0.1",
+    "@angular/platform-browser": "~9.0.1",
+    "@angular/platform-browser-dynamic": "~9.0.1",
     "zone.js": "~0.10.2",
     "ng-packagr": "^9.0.0",
-    "@angular/compiler": "~9.0.0",
-    "@angular/compiler-cli": "~9.0.0",
+    "@angular/compiler": "~9.0.1",
+    "@angular/compiler-cli": "~9.0.1",
     "typescript": "~3.7.5"
   },
   "repository": {

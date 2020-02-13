@@ -4,6 +4,7 @@
     "lib": {
       "entryFile": "./public_api.ts",
       "umdModuleIds": {
+        "@sencha/ext-web-components-classic": "@sencha/ext-web-components-classic",
         "@sencha/ext-web-components-modern": "@sencha/ext-web-components-modern"
       }
     },
@@ -13,9 +14,7 @@
       "comment-json",
       "script-loader",
       "@sencha/ext-web-components-modern",
-      "@sencha/ext-runtime-modern-base",
       "@sencha/ext-web-components-classic",
-      "@sencha/ext-runtime-classic-base",
       "fs-extra"
     ]
   }

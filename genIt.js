@@ -559,14 +559,16 @@ async function doNpmInstall() {
     log(`add postinstall.js and all .md in ${process.cwd()}`);
     await run(`cp -R ./src dist/lib`);
     await run(`cp -R ./bin dist/bin`);
-    await run(`cp ./postinstall.js dist/postinstall.js`);
-    await run(`cp ./Adding_ExtAngular_to_Angular_CLI_project.md dist/Adding_ExtAngular_to_Angular_CLI_project.md`);
-    await run(`cp ./Creating_Angular_CLI_ExtAngular.md dist/Creating_Angular_CLI_ExtAngular.md`);
-    await run(`cp ./MIGRATE.md dist/MIGRATE.md`);
+    await run(`cp -R ./guides dist/guides`);
     await run(`cp ./README.md dist/README.md`);
-    await run(`cp ./UNDERSTANDING_AN_APP.md dist/UNDERSTANDING_AN_APP.md`);
-    await run(`cp ./USING_EXT_WEBPACK_PLUGIN.md dist/USING_EXT_WEBPACK_PLUGIN.md`);
-    await run(`cp ./WHATS_NEW.md dist/WHATS_NEW.md`);
+    await run(`cp ./postinstall.js dist/postinstall.js`);
+
+    // await run(`cp ./Adding_ExtAngular_to_Angular_CLI_project.md dist/Adding_ExtAngular_to_Angular_CLI_project.md`);
+    // await run(`cp ./Creating_Angular_CLI_ExtAngular.md dist/Creating_Angular_CLI_ExtAngular.md`);
+    // await run(`cp ./MIGRATE.md dist/MIGRATE.md`);
+    // await run(`cp ./UNDERSTANDING_AN_APP.md dist/UNDERSTANDING_AN_APP.md`);
+    // await run(`cp ./USING_EXT_WEBPACK_PLUGIN.md dist/USING_EXT_WEBPACK_PLUGIN.md`);
+    // await run(`cp ./WHATS_NEW.md dist/WHATS_NEW.md`);
 
     process.chdir('dist');
     var packagenameAngular = './package.json';

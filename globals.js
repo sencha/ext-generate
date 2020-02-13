@@ -3,15 +3,15 @@ exports.setGlobals =() => {
   //global["docs"]      = [];
 
   global["doWebComponents"]      = true;
-  global["doAngular"]            = false;
-  global["doReact"]              = false;
+  global["doAngular"]            = true;
+  global["doReact"]              = true;
   global["doDoc"]                = false;
 
   global["createFolders"]        = true;
   global["launch"]               = true;
   global["postLaunch"]           = true;
   global["npmInstall"]           = true;
-  global["npmPublishRightAfter"] = true;
+  global["npmPublishRightAfter"] = false;
   global["copy"]                 = true;
 
 
