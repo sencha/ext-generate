@@ -504,6 +504,7 @@ function createReact(stagingFolder) {
     })
 
     copyFileSync(`${reactTemplateFolder}reactize.js`, `${reactPackageFolder}src/reactize.js`);
+    copyFileSync(`${reactTemplateFolder}Template2.js`, `${reactPackageFolder}src/Template2.js`);
     copyFileSync(`${reactTemplateFolder}ReactCell.js`, `${reactPackageFolder}src/ReactCell.js`);
     writeTemplateFile(`${reactTemplateFolder}ext-react.component.js.tpl`, `${reactPackageFolder}src/ext-react.component.js`, {})
     writeTemplateFile(`${reactTemplateFolder}ext-react-renderer.component.js.tpl`, `${reactPackageFolder}src/ext-react-renderer.component.js`, {})
