@@ -11,9 +11,8 @@ exports.setGlobals =() => {
   global["launch"]               = true;
   global["postLaunch"]           = true;
   global["npmInstall"]           = true;
-  global["npmPublishRightAfter"] = false;
+  global["npmPublishRightAfter"] = true;
   global["copy"]                 = true;
-
 
   console.log(`doWebComponents:\t${doWebComponents}`)
   console.log(`doAngular:\t\t${doAngular}`)
@@ -28,9 +27,7 @@ exports.setGlobals =() => {
   console.log(`copy:\t\t\t${copy}`)
   console.log(`\n`)
 
-  global["doAllinXtype"] = true;
-
-  global["toolkit"] = process.argv[4];
+  global["toolkit"] = process.argv[3];
   var toolkits = ['modern', 'classic'];
   if (toolkits.includes(toolkit) == false) {
     log('toolkit not valid')
@@ -58,10 +55,13 @@ exports.setGlobals =() => {
   info.toolkitshown = `-${info.toolkit}`;
   info.version = '7.2.0';
   //info.reactPrefix = 'Ext';
-  info.shortname = process.argv[2];
-  info.Shortname = info.shortname.charAt(0).toUpperCase() + info.shortname.slice(1);
+
+  //info.shortname = process.argv[2];
+  //info.Shortname = info.shortname.charAt(0).toUpperCase() + info.shortname.slice(1);
+
+
   info.framework = 'elements';
-  info.suffixParm = process.argv[3];
+  info.suffixParm = process.argv[2];
   if (info.suffixParm == 'blank' ||
       info.suffixParm == 'test'
   ) {
@@ -196,7 +196,14 @@ export const URLField = ExtUrlfield_;
 
 global["generatedFolders"] = "./GeneratedFolders/";
 global["typeFolder"] = generatedFolders + info.suffixParm + '/';
-global["templateFolder"] = "./filetemplates/" + info.framework + "/";
+
+
+//global["templateFolder"] = "./filetemplates/" + info.framework + "/";
+
+global["webComponentsTemplateFolder"] = `./filetemplates/web-components/`;
+global["angularTemplateFolder"] = `./filetemplates/angular/`;
+global["reactTemplateFolder"] = `./filetemplates/react/`;
+
 
 // global["outputFolder"] = `${typeFolder}ext-${info.framework}${info.toolkitshown}${info.bundle}/`;
 // global["outputSrcFolder"] = outputFolder + "src/";

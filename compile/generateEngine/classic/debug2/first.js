@@ -1,0 +1,1 @@
+var Ext = window['Ext']

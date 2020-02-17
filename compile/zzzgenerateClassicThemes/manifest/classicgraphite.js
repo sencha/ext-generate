@@ -1,0 +1,1 @@
+import '../build/testing/generateClassicThemes/resources/generateClassicThemes-all.css';

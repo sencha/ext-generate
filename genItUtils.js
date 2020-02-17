@@ -39,7 +39,8 @@ function getItems(o, type) {
   }
 }
 
-exports.doProperties = (o, doAllinXtype) => {
+exports.doProperties = (o) => {
+  var doAllinXtype = true; //dont think this is needed
 
   var sLocalPROPERTIES = `\n`;
   //var sPROPERTIESOBJECT = `\n`;
@@ -186,7 +187,7 @@ exports.doProperties = (o, doAllinXtype) => {
 
 }
 
-exports.doMethods = (o, doAllinXtype) => {
+exports.doMethods = (o) => {
   var methodsLocalDocs = `<div class="select-div"><select id="methodsDocs" onchange="changeMethod()" name="methodsDocs">\n`
   var sLocalMETHODS = "";
   var methodsArray = []
@@ -250,7 +251,7 @@ exports.doMethods = (o, doAllinXtype) => {
 
 }
 
-exports.doEvents = (o, doAllinXtype) => {
+exports.doEvents = (o) => {
   var eventsLocalDocs = `<div class="select-div"><select id="eventsDocs" onchange="changeEvent()" name="eventsDocs">\n`
   var sLocalEVENTS = `\n`;
   var sLocalEVENTNAMES = `\n`;

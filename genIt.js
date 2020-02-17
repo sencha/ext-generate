@@ -1,7 +1,7 @@
-// node ./genIt.js ele test modern
-// node ./genIt.js ele blank modern
-// node ./genIt.js ele blank classic
-// node ./genIt.js ele button
+// node ./genIt.js test modern
+// node ./genIt.js blank modern
+// node ./genIt.js blank classic
+// node ./genIt.js button classic
 
 async function go() {
   require("./globals").setGlobals();
@@ -28,6 +28,8 @@ function doCreateFolders() {
     rimraf.sync(webComponentsPackageFolder);
     mkdirp.sync(`${webComponentsPackageFolder}`);
     mkdirp.sync(`${webComponentsPackageFolder}src`);
+    mkdirp.sync(`${webComponentsPackageFolder}src/overrides`);
+    mkdirp.sync(`${webComponentsPackageFolder}src/runtime`);
     mkdirp.sync(`${webComponentsPackageFolder}bin`);
     mkdirp.sync(`${webComponentsPackageFolder}guides`);
   }
@@ -36,6 +38,8 @@ function doCreateFolders() {
     rimraf.sync(angularPackageFolder);
     mkdirp.sync(`${angularPackageFolder}`);
     mkdirp.sync(`${angularPackageFolder}src`);
+    mkdirp.sync(`${angularPackageFolder}src/overrides`);
+    mkdirp.sync(`${angularPackageFolder}src/runtime`);
     mkdirp.sync(`${angularPackageFolder}bin`);
     mkdirp.sync(`${angularPackageFolder}guides`);
   }
@@ -44,6 +48,8 @@ function doCreateFolders() {
     rimraf.sync(reactPackageFolder);
     mkdirp.sync(`${reactPackageFolder}`);
     mkdirp.sync(`${reactPackageFolder}src`);
+    mkdirp.sync(`${reactPackageFolder}src/overrides`);
+    mkdirp.sync(`${reactPackageFolder}src/runtime`);
     mkdirp.sync(`${reactPackageFolder}bin`);
     mkdirp.sync(`${reactPackageFolder}guides`);
   }
@@ -60,6 +66,7 @@ function doLaunch(item) {
   var processIt = shouldProcessIt(item)
   if (processIt == true) {
     //get all names and eliminate duplicates
+
     item.names = []
     item.names.push(item.name)
     if (item.alternateClassNames != undefined) {
@@ -117,11 +124,9 @@ function oneItem(item) {
   var names = item.names;
   var xtypes = item.xtypes;
 
-  //var xtype = xtypes[0];
-
-  info.propertyObj = doProperties(item, doAllinXtype);
-  info.methodObj = doMethods(item, doAllinXtype);
-  info.eventObj = doEvents(item, doAllinXtype);
+  info.propertyObj = doProperties(item);
+  info.methodObj = doMethods(item);
+  info.eventObj = doEvents(item);
 
   for (var i = 0; i < names.length; i++) {
     var name = names[i];
@@ -172,7 +177,7 @@ function oneItem(item) {
             sEVENTS: info.eventObj.sEVENTS
         }
       }
-      writeTemplateFile(`${templateFolder}${templateFile}`, `${folder}${filename}.js`, v)
+      writeTemplateFile(`${webComponentsTemplateFolder}runtime/${templateFile}`, `${folder}${filename}.js`, v)
     }
 
     var Xtype;
@@ -186,7 +191,6 @@ function oneItem(item) {
           propNames: info.propertyObj.propNames,
           eventNames: info.eventObj.eventNames,
           classname: name.replace(/\./g, "_"),
-          doAllinXtype: doAllinXtype,
           sPROPERTIES: info.propertyObj.sPROPERTIES,
           sEVENTS: info.eventObj.sEVENTS,
           sEVENTNAMES: info.eventObj.sEVENTNAMES,
@@ -197,27 +201,16 @@ function oneItem(item) {
           xtype: xtypes[j]
         }
 
-        values.overrides = ""
-        values.Template = ""
-
         if (doWebComponents == true) {
-          writeTemplateFile(`./filetemplates/web-components/web-components.tpl`, `${webComponentsPackageFolder}src/ext-${xtypes[j]}.component.js`, values)
+          writeTemplateFile(`./filetemplates/web-components/runtime/web-components.tpl`, `${webComponentsPackageFolder}src/ext-${xtypes[j]}.component.js`, values)
         }
 
         if (doAngular == true) {
-          writeTemplateFile(`./filetemplates/angular/angular.tpl`, `${angularPackageFolder}src/Ext${values.Xtype}.ts`, values)
+          writeTemplateFile(`./filetemplates/angular/runtime/angular.tpl`, `${angularPackageFolder}src/Ext${values.Xtype}.ts`, values)
         }
 
         if (doReact == true) {
-          if (xtypes[j] == "grid" && info.toolkit == 'modern') {
-              values.ReactCell = "import './ReactCell';"
-              values.ElementCell = "import './ElementCell';"
-            }
-            else {
-              values.ReactCell = ""
-              values.ElementCell = ""
-            }
-          writeTemplateFile(`./filetemplates/react/react.tpl`, `${reactPackageFolder}src/Ext${values.Xtype}.js`, values)
+          writeTemplateFile(`./filetemplates/react/runtime/react.tpl`, `${reactPackageFolder}src/Ext${values.Xtype}.js`, values)
         }
 
         xt = values.xtype
@@ -327,46 +320,6 @@ function oneItem(item) {
   }
 }
 
-
-// function fromStaging(localStagingFolder, toFolder, framework) {
-//   //console.log(framework)
-//   //console.log(localStagingFolder)
-//   //console.log(toFolder)
-
-//   //copy xtypes from staging to src
-//   fs.readdirSync(`${localStagingFolder}`).forEach(function(file) {
-//     //console.log(file)
-//     var stat = fs.statSync(`${localStagingFolder}` + "/" + file);
-//     if (stat.isDirectory()) {return;}
-
-//     var f = file.split('.')
-//     var xtype
-//     var toFrameworkFile
-//     switch(framework) {
-//       case 'WebComponents':
-//         xtype = f[0].substring(4)
-//         toFrameworkFile = `ext-${xtype}.component.js`
-//         break;
-//       case 'Angular':
-//         xtype = f[0].substring(3).toLowerCase();
-//         var Xtype = xtype.charAt(0).toUpperCase() + xtype.slice(1).replace(/-/g,'_');
-//         toFrameworkFile = `Ext${Xtype}.ts`
-//         break;
-//       case 'React':
-//         xtype = f[0].substring(3).toLowerCase();
-//         var Xtype = xtype.charAt(0).toUpperCase() + xtype.slice(1).replace(/-/g,'_');
-//         toFrameworkFile = `Ext${Xtype}.js`
-//         break;
-//     }
-//     //if (info.wantedxtypes.indexOf(xtype) != -1) {
-//         //console.log(`${localStagingFolder}${toFrameworkFile}`)
-//         //console.log(`${toFolder}${toFrameworkFile}`)
-//     fs.copySync(`${localStagingFolder}${toFrameworkFile}`,`${toFolder}${toFrameworkFile}`)
-//     //}
-//   });
-// }
-
-
 function doPostLaunch() {
   console.log('doPostLaunch')
   if(doWebComponents == true) {
@@ -427,7 +380,6 @@ function doPostLaunch() {
   //   })
   // }
   //writeTheUniqueOnes()
-
 }
 
 function createWebComponents() {
@@ -436,15 +388,15 @@ function createWebComponents() {
     }
     info.webComponentsImportsUnique = info.webComponentsImports.filter( onlyUnique ).join('')
 
-    const webComponentsTemplateFolder = `./filetemplates/web-components/`;
+    //const webComponentsTemplateFolder = `./filetemplates/web-components/`;
 
-    writeTemplateFile(`${webComponentsTemplateFolder}${info.shortname}-base.tpl`,`${webComponentsPackageFolder}src/${info.shortname}-base.js`, info);
-    writeTemplateFile(`${webComponentsTemplateFolder}ElementParser.js.tpl`, `${webComponentsPackageFolder}src/ElementParser.js`, info);
-    copyFileSync(`${webComponentsTemplateFolder}ElementCell.js`, `${webComponentsPackageFolder}src/ElementCell.js`);
-    copyFileSync(`${webComponentsTemplateFolder}util.js`, `${webComponentsPackageFolder}src/util.js`);
-    writeTemplateFile(`${webComponentsTemplateFolder}router.tpl`, `${webComponentsPackageFolder}src/ext-router.component.js`, info);
+    writeTemplateFile(`${webComponentsTemplateFolder}runtime/webcomponentsbase.tpl`,`${webComponentsPackageFolder}src/runtime/webcomponentsbase.js`, info);
+    writeTemplateFile(`${webComponentsTemplateFolder}runtime/ElementParser.js.tpl`, `${webComponentsPackageFolder}src/runtime/ElementParser.js`, info);
+    //copyFileSync(`${webComponentsTemplateFolder}ElementCell.js`, `${webComponentsPackageFolder}src/ElementCell.js`);
+    copyFileSync(`${webComponentsTemplateFolder}runtime/util.js`, `${webComponentsPackageFolder}src/runtime/util.js`);
+    writeTemplateFile(`${webComponentsTemplateFolder}runtime/router.tpl`, `${webComponentsPackageFolder}src/ext-router.component.js`, info);
 
-    writeTemplateFile(`${webComponentsTemplateFolder}ext-web-components.js.tpl`,`${webComponentsPackageFolder}bin/ext-web-components.js`,info);
+    writeTemplateFile(`${webComponentsTemplateFolder}runtime/ext-web-components.js.tpl`,`${webComponentsPackageFolder}bin/ext-web-components.js`,info);
 
     writeTemplateFile(`${webComponentsTemplateFolder}index.js.tpl`,`${webComponentsPackageFolder}index.js`,info);
     writeTemplateFile(`${webComponentsTemplateFolder}package.json.tpl`,`${webComponentsPackageFolder}package.json`,info);
@@ -463,18 +415,19 @@ function createWebComponents() {
     writeTemplateFile(`${webComponentsTemplateFolder}guides/WHATS_NEW.tpl`,`${webComponentsPackageFolder}guides/WHATS_NEW.md`,info);
 }
 
-function createAngular(stagingFolder) {
+function createAngular() {
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
     info.angularImportsUnique = info.angularImports.filter( onlyUnique ).join('')
     moduleVars.angularImportsUnique = info.angularImportsUnique;
 
-    const angularTemplateFolder = `./filetemplates/angular/`;
+    copyFileSync(`${angularTemplateFolder}runtime/angularbase.ts`, `${angularPackageFolder}src/runtime/angularbase.ts`);
 
-    copyFileSync(`${angularTemplateFolder}angularbase.ts`, `${angularPackageFolder}src/angularbase.ts`);
+    writeTemplateFile(`${angularTemplateFolder}runtime/ext-angular.js.tpl`,`${angularPackageFolder}bin/ext-angular.js`,info);
 
-    writeTemplateFile(`${angularTemplateFolder}ext-angular.js.tpl`,`${angularPackageFolder}bin/ext-angular.js`,info);
+    copyFileSync(`${angularTemplateFolder}overrides/AngularXTemplate.ts`, `${angularPackageFolder}src/overrides/AngularXTemplate.ts`);
+    copyFileSync(`${angularTemplateFolder}overrides/AngularCell.ts`, `${angularPackageFolder}src/overrides/AngularCell.ts`);
 
     writeTemplateFile(`${angularTemplateFolder}package.tpl`,`${angularPackageFolder}package.json`,info);
     writeTemplateFile(`${angularTemplateFolder}module.tpl`,`${angularPackageFolder}ext-angular${info.toolkitshown}${info.bundle}.module.ts`,moduleVars);
@@ -493,9 +446,9 @@ function createAngular(stagingFolder) {
     writeTemplateFile(`${angularTemplateFolder}guides/WHATS_NEW.tpl`,`${angularPackageFolder}guides/WHATS_NEW.md`,info);
 }
 
-function createReact(stagingFolder) {
-    const reactTemplateFolder = `./filetemplates/react/`;
+function createReact() {
 
+    info.reactImports =`import ExtReactDOM from "./runtime/ExtReactDOM";\nexport default ExtReactDOM;\n`
     info.wantedxtypes.forEach(xtype => {
       var Xtype = xtype.charAt(0).toUpperCase() + xtype.slice(1).replace(/-/g,'_');
       info.reactImports = info.reactImports + `import Ext${Xtype}_ from "./Ext${Xtype}";\n`;
@@ -503,16 +456,15 @@ function createReact(stagingFolder) {
       info.reactExports70 = info.reactExports70 + `export const ${Xtype} = Ext${Xtype}_;\n`;
     })
 
-    copyFileSync(`${reactTemplateFolder}reactize.js`, `${reactPackageFolder}src/reactize.js`);
-    copyFileSync(`${reactTemplateFolder}Template2.js`, `${reactPackageFolder}src/Template2.js`);
-    copyFileSync(`${reactTemplateFolder}ReactCell.js`, `${reactPackageFolder}src/ReactCell.js`);
-    writeTemplateFile(`${reactTemplateFolder}ext-react.component.js.tpl`, `${reactPackageFolder}src/ext-react.component.js`, {})
-    writeTemplateFile(`${reactTemplateFolder}ext-react-renderer.component.js.tpl`, `${reactPackageFolder}src/ext-react-renderer.component.js`, {})
-    writeTemplateFile(`${reactTemplateFolder}ExtReact.js.tpl`, `${reactPackageFolder}src/ExtReact.js`, {})
-    writeTemplateFile(`${reactTemplateFolder}ExtReactRenderer.js.tpl`, `${reactPackageFolder}src/ExtReactRenderer.js`, {})
-    writeTemplateFile(`${reactTemplateFolder}index.js.tpl`, `${reactPackageFolder}src/index.js`, info);
+    writeTemplateFile(`${reactTemplateFolder}runtime/ext-react.js.tpl`,`${reactPackageFolder}bin/ext-react.js`,info);
 
-    writeTemplateFile(`${reactTemplateFolder}ext-react.js.tpl`,`${reactPackageFolder}bin/ext-react.js`,info);
+    copyFileSync(`${reactTemplateFolder}runtime/ExtReactDOM.js`, `${reactPackageFolder}src/runtime/ExtReactDOM.js`);
+    copyFileSync(`${reactTemplateFolder}runtime/reactize.js`, `${reactPackageFolder}src/runtime/reactize.js`);
+
+    copyFileSync(`${reactTemplateFolder}overrides/ReactXTemplate.js`, `${reactPackageFolder}src/overrides/ReactXTemplate.js`);
+    copyFileSync(`${reactTemplateFolder}overrides/ReactCell.js`, `${reactPackageFolder}src/overrides/ReactCell.js`);
+
+    writeTemplateFile(`${reactTemplateFolder}index.js.tpl`, `${reactPackageFolder}src/index.js`, info);
 
     writeTemplateFile(`${reactTemplateFolder}package.tpl`,`${reactPackageFolder}package.json`,info);
     copyFileSync(`${reactTemplateFolder}.babelrc`, `${reactPackageFolder}.babelrc`);
@@ -543,7 +495,6 @@ async function doNpmInstall() {
     log('');log(`npm install in: ${process.cwd()}`);
     await run(`npm install`);
     if (npmPublishRightAfter == true) {
-      //log('');log(`npmPublishRightAfter is true`);
       log(`publish ExtWebComponents`)
       await run(`npm publish --force`);
     }
@@ -564,13 +515,6 @@ async function doNpmInstall() {
     await run(`cp ./README.md dist/README.md`);
     await run(`cp ./postinstall.js dist/postinstall.js`);
 
-    // await run(`cp ./Adding_ExtAngular_to_Angular_CLI_project.md dist/Adding_ExtAngular_to_Angular_CLI_project.md`);
-    // await run(`cp ./Creating_Angular_CLI_ExtAngular.md dist/Creating_Angular_CLI_ExtAngular.md`);
-    // await run(`cp ./MIGRATE.md dist/MIGRATE.md`);
-    // await run(`cp ./UNDERSTANDING_AN_APP.md dist/UNDERSTANDING_AN_APP.md`);
-    // await run(`cp ./USING_EXT_WEBPACK_PLUGIN.md dist/USING_EXT_WEBPACK_PLUGIN.md`);
-    // await run(`cp ./WHATS_NEW.md dist/WHATS_NEW.md`);
-
     process.chdir('dist');
     var packagenameAngular = './package.json';
     var packageAngular = fs.readFileSync(packagenameAngular, 'utf8');
@@ -583,11 +527,9 @@ async function doNpmInstall() {
     fs.writeFileSync(packagenameAngular, packageStringAngular);
 
     if (npmPublishRightAfter == true) {
-      //log('');log(`npmPublishRightAfter is true`);
       log(`publish ExtAngular`)
       await run(`npm publish --force`);
     }
-
     process.chdir(origCwd);
   }
 
