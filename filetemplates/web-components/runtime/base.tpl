@@ -3,6 +3,8 @@ import WebComponentsBaseComponent from '../runtime/webcomponentsbase.js'
 export default class {classname} extends WebComponentsBaseComponent {
 
     static PROPERTIES() { return [
+        'group',
+        'value',
         'createExtComponentDefer',
         'createExtComponent',
         'closable',
@@ -45,7 +47,6 @@ export default class {classname} extends WebComponentsBaseComponent {
         {classname}.EVENTS().forEach(function (eventparameter, index, array) {
             attrs.push('on' + eventparameter.name)
         })
-        //attrs.push('onready')
         return attrs
     }
 
