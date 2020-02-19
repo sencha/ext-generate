@@ -2,6 +2,13 @@ var fs = require('fs');
 var uglify = require("uglify-js");
 var concat = require('concat-files');
 const copyFileSync = require('fs-copy-file-sync');
+global["rimraf"] = require("rimraf");
+global["mkdirp"] = require("mkdirp");
+
+var localSDK = `./localsdk/`
+var outputFolder = `./dist/`
+var classicFolderLocalSDK = `${localSDK}classic/`;
+var modernFolderLocalSDK = `${localSDK}modern/`;
 
 var folderRemoteSDK = `/Volumes/BOOTCAMP/aaExt/ext-7.1.0.46/`;
 
@@ -15,7 +22,7 @@ var classicEnterprisePathsRemoteSDK = [
   `${folderRemoteSDK}packages/pivot-d3/build/classic/pivot-d3-debug.js`,
   `${folderRemoteSDK}build/packages/ux/classic/ux-debug.js`,
 ]
-var classicFolderLocalSDK = `./sdk/classic/`;
+
 var classicEnterprisePathsLocalSDK = [
   `${classicFolderLocalSDK}ext-all-debug.js`,
   `${classicFolderLocalSDK}calendar-debug.js`,
@@ -26,7 +33,7 @@ var classicEnterprisePathsLocalSDK = [
   `${classicFolderLocalSDK}pivot-d3-debug.js`,
   `${classicFolderLocalSDK}ux-debug.js`,
 ]
-var outFileClassicEnterprise = `./dist/classic.engine.enterprise`;
+var outFileClassicEnterprise = `${outputFolder}classic.engine.enterprise`;
 
 var classicProPathsRemoteSDK = [
   `${folderRemoteSDK}build/ext-all-debug.js`,
@@ -34,7 +41,7 @@ var classicProPathsRemoteSDK = [
 var classicProPathsLocalSDK = [
   `${classicFolderLocalSDK}ext-all-debug.js`,
 ]
-var outFileClassicPro = `./dist/classic.engine.pro`;
+var outFileClassicPro = `${outputFolder}classic.engine.pro`;
 
 
 var modernEnterprisePathsRemoteSDK = [
@@ -47,7 +54,7 @@ var modernEnterprisePathsRemoteSDK = [
   `${folderRemoteSDK}packages/pivot-d3/build/modern/pivot-d3-debug.js`,
   `${folderRemoteSDK}build/packages/ux/modern/ux-debug.js`,
 ];
-var modernFolderLocalSDK = `./sdk/modern/`;
+
 var modernEnterprisePathsLocalSDK = [
   `${modernFolderLocalSDK}ext-modern-all-debug.js`,
   `${modernFolderLocalSDK}calendar-debug.js`,
@@ -58,7 +65,7 @@ var modernEnterprisePathsLocalSDK = [
   `${modernFolderLocalSDK}pivot-d3-debug.js`,
   `${modernFolderLocalSDK}ux-debug.js`,
 ];
-var outFileModernEnterprise = `./dist/modern.engine.enterprise`;
+var outFileModernEnterprise = `${outputFolder}modern.engine.enterprise`;
 
 var modernProPathsRemoteSDK = [
   `${folderRemoteSDK}build/ext-modern-all-debug.js`,
@@ -66,19 +73,25 @@ var modernProPathsRemoteSDK = [
 var modernProPathsLocalSDK = [
   `${modernFolderLocalSDK}ext-modern-all-debug.js`,
 ]
-var outFileModernPro = `./dist/modern.engine.pro`;
+var outFileModernPro = `${outputFolder}modern.engine.pro`;
 
 doInstall();
 return
 
 async function doInstall() {
+  rimraf.sync(`${outputFolder}`);
+  mkdirp.sync(`${outputFolder}`);
+  rimraf.sync(`${localSDK}`);
+  mkdirp.sync(`${localSDK}`);
+  mkdirp.sync(`${classicFolderLocalSDK}`);
+  mkdirp.sync(`${modernFolderLocalSDK}`);
 
   //get from SDK folder
-  //await copyAll(classicEnterprisePathsRemoteSDK, classicFolderLocalSDK);
-  //await copyAll(modernEnterprisePathsRemoteSDK, modernFolderLocalSDK);
+  await copyAll(classicEnterprisePathsRemoteSDK, classicFolderLocalSDK);
+  await copyAll(modernEnterprisePathsRemoteSDK, modernFolderLocalSDK);
 
-  //await concatAndUgilify(classicEnterprisePathsLocalSDK, outFileClassicEnterprise);
-  //await concatAndUgilify(modernEnterprisePathsLocalSDK, outFileModernEnterprise);
+  await concatAndUgilify(classicEnterprisePathsLocalSDK, outFileClassicEnterprise);
+  await concatAndUgilify(modernEnterprisePathsLocalSDK, outFileModernEnterprise);
 
   await concatAndUgilify(classicProPathsLocalSDK, outFileClassicPro);
   await concatAndUgilify(modernProPathsLocalSDK, outFileModernPro);
@@ -86,23 +99,25 @@ async function doInstall() {
   console.log(`done`)
 }
 
-// function copyAll (inPaths, outFolder) {
-//   inPaths.forEach( path => {
-//     var n = path.lastIndexOf('/');
-//     console.log(outFolder + path.substr(n+1))
-//     copyFileSync(path, outFolder + path.substr(n+1));
-//   })
-// }
+function copyAll (inPaths, outputFolder) {
+  console.log(`\ncopyall...`)
+  inPaths.forEach( path => {
+    var n = path.lastIndexOf('/');
+    console.log(outputFolder + path.substr(n+1))
+    copyFileSync(path, outputFolder + path.substr(n+1));
+  })
+}
 
 
 
 function concatAndUgilify (inPaths, outFile) {
   return promise = new Promise((resolve, reject) => {
-    console.log(`These files will be processed:`)
+    console.log(`\nThese files - concat and uglify:`)
     console.log(inPaths)
     concat(inPaths, `${outFile}.debug.js`, function(err) {
       if (err) throw err
-      console.log('concat is done, processing uglify...');
+      console.log(`concat is done: ${outFile}.debug.js`);
+      console.log('processing uglify...');
       var ugly = uglify.minify({
         "ext": fs.readFileSync(`${outFile}.debug.js`, "utf8")
       })
@@ -111,8 +126,7 @@ function concatAndUgilify (inPaths, outFile) {
           console.log(err);
           reject(err);
         } else {
-          console.log('ufilify is done');
-          console.log("Script generated and saved:", `${outFile}.js`);
+          console.log(`ufilify is done: ${outFile}.js`);
           resolve(0);
         }
       });

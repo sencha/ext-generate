@@ -25,7 +25,7 @@ function doCreateFolders() {
   if (!fs.existsSync(typeFolder)) {mkdirp.sync(typeFolder)}
 
   if (doWebComponents == true) {
-    rimraf.sync(webComponentsPackageFolder);
+    rimraf.sync(`${webComponentsPackageFolder}`);
     mkdirp.sync(`${webComponentsPackageFolder}`);
     mkdirp.sync(`${webComponentsPackageFolder}src`);
     mkdirp.sync(`${webComponentsPackageFolder}src/overrides`);
@@ -35,7 +35,7 @@ function doCreateFolders() {
   }
 
   if (doAngular == true) {
-    rimraf.sync(angularPackageFolder);
+    rimraf.sync(`${angularPackageFolder}`);
     mkdirp.sync(`${angularPackageFolder}`);
     mkdirp.sync(`${angularPackageFolder}src`);
     mkdirp.sync(`${angularPackageFolder}src/overrides`);
@@ -45,7 +45,7 @@ function doCreateFolders() {
   }
 
   if (doReact == true) {
-    rimraf.sync(reactPackageFolder);
+    rimraf.sync(`${reactPackageFolder}`);
     mkdirp.sync(`${reactPackageFolder}`);
     mkdirp.sync(`${reactPackageFolder}src`);
     mkdirp.sync(`${reactPackageFolder}src/overrides`);
