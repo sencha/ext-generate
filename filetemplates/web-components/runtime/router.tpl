@@ -1,5 +1,5 @@
-import EleBaseComponent from './ele-base';
-import ElementParser from './ElementParser.js';
+import WebComponentsBaseComponent from './runtime/webcomponentsbase';
+import ElementParser from './runtime/ElementParser.js';
 
 import {
     //doProp,
@@ -9,9 +9,9 @@ import {
     isParentGridAndChildColumn,
     isTooltip,
     isPlugin
-} from './util.js';
+} from './runtime/util.js';
 
-export class ExtRouter extends EleBaseComponent {
+export class ExtRouter extends WebComponentsBaseComponent {
     //prettier-ignore
     get hidden() {return this.getAttribute('hidden');}
     set hidden(hidden) {
@@ -35,12 +35,12 @@ export class ExtRouter extends EleBaseComponent {
     }
 
     connectedCallback() {
-        //EleBaseComponent.elementcount++;
-        //console.log('added: ' + this.tagName + ': elementcount is now ' + EleBaseComponent.elementcount);
-        //EleBaseComponent.elements.push(this);
-        //console.log(EleBaseComponent.elements)
+        //WebComponentsBaseComponent.elementcount++;
+        //console.log('added: ' + this.tagName + ': elementcount is now ' + WebComponentsBaseComponent.elementcount);
+        //WebComponentsBaseComponent.elements.push(this);
+        //console.log(WebComponentsBaseComponent.elements)
 
-        this.base = EleBaseComponent;
+        this.base = WebComponentsBaseComponent;
     }
 
     parsedCallback() {
@@ -88,8 +88,8 @@ export class ExtRouter extends EleBaseComponent {
                 me.parentNode.A.CHILDREN.push(me.A.ext);
             }
         }
-        //EleBaseComponent.elementcount--;
-        //console.log('reduced: ' + me.tagName + ' elementcount reduced to ' + EleBaseComponent.elementcount)
+        //WebComponentsBaseComponent.elementcount--;
+        //console.log('reduced: ' + me.tagName + ' elementcount reduced to ' + WebComponentsBaseComponent.elementcount)
         //});
     }
 
