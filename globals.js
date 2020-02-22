@@ -11,7 +11,7 @@ exports.setGlobals =() => {
   global["launch"]               = true;
   global["postLaunch"]           = true;
   global["npmInstall"]           = true;
-  global["npmPublishRightAfter"] = true;
+  global["npmPublishRightAfter"] = false;
   global["copy"]                 = true;
 
   console.log(`doWebComponents:\t${doWebComponents}`)

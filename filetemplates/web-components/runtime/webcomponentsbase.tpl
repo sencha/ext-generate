@@ -245,6 +245,13 @@ export default class WebComponentsBaseComponent extends HTMLElement {
     me.A.ext = Ext.create(me.A.o);
     me.cmp = me.A.ext;
     me.ext = me.A.ext;
+
+    me.dispatchEvent(new CustomEvent('created', {
+       detail: {
+         cmp: me.A.ext,
+       }
+    }))
+
     this.doChildren(this);
 
     if (isApplication) {

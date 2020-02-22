@@ -315,11 +315,14 @@ exports.doEvents = (o) => {
 
 
 
-  sLocalEVENTS = sLocalEVENTS + '  ' + '  ' + "{name:'" +"ready" +"', parameters:'cmd,cmdAll'}" +"" + '\n';
-  sLocalEVENTNAMES = sLocalEVENTNAMES + "'" + "ready" + "'" + "" + '\n';
+  sLocalEVENTS = sLocalEVENTS + `    {name:'ready', parameters:'cmp,cmpObj'},\n` + `    {name:'created', parameters:'cmp'}\n`;
+  sLocalEVENTNAMES = sLocalEVENTNAMES + `'ready','created'\n`;
+
+  //sLocalEVENTS = sLocalEVENTS + '  ' + '  ' + "{name:'" +"ready" +"', parameters:'cmd,cmdAll'}" +"" + '\n';
+  //sLocalEVENTNAMES = sLocalEVENTNAMES + "'" + "ready" + "'" + "" + '\n';
 
 
-  var eventLocalNames = `['ready',`
+  var eventLocalNames = `['ready','created',`
   eventsLocalArray.forEach(event => {
     //info.propNames.push(property.name)
     eventLocalNames = eventLocalNames + `'${event.name}',`
