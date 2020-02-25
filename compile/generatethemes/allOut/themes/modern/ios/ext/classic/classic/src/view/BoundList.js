@@ -373,7 +373,7 @@ Ext.define('Ext.view.BoundList', {
         this.callParent();
 
         // If the input field is not focused, then focus it.
-        if (field && field.rendered && !field.hasFocus) {
+        if (field && field.rendered && !field.hasFocus && !Ext.isTouchMode()) {
             field.focus();
         }
     },

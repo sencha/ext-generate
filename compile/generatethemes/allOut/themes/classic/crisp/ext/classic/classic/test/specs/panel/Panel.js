@@ -7,7 +7,8 @@ topSuite("Ext.panel.Panel", [
     'Ext.form.field.TextArea',
     'Ext.data.Session',
     'Ext.app.ViewModel',
-    'Ext.app.ViewController'
+    'Ext.app.ViewController',
+    'Ext.form.field.ComboBox'
 ], function() {
     var panel, ct, viewport;
 
@@ -880,6 +881,50 @@ topSuite("Ext.panel.Panel", [
 
                 expect(reExpander).toHaveCls('x-panel-header-default-vertical');
 
+            });
+
+            it("should hide combobox when collapsed", function() {
+                var collapseSpy = jasmine.createSpy(),
+                    combo, states;
+
+                states = Ext.create('Ext.data.Store', {
+                    fields: ['abbr', 'name'],
+                    data: [
+                        { "abbr": "AL", "name": "Alabama" },
+                        { "abbr": "AK", "name": "Alaska" }
+                    ]
+                });
+
+                makePanel({
+                    width: 100,
+                    height: 100,
+                    title: 'Foo',
+                    collapsible: true,
+                    collapseDirection: 'left',
+                    listeners: {
+                        collapse: collapseSpy
+                    },
+                    items: [{
+                        xtype: 'combobox',
+                        itemId: 'combo',
+                        fieldLabel: 'Choose State',
+                        store: states,
+                        queryMode: 'local',
+                        displayField: 'name',
+                        valueField: 'abbr'
+                    }]
+                });
+
+                combo = panel.down('combo');
+                combo.expand();
+                expect(combo.picker.isVisible()).toBe(true);
+
+                panel.collapse();
+                waitsForSpy(collapseSpy);
+                waitAWhile();
+                runs(function() {
+                    expect(combo.picker.isVisible()).toBe(false);
+                });
             });
         });
 

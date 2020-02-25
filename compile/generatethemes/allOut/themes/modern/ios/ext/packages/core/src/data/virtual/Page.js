@@ -227,12 +227,12 @@ Ext.define('Ext.data.virtual.Page', {
         return this.state === 'loading';
     },
 
-    load: function() {
+    load: function(options) {
         var me = this,
             operation;
 
         me.state = 'loading';
-        operation = me.pageMap.store.loadVirtualPage(me, me.onLoad, me);
+        operation = me.pageMap.store.loadVirtualPage(me, me.onLoad, me, options);
 
         // Memory proxy will synchronously load pages...
         if (me.state === 'loading') {

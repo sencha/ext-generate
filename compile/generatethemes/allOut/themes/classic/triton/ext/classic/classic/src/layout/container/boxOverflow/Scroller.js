@@ -235,7 +235,8 @@ Ext.define('Ext.layout.container.boxOverflow.Scroller', {
         me[repeaterName] = new Ext.util.ClickRepeater(scrollerEl, {
             interval: me.scrollRepeatInterval,
             handler: scrollHandler,
-            scope: me
+            scope: me,
+            mousedownPreventDefault: true // Stop IE from scrolling to improperly focused element
         });
 
         return scrollerEl;

@@ -1001,6 +1001,11 @@ Ext.define('Ext.form.field.ComboBox', {
     onFocus: function(e) {
         var me = this;
 
+        // For touch devices move focus to the picker
+        if (Ext.isTouchMode()) {
+            me.getPicker().getEl().focus();
+        }
+
         me.callParent([e]);
 
         if (me.triggerAction !== 'all' && me.queryFilter && me.queryMode === 'local' &&
@@ -1107,8 +1112,8 @@ Ext.define('Ext.form.field.ComboBox', {
         else if ((value = me.getValue()) && value == rawValue) {
             rec = me.findRecordByDisplay(value);
 
-            if (rec && (rec !== (lastRecords && lastRecords[0]) ||
-                me.displayField !== me.valueField)) {
+            // fire select if the new record is different from the last record
+            if (rec && (rec !== (lastRecords && lastRecords[0]))) {
                 me.select(rec, true);
                 me.fireEvent('select', me, rec);
             }
@@ -1760,6 +1765,11 @@ Ext.define('Ext.form.field.ComboBox', {
         if (!me.readOnly && !me.disabled) {
             if (me.isExpanded) {
                 me.collapse();
+
+                // Hide keyboard for touch devices when the picker list is collapsed
+                if (e.pointerType !== 'mouse') {
+                    trigger.getEl().focus();
+                }
             }
             else {
                 // Alt-Down arrow opens the picker but does not select items:

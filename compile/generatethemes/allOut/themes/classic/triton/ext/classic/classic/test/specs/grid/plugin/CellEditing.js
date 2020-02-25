@@ -485,6 +485,63 @@ function() {
                 selectRange('dblclick');
             }
         });
+
+        describe('validateedit', function() {
+            it('should not mark the cell as dirty when using a tagfield and no change is made', function() {
+                var validateSpy = jasmine.createSpy(),
+                    editor, context;
+
+                makeGrid({
+                    listeners: {
+                        validateedit: validateSpy
+                    }
+                }, {
+                    store: {
+                        fields: [{
+                            name: 'tag',
+                            type: 'array'
+                        }],
+                        data: [{
+                            tag: ['one', 'two']
+                        }]
+                    },
+                    columns: [
+                        {
+                            header: 'Tag',
+                            dataIndex: 'tag',
+                            flex: 1,
+                            editor: {
+                                xtype: 'tagfield',
+                                displayField: 'name',
+                                store: {
+                                    data: [ { name: 'one' }, { name: 'two' }]
+                                }
+                            }
+                        }
+                    ]
+                });
+
+                plugin.startEdit(0, 0);
+
+                waitsFor(function() {
+                    editor = plugin.getActiveEditor();
+
+                    return editor.editing;
+                }, 'editing to start at cell(0, 0)');
+                runs(function() {
+                    context = plugin.context;
+                    editor.field.onTriggerClick();
+                    waitAWhile();
+                    jasmine.fireKeyEvent(editor.field.inputEl, 'keydown', Ext.event.Event.TAB);
+                });
+
+                waitsForSpy(validateSpy);
+                runs(function() {
+                    expect(context.record.dirty).toBe(false);
+                    validateSpy = null;
+                });
+            });
+        });
     });
 
     describe('sorting', function() {

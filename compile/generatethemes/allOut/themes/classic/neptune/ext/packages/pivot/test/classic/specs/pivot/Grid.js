@@ -318,6 +318,10 @@ function() {
         }
     }
 
+    function fireClick(target) {
+        jasmine.fireMouseEvent(target, 'click');
+    }
+
     describe('Previous versions', function() {
         beforeEach(makeOldGrid);
         afterEach(destroyGrid);
@@ -716,6 +720,93 @@ function() {
                 expect(scroller.getStyle('overflow-x')).toBe('auto');
             });
         });
+
+        describe("sorting", function() {
+
+            var spy = jasmine.createSpy(),
+                header;
+
+            it("should not sort when grid configured to sortable false", function() {
+                makeGrid({
+                    sortableColumns: false,
+                    listeners: {
+                        sortchange: spy
+                    },
+                    matrix: {
+                        aggregate: [{
+                            dataIndex: 'value',
+                            aggregator: 'sum'
+                        }],
+                        leftAxis: [{
+                            dataIndex: 'company',
+                            header: 'Company'
+                        }],
+                        topAxis: [{
+                            dataIndex: 'person'
+                        }]
+                    }
+                    }, [
+                    {
+                        company: 'A',
+                        person: 'Adrian',
+                        date: new Date(2015, 0, 1),
+                        value: 10,
+                        quantity: 2
+                    }
+                ]);
+
+                waitsFor(function() {
+                    return pivotDone;
+                });
+
+                runs(function() {
+                    header = grid.getHeaderContainer();
+                    fireClick(header.columnManager.getColumns()[1]);
+                    expect(spy.callCount).toBe(0);
+                });
+            });
+
+            it("should not sort a column set with sortable false", function() {
+                makeGrid({
+                    listeners: {
+                        sortchange: spy
+                    },
+                    matrix: {
+                        aggregate: [{
+                            dataIndex: 'value',
+                            aggregator: 'sum'
+                        }],
+                        leftAxis: [{
+                            dataIndex: 'company',
+                            header: 'Company'
+                        }],
+                        topAxis: [{
+                            dataIndex: 'person',
+                            sortable: false
+                        }]
+                    }
+                    }, [
+                    {
+                        company: 'A',
+                        person: 'Adrian',
+                        date: new Date(2015, 0, 1),
+                        value: 10,
+                        quantity: 2
+                    }
+                ]);
+
+                waitsFor(function() {
+                    return pivotDone;
+                });
+
+                runs(function() {
+                    header = grid.getHeaderContainer();
+                    fireClick(header.columnManager.getColumns()[1]);
+                    expect(spy.callCount).toBe(0);
+                });
+            });
+        });
+
     });
 
     describe('Widgets', function() {

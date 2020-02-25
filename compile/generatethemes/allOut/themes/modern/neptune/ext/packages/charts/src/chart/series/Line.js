@@ -118,6 +118,12 @@ Ext.define('Ext.chart.series.Line', {
         'Ext.chart.series.sprite.Line'
     ],
 
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Line}
+     */
+
     config: {
         /**
          * @cfg {Number} selectionTolerance

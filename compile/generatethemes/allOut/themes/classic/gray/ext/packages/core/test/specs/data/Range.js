@@ -113,6 +113,22 @@ topSuite("Ext.data.Range", [
             makeStore();
         });
 
+        describe("return value", function() {
+            it("should return a promise which resolves to the range", function() {
+                var spy = jasmine.createSpy();
+
+                makeRange({
+                    begin: 0,
+                    end: 50
+                });
+                range.goto(50, 100).then(spy);
+                waitsForSpy(spy, 'promise resolves', 50);
+                runs(function() {
+                    expect(spy.calls[0].args).toEqual([range]);
+                });
+            });
+        });
+
         it("should be able to go backwards without overlap", function() {
             makeRange({
                 begin: 80,

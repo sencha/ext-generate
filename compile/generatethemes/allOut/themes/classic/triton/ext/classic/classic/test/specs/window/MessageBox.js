@@ -550,6 +550,28 @@ topSuite("Ext.window.MessageBox", function() {
             });
             expect(M.down('tool').isVisible()).toBe(false);
         });
+
+        describe("esc key", function() {
+            it("should close on esc key with closable: true", function() {
+                M.show({
+                    buttons: false,
+                    closable: true
+                });
+
+                jasmine.fireKeyEvent(Ext.Element.getActiveElement(), 'keydown', Ext.event.Event.ESC);
+                expect(M.isVisible()).toBe(false);
+            });
+
+            it("should not close on esc key with closable: false", function() {
+                M.show({
+                    buttons: false,
+                    closable: false
+                });
+
+                jasmine.fireKeyEvent(Ext.Element.getActiveElement(), 'keydown', Ext.event.Event.ESC);
+                expect(M.isVisible()).toBe(true);
+            });
+        });
     });
 
     describe("ARIA", function() {

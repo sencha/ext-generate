@@ -134,11 +134,6 @@ Ext.define('Ext.data.virtual.Range', {
                 activePages, page, pg, direction,
                 prefetchBegin, prefetchEnd, prefetchPages;
 
-            // If store.totalCount is 0: no need to goto any page, just return from here
-            if (limit === 0) {
-                return;
-            }
-
             adjustingPages.length = 0;
 
             // Forwards
@@ -308,6 +303,12 @@ Ext.define('Ext.data.virtual.Range', {
 
             me.lastBegin = begin;
             me.lastEnd = end;
+
+            // This can occur if the store reloads empty. As such, trigger the callback
+            // immediately since there won't be any loads.
+            if (begin === end && begin === 0) {
+                this.triggerCallback(0, 0);
+            }
         },
 
         onPageDestroy: function(page) {
@@ -326,19 +327,22 @@ Ext.define('Ext.data.virtual.Range', {
 
         onPageLoad: function(page) {
             var me = this,
-                callback = me.callback,
+                wait = me.activeWait,
                 first, last;
 
             if (me.activePages[page.number]) {
                 page.fillRecords(me.records);
 
-                if (callback) {
-                    // Clip the range to our actually active range for the sake of
-                    // the user:
-                    first = Math.max(me.begin, page.begin);
-                    last = Math.min(me.end, page.end);
+                // Clip the range to our actually active range for the sake of
+                // the user:
+                first = Math.max(me.begin, page.begin);
+                last = Math.min(me.end, page.end);
 
-                    Ext.callback(callback, me.scope, [me, first, last]);
+                me.triggerCallback(first, last);
+
+                if (wait) {
+                    wait.got++;
+                    me.resolveWaitIfSatisfied();
                 }
             }
         },
@@ -365,8 +369,39 @@ Ext.define('Ext.data.virtual.Range', {
             me.direction = 1;
             me.prefetchPages = me.activePages = null;
 
-            /* eslint-disable-next-line dot-notation */
             me.goto(begin, end);
+        },
+
+        resolveWaitIfSatisfied: function() {
+            var wait = this.activeWait;
+
+            if (wait && wait.got === wait.needed) {
+                this.resolveWait(this);
+            }
+        },
+
+        setupWait: function(begin, end) {
+            var result = this.callParent([begin, end]),
+                pages = this.store.pageMap.getPages(begin, end),
+                needed = 0,
+                p;
+
+            for (p in pages) {
+                needed += pages[p].isLoaded() ? 0 : 1;
+            }
+
+            result.got = 0;
+            result.needed = needed;
+
+            return result;
+        },
+
+        triggerCallback: function(first, last) {
+            var callback = this.callback;
+
+            if (callback) {
+                Ext.callback(callback, this.scope, [this, first, last]);
+            }
         }
     }
 });

@@ -234,6 +234,7 @@ Ext.define('Ext.grid.plugin.ViewOptions', {
                     infinite: true,
                     mode: 'MULTI',
                     variableHeights: true,
+                    scrollToTopOnRefresh: false,
                     plugins: {
                         sortablelist: {
                             source: {
@@ -421,10 +422,13 @@ Ext.define('Ext.grid.plugin.ViewOptions', {
 
     onVisibleIndicatorTap: function(row, record) {
         var hidden = !record.get('hidden'),
-            column = Ext.getCmp(record.get('id'));
+            column = Ext.getCmp(record.get('id')),
+            len = this.getGrid().getVisibleColumns().length;
 
-        column.setHidden(hidden);
-        record.set('hidden', hidden);
+        if (len > 1 || (len && column.isHidden())) {
+            column.setHidden(hidden);
+            record.set('hidden', hidden);
+        }
     },
 
     onGroupIndicatorTap: function(row, record) {

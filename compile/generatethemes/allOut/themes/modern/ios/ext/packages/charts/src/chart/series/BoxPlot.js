@@ -65,6 +65,12 @@ Ext.define('Ext.chart.series.BoxPlot', {
         'Ext.chart.sprite.BoxPlot'
     ],
 
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.BoxPlot}
+     */
+
     config: {
 
         itemInstancing: {

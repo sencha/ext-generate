@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-ux",
     "SenchaExtName": "@sencha/ext-ux",
     "SenchaExtReactName": "@sencha/ext-react-ux",
-    "version": "7.1.0.46",
+    "version": "7.2.0.56",
     "sencha": {
         "name": "ux",
         "namespace": "Ext",
@@ -16,8 +16,8 @@
         "creator": "Sencha",
         "summary": "User eXtensions",
         "detailedDescription": "This package contains extensions to Ext JS that should be considered as 'beta' or 'work in progress'. We hope they are useful 'as is' or serve as inspiration for more feature-rich work.",
-        "version": "7.1.0",
-        "compatVersion": "7.1.0",
+        "version": "7.2.0",
+        "compatVersion": "7.2.0",
         "format": "1",
         "output": {
             "base": "${framework.dir}/build/packages/${package.name}/${toolkit.name}/${build.id}",

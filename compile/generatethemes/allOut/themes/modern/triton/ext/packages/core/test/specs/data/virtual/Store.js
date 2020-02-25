@@ -148,6 +148,17 @@ topSuite("Ext.data.virtual.Store", function() {
     });
 
     describe("misc", function() {
+        it('should trigger a load callback', function() {
+            var spy = jasmine.createSpy();
+
+            makeStore();
+            store.load({
+                callback: spy
+            });
+            flushAllLoads();
+            expect(spy.callCount).toBe(1);
+        });
+
         it("should handle a goto of a smaller range in totalcountchange after a reload", function() {
             pageSize = 300;
             makeStore();
@@ -411,7 +422,7 @@ topSuite("Ext.data.virtual.Store", function() {
 
                 // https://sencha.jira.com/browse/EXTJS-27063
                 // This proves that no error is thrown for 0 record
-                expect(range.goto(0, 1)).toBeUndefined();
+                range.goto(0, 0);
                 expect(store.getCount()).toBe(0);
             });
         });
@@ -1070,13 +1081,12 @@ topSuite("Ext.data.virtual.Store", function() {
                         store.getSorters().add({
                             property: 'id'
                         });
-                        completeReload();
                         flushAllLoads();
 
-                        // reload + 4 pages
-                        expect(proxySpy.callCount).toBe(5);
+                        // 4 pages
+                        expect(proxySpy.callCount).toBe(4);
 
-                        var calls = proxySpy.calls.slice(1),
+                        var calls = proxySpy.calls,
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1108,27 +1118,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-
-                        makeRange();
-                        range.goto(100, 200);
-                        flushAllLoads();
-
-                        store.getSorters().add({
-                            property: 'id'
-                        });
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1144,15 +1133,13 @@ topSuite("Ext.data.virtual.Store", function() {
                             property: 'id'
                         });
 
-                        completeReload();
-
                         flushAllLoads();
-                        // Initial call, + 1 aborted call, + reload call + 4 new requests
-                        expect(proxySpy.callCount).toBe(7);
+                        // Initial call, + 1 aborted call, + 4 new requests
+                        expect(proxySpy.callCount).toBe(6);
 
                         expectAborted(proxySpy.calls[1]);
 
-                        var calls = proxySpy.calls.slice(3),
+                        var calls = proxySpy.calls.slice(2),
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1184,27 +1171,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(0, 100);
-                        flushNextLoad();
-                        completeLatest();
-
-                        store.getSorters().add({
-                            property: 'id'
-                        });
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1226,12 +1192,11 @@ topSuite("Ext.data.virtual.Store", function() {
                         proxySpy.reset();
 
                         store.getSorters().removeAll();
-                        completeReload();
                         flushAllLoads();
 
-                        // Reload, + 4 pages
-                        expect(proxySpy.callCount).toBe(5);
-                        var calls = proxySpy.calls.slice(1),
+                        // 4 pages
+                        expect(proxySpy.callCount).toBe(4);
+                        var calls = proxySpy.calls,
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1254,24 +1219,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         expect(spy.mostRecentCall.args[1]).toEqual([]);
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event immediately", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(100, 200);
-                        flushAllLoads();
-
-                        store.getSorters().removeAll();
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1285,14 +1232,13 @@ topSuite("Ext.data.virtual.Store", function() {
 
                         store.getSorters().removeAll();
 
-                        completeReload();
                         flushAllLoads();
-                        // Initial call, + 1 aborted call, + reload, + 4 new requests
-                        expect(proxySpy.callCount).toBe(7);
+                        // Initial call, + 1 aborted call, + 4 new requests
+                        expect(proxySpy.callCount).toBe(6);
 
                         expectAborted(proxySpy.calls[1]);
 
-                        var calls = proxySpy.calls.slice(3),
+                        var calls = proxySpy.calls.slice(2),
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1316,25 +1262,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         expect(spy.mostRecentCall.args[1]).toEqual([]);
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(0, 100);
-                        flushNextLoad();
-                        completeLatest();
-
-                        store.getSorters().removeAll();
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1357,13 +1284,12 @@ topSuite("Ext.data.virtual.Store", function() {
 
                         store.sort('id', 'DESC');
 
-                        completeReload();
                         flushAllLoads();
 
-                        // 1 reload of first page, + 4 pages
-                        expect(proxySpy.callCount).toBe(5);
+                        // 4 pages
+                        expect(proxySpy.callCount).toBe(4);
 
-                        var calls = proxySpy.calls.slice(1),
+                        var calls = proxySpy.calls,
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1394,24 +1320,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(100, 200);
-                        flushAllLoads();
-
-                        store.sort('id', 'DESC');
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1427,12 +1335,12 @@ topSuite("Ext.data.virtual.Store", function() {
 
                         completeReload();
                         flushAllLoads();
-                        // Initial call, + 1 aborted call, +first page, + 4 new requests
-                        expect(proxySpy.callCount).toBe(7);
+                        // Initial call, + 1 aborted call, + 4 new requests
+                        expect(proxySpy.callCount).toBe(6);
 
                         expectAborted(proxySpy.calls[1]);
 
-                        var calls = proxySpy.calls.slice(3),
+                        var calls = proxySpy.calls.slice(2),
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1462,25 +1370,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(0, 100);
-                        flushNextLoad();
-                        completeLatest();
-
-                        store.sort('id', 'DESC');
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1655,12 +1544,11 @@ topSuite("Ext.data.virtual.Store", function() {
                             property: 'group'
                         });
 
-                        completeReload();
                         flushAllLoads();
 
-                        // 1 reload, + 4 pages
-                        expect(proxySpy.callCount).toBe(5);
-                        var calls = proxySpy.calls.slice(1),
+                        // 4 pages
+                        expect(proxySpy.callCount).toBe(4);
+                        var calls = proxySpy.calls,
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1692,28 +1580,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-
-                        makeRange();
-                        range.goto(100, 200);
-                        flushAllLoads();
-
-                        store.setGrouper({
-                            property: 'group'
-                        });
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1729,14 +1595,13 @@ topSuite("Ext.data.virtual.Store", function() {
                             property: 'group'
                         });
 
-                        completeReload();
                         flushAllLoads();
-                        // Initial call, + 1 aborted call, +first page, + 4 new requests
-                        expect(proxySpy.callCount).toBe(7);
+                        // Initial call, + 1 aborted call, + 4 new requests
+                        expect(proxySpy.callCount).toBe(6);
 
                         expectAborted(proxySpy.calls[1]);
 
-                        var calls = proxySpy.calls.slice(3),
+                        var calls = proxySpy.calls.slice(2),
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1768,27 +1633,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(0, 100);
-                        flushNextLoad();
-                        completeLatest();
-
-                        store.setGrouper({
-                            property: 'group'
-                        });
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1810,12 +1654,11 @@ topSuite("Ext.data.virtual.Store", function() {
                         proxySpy.reset();
 
                         store.setGrouper(null);
-                        completeReload();
                         flushAllLoads();
 
-                        // first page + 4 pages
-                        expect(proxySpy.callCount).toBe(5);
-                        var calls = proxySpy.calls.slice(1),
+                        // 4 pages
+                        expect(proxySpy.callCount).toBe(4);
+                        var calls = proxySpy.calls,
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1838,24 +1681,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         expect(spy.mostRecentCall.args[1]).toBeNull();
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(100, 200);
-                        flushAllLoads();
-
-                        store.setGrouper(null);
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1871,12 +1696,12 @@ topSuite("Ext.data.virtual.Store", function() {
 
                         completeReload();
                         flushAllLoads();
-                        // Initial call, + 1 aborted call, + first page, + 4 new requests
-                        expect(proxySpy.callCount).toBe(7);
+                        // Initial call, + 1 aborted call, + 4 new requests
+                        expect(proxySpy.callCount).toBe(6);
 
                         expectAborted(proxySpy.calls[1]);
 
-                        var calls = proxySpy.calls.slice(3),
+                        var calls = proxySpy.calls.slice(2),
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1900,25 +1725,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         expect(spy.mostRecentCall.args[1]).toBeNull();
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(0, 100);
-                        flushNextLoad();
-                        completeLatest();
-
-                        store.setGrouper(null);
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -1944,13 +1750,12 @@ topSuite("Ext.data.virtual.Store", function() {
                             direction: 'DESC'
                         });
 
-                        completeReload();
                         flushAllLoads();
 
-                        // first page, + 4 pages
-                        expect(proxySpy.callCount).toBe(5);
+                        // 4 pages
+                        expect(proxySpy.callCount).toBe(4);
 
-                        var calls = proxySpy.calls.slice(1),
+                        var calls = proxySpy.calls,
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -1982,27 +1787,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(100, 200);
-                        flushAllLoads();
-
-                        store.setGrouper({
-                            property: 'group',
-                            direction: 'DESC'
-                        });
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -2021,12 +1805,12 @@ topSuite("Ext.data.virtual.Store", function() {
 
                         completeReload();
                         flushAllLoads();
-                        // Initial call, + 1 aborted call, + first page, + 4 new requests
-                        expect(proxySpy.callCount).toBe(7);
+                        // Initial call, + 1 aborted call, + 4 new requests
+                        expect(proxySpy.callCount).toBe(6);
 
                         expectAborted(proxySpy.calls[1]);
 
-                        var calls = proxySpy.calls.slice(3),
+                        var calls = proxySpy.calls.slice(2),
                             i;
 
                         for (i = 0; i < 4; ++i) {
@@ -2059,28 +1843,6 @@ topSuite("Ext.data.virtual.Store", function() {
                         });
 
                         completeReload();
-                        flushAllLoads();
-                    });
-
-                    it("should fire the reload event immediately", function() {
-                        var spy = jasmine.createSpy();
-
-                        store.on('reload', spy);
-                        makeRange();
-                        range.goto(0, 100);
-                        flushNextLoad();
-                        completeLatest();
-
-                        store.setGrouper({
-                            property: 'group',
-                            direction: 'DESC'
-                        });
-                        expect(spy).not.toHaveBeenCalled();
-                        completeReload();
-                        expect(spy.callCount).toBe(1);
-                        expect(spy.mostRecentCall.args[0]).toBe(store);
-                        expect(spy.mostRecentCall.args[1].$className).toBe('Ext.data.operation.Read');
-
                         flushAllLoads();
                     });
                 });
@@ -2154,8 +1916,6 @@ topSuite("Ext.data.virtual.Store", function() {
                     property: 'group',
                     direction: 'DESC'
                 });
-
-                completeReload();
 
                 makeRange();
                 range.goto(4800, 4900);
@@ -2553,7 +2313,6 @@ topSuite("Ext.data.virtual.Store", function() {
                     property: 'id',
                     direction: 'DESC'
                 });
-                completeReload();
                 flushAllLoads();
                 expect(store.getAt(100).id).toBe(4900);
             });
@@ -2609,7 +2368,6 @@ topSuite("Ext.data.virtual.Store", function() {
                     property: 'id',
                     direction: 'DESC'
                 });
-                completeReload();
                 flushAllLoads();
                 expect(store.getById(4850).id).toBe(4850);
             });
@@ -2665,7 +2423,6 @@ topSuite("Ext.data.virtual.Store", function() {
                     property: 'id',
                     direction: 'DESC'
                 });
-                completeReload();
                 flushAllLoads();
                 expect(store.indexOf(store.getAt(100))).toBe(100);
             });
@@ -2721,7 +2478,6 @@ topSuite("Ext.data.virtual.Store", function() {
                     property: 'id',
                     direction: 'DESC'
                 });
-                completeReload();
                 flushAllLoads();
                 expect(store.indexOfId(4850)).toBe(150);
             });
@@ -2787,7 +2543,6 @@ topSuite("Ext.data.virtual.Store", function() {
 
             store.on('beforesort', spy);
             store.sort('group', 'ASC');
-            completeReload();
             flushAllLoads();
             expect(spy.callCount).toBe(1);
         });
@@ -2797,7 +2552,6 @@ topSuite("Ext.data.virtual.Store", function() {
 
             store.on('sort', spy);
             store.sort('group', 'ASC');
-            completeReload();
             flushAllLoads();
             expect(spy.callCount).toBe(1);
         });

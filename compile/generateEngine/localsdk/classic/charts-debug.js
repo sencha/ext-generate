@@ -15375,7 +15375,8 @@ Ext.define('Ext.chart.series.Series', {
         theme: null,
         /**
          * @cfg {Object} style Custom style configuration for the sprite used in the series.
-         * It overrides the style that is provided by the current theme.
+         * It overrides the style that is provided by the current theme. See
+         * {@link Ext.chart.theme.series.Series}
          */
         style: {},
         /**
@@ -24582,12 +24583,26 @@ Ext.define('Ext.chart.overrides.AbstractChart', {
         ]);
         if (!this.hasFirstLayout) {
             this.scheduleLayout();
+        } else {
+            this.scheduleRedraw();
         }
     },
     allowSchedule: function() {
         return this.rendered;
     },
+    scheduleRedraw: function() {
+        var me = this,
+            task = me.scheduleRedrawTask;
+        if (!task) {
+            me.scheduleRedrawTask = task = new Ext.util.DelayedTask(me.redraw, me);
+        }
+        task.delay(100);
+    },
     doDestroy: function() {
+        var re = this.scheduleRedrawTask;
+        if (re) {
+            re.cancel();
+        }
         this.destroyChart();
         this.callParent();
     }
@@ -30797,6 +30812,11 @@ Ext.define('Ext.chart.series.Area', {
      * @inheritdoc
      */
     seriesType: 'areaSeries',
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Area}
+     */
     isArea: true,
     requires: [
         'Ext.chart.series.sprite.Area'
@@ -30860,7 +30880,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
             }
         }
     },
-    drawLabel: function(text, dataX, dataStartY, dataY, labelId) {
+    drawLabel: function(text, dataX, dataStartY, dataY, labelId, sClipRect) {
         var me = this,
             attr = me.attr,
             label = me.getMarker('labels'),
@@ -30872,7 +30892,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
             labelOrientation = labelTpl.attr.orientation,
             isVerticalText = (labelOrientation === 'horizontal' && attr.flipXY) || (labelOrientation === 'vertical' && !attr.flipXY) || !labelOrientation,
             calloutLine = labelTpl.getCalloutLine(),
-            labelY, halfText, labelBBox, calloutLineLength, changes, hasPendingChanges, params;
+            labelY, halfText, labelBBox, calloutLineLength, changes, hasPendingChanges, params, paddingOffset, calloutInfo;
         // The coordinates below (data point converted to surface coordinates)
         // are just for the renderer to give it a notion of where the label will be positioned.
         // The actual position of the label will be different
@@ -30945,22 +30965,23 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         } else {
             halfText = (isVerticalText ? labelBBox.width : labelBBox.height) / 2 + labelOverflowPadding;
         }
+        paddingOffset = labelOverflowPadding * 2;
         if (dataStartY > dataY) {
             halfText = -halfText;
+            paddingOffset = -paddingOffset;
         }
         if (isVerticalText) {
             labelY = (labelDisplay === 'insideStart') ? dataStartY + halfText : dataY - halfText;
         } else {
-            labelY = (labelDisplay === 'insideStart') ? dataStartY + labelOverflowPadding * 2 : dataY - labelOverflowPadding * 2;
+            labelY = (labelDisplay === 'insideStart') ? dataStartY + paddingOffset : dataY - paddingOffset;
         }
         labelCfg.x = surfaceMatrix.x(dataX, labelY);
         labelCfg.y = surfaceMatrix.y(dataX, labelY);
-        labelY = (labelDisplay === 'insideStart') ? dataStartY : dataY;
-        labelCfg.calloutStartX = surfaceMatrix.x(dataX, labelY);
-        labelCfg.calloutStartY = surfaceMatrix.y(dataX, labelY);
-        labelY = (labelDisplay === 'insideStart') ? dataStartY - halfText : dataY + halfText;
-        labelCfg.calloutPlaceX = surfaceMatrix.x(dataX, labelY);
-        labelCfg.calloutPlaceY = surfaceMatrix.y(dataX, labelY);
+        calloutInfo = this.getCalloutYPos(labelDisplay, dataStartY, dataY, halfText, sClipRect);
+        labelCfg.calloutStartX = surfaceMatrix.x(dataX, calloutInfo.start);
+        labelCfg.calloutStartY = surfaceMatrix.y(dataX, calloutInfo.start);
+        labelCfg.calloutPlaceX = surfaceMatrix.x(dataX, calloutInfo.place);
+        labelCfg.calloutPlaceY = surfaceMatrix.y(dataX, calloutInfo.place);
         labelCfg.calloutColor = (calloutLine && calloutLine.color) || me.attr.fillStyle;
         if (calloutLine) {
             if (calloutLine.width) {
@@ -30969,18 +30990,36 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         } else {
             labelCfg.calloutColor = 'none';
         }
-        if (dataStartY > dataY) {
-            halfText = -halfText;
-        }
-        if (Math.abs(dataY - dataStartY) <= halfText * 2 || labelDisplay === 'outside') {
-            labelCfg.callout = 1;
-        } else {
-            labelCfg.callout = 0;
-        }
+        // Cast to a number
+        labelCfg.callout = +(Math.abs(dataY - dataStartY) <= Math.abs(halfText * 2) || labelDisplay === 'outside');
         if (hasPendingChanges) {
             Ext.apply(labelCfg, changes);
         }
         me.putMarker('labels', labelCfg, labelId);
+    },
+    // shared object to prevent allocating a new one all the time
+    callOutObj: {
+        start: 0,
+        place: 0
+    },
+    getCalloutYPos: function(display, startY, y, halfText, rect) {
+        var me = this,
+            o = me.callOutObj,
+            inside = display === 'insideStart',
+            start = inside ? startY : y,
+            place = inside ? startY - halfText : y + halfText,
+            textSize = halfText * 2,
+            placeText = place + textSize;
+        if (!me.fromSelf && !inside && (placeText <= rect[1] || placeText >= rect[3])) {
+            // On the unlikely chance this occurs, prevent recursive calls
+            me.fromSelf = true;
+            o = me.getCalloutYPos('insideStart', startY, y, halfText, rect);
+            delete me.fromSelf;
+        } else {
+            o.start = start;
+            o.place = place;
+        }
+        return o;
     },
     drawBar: function(ctx, surface, rect, left, top, right, bottom, index) {
         var me = this,
@@ -31005,7 +31044,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         }
         me.putMarker('items', itemCfg, index, !renderer);
     },
-    renderClipped: function(surface, ctx, dataClipRect) {
+    renderClipped: function(surface, ctx, dataClipRect, surfaceClipRect) {
         if (this.cleanRedraw) {
             return;
         }
@@ -31053,7 +31092,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
             me.drawBar(ctx, surface, dataClipRect, left, top - halfLineWidth, right, bottom - halfLineWidth, i);
             // We want 0 values to be passed to the renderer
             if (isDrawLabels && dataText[i] != null) {
-                me.drawLabel(dataText[i], center, bottom, top, i);
+                me.drawLabel(dataText[i], center, bottom, top, i, surfaceClipRect);
             }
             me.putMarker('markers', {
                 translationX: surfaceMatrix.x(center, top),
@@ -31136,6 +31175,11 @@ Ext.define('Ext.chart.series.Bar', {
         'Ext.chart.series.sprite.Bar',
         'Ext.draw.sprite.Rect'
     ],
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Bar}
+     */
     config: {
         /**
          * @private
@@ -31663,6 +31707,11 @@ Ext.define('Ext.chart.series.Bar3D', {
     type: 'bar3d',
     seriesType: 'bar3dSeries',
     is3D: true,
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Bar3D}
+     */
     config: {
         itemInstancing: {
             type: 'bar3d',
@@ -32153,6 +32202,11 @@ Ext.define('Ext.chart.series.BoxPlot', {
         'Ext.chart.series.sprite.BoxPlot',
         'Ext.chart.sprite.BoxPlot'
     ],
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.BoxPlot}
+     */
     config: {
         itemInstancing: {
             type: 'boxplot',
@@ -32661,18 +32715,27 @@ Ext.define("Ext.draw.SegmentTree", {
                 maxY: maxY,
                 close: close
             },
-            i;
+            minValue = Infinity,
+            maxValue = -Infinity,
+            i, v;
         for (i = 0; i < length; i++) {
+            v = dataX[i];
             startIdx[i] = i;
             endIdx[i] = i;
             minIdx[i] = i;
             maxIdx[i] = i;
             open[i] = dataOpen[i];
-            minX[i] = dataX[i];
+            minX[i] = v;
             minY[i] = dataLow[i];
-            maxX[i] = dataX[i];
+            maxX[i] = v;
             maxY[i] = dataHigh[i];
             close[i] = dataClose[i];
+            if (v < minValue) {
+                minValue = v;
+            }
+            if (v > maxValue) {
+                maxValue = v;
+            }
         }
         result.map = {
             original: [
@@ -32680,31 +32743,24 @@ Ext.define("Ext.draw.SegmentTree", {
                 length
             ]
         };
+        result.range = Math.abs(maxValue - minValue);
         if (length) {
             this[this.getStrategy()](result, length, dataX, dataOpen, dataHigh, dataLow, dataClose);
         }
         return result;
     },
-    /**
-     * @private
-     * @param {Object} items
-     * @param {Number} start
-     * @param {Number} end
-     * @param {Number} key
-     * @return {*}
-     */
-    binarySearchMin: function(items, start, end, key) {
+    binarySearch: function(items, start, end, key, isMin) {
         var dx = this.dataX,
             mid, val;
-        if (key <= dx[items.startIdx[0]]) {
+        if (key <= dx[items[0]]) {
             return start;
         }
-        if (key >= dx[items.startIdx[end - 1]]) {
+        if (key >= dx[items[end - 1]]) {
             return end - 1;
         }
         while (start + 1 < end) {
             mid = (start + end) >> 1;
-            val = dx[items.startIdx[mid]];
+            val = dx[items[mid]];
             if (val === key) {
                 return mid;
             } else if (val < key) {
@@ -32713,37 +32769,7 @@ Ext.define("Ext.draw.SegmentTree", {
                 end = mid;
             }
         }
-        return start;
-    },
-    /**
-     * @private
-     * @param {Object} items
-     * @param {Number} start
-     * @param {Number} end
-     * @param {Number} key
-     * @return {*}
-     */
-    binarySearchMax: function(items, start, end, key) {
-        var dx = this.dataX,
-            mid, val;
-        if (key <= dx[items.endIdx[0]]) {
-            return start;
-        }
-        if (key >= dx[items.endIdx[end - 1]]) {
-            return end - 1;
-        }
-        while (start + 1 < end) {
-            mid = (start + end) >> 1;
-            val = dx[items.endIdx[mid]];
-            if (val === key) {
-                return mid;
-            } else if (val < key) {
-                start = mid;
-            } else {
-                end = mid;
-            }
-        }
-        return end;
+        return isMin ? start : end;
     },
     constructor: function(config) {
         this.initConfig(config);
@@ -32786,23 +32812,28 @@ Ext.define("Ext.draw.SegmentTree", {
         }
         // eslint-disable-next-line vars-on-top
         var minStep = Infinity,
-            range = this.dataX[this.dataX.length - 1] - this.dataX[0],
-            cacheMap = this.cache.map,
+            cache = this.cache,
+            range = cache.range,
+            cacheMap = cache.map,
             result = cacheMap.original,
             name, positions, ln, step, minIdx, maxIdx;
         for (name in cacheMap) {
             positions = cacheMap[name];
             ln = positions[1] - positions[0] - 1;
+            if (ln === 0) {
+                
+                continue;
+            }
             step = range / ln;
             if (estStep <= step && step < minStep) {
                 result = positions;
                 minStep = step;
             }
         }
-        minIdx = Math.max(this.binarySearchMin(this.cache, result[0], result[1], min), result[0]);
-        maxIdx = Math.min(this.binarySearchMax(this.cache, result[0], result[1], max) + 1, result[1]);
+        minIdx = Math.max(this.binarySearch(cache.startIdx, result[0], result[1], min, true), result[0]);
+        maxIdx = Math.min(this.binarySearch(cache.endIdx, result[0], result[1], max, false) + 1, result[1]);
         return {
-            data: this.cache,
+            data: cache,
             start: minIdx,
             end: maxIdx
         };
@@ -33237,6 +33268,11 @@ Ext.define('Ext.chart.series.CandleStick', {
     type: 'candlestick',
     seriesType: 'candlestickSeries',
     isCandleStick: true,
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.CandleStick}
+     */
     config: {
         /**
          * @cfg {String} openField
@@ -34692,6 +34728,11 @@ Ext.define('Ext.chart.series.Line', {
     requires: [
         'Ext.chart.series.sprite.Line'
     ],
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Line}
+     */
     config: {
         /**
          * @cfg {Number} selectionTolerance
@@ -35179,6 +35220,11 @@ Ext.define('Ext.chart.series.Pie', {
     alias: 'series.pie',
     seriesType: 'pieslice',
     isPie: true,
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Pie}
+     */
     config: {
         /**
          * @cfg {String} radiusField
@@ -36504,6 +36550,11 @@ Ext.define('Ext.chart.series.Pie3D', {
     seriesType: 'pie3d',
     alias: 'series.pie3d',
     is3D: true,
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Pie3D}
+     */
     config: {
         rect: [
             0,
@@ -38208,6 +38259,241 @@ Ext.define('Ext.chart.theme.YellowGradients', {
         }
     }
 });
+
+/**
+ * Describes style for a series.
+ */
+Ext.define('Ext.chart.theme.series.Series', {
+    config: {}
+});
+/**
+         * @cfg strokeStyle
+         * @inheritDoc Ext.chart.series.sprite.Series#strokeStyle
+         */
+/**
+         * @cfg fillStyle
+         * @inheritDoc Ext.chart.series.sprite.Series#fillStyle
+         */
+/**
+         * @cfg strokeOpacity
+         * @inheritDoc Ext.chart.series.sprite.Series#strokeOpacity
+         */
+/**
+         * @cfg fillOpacity
+         * @inheritDoc Ext.chart.series.sprite.Series#fillOpacity
+         */
+/**
+         * @cfg lineWidth
+         * @inheritDoc Ext.chart.series.sprite.Series#lineWidth
+         */
+/**
+         * @cfg lineCap
+         * @inheritDoc Ext.chart.series.sprite.Series#lineCap
+         */
+/**
+         * @cfg lineJoin
+         * @inheritDoc Ext.chart.series.sprite.Series#lineJoin
+         */
+/**
+         * @cfg lineDash
+         * @inheritDoc Ext.chart.series.sprite.Series#lineDash
+         */
+/**
+         * @cfg lineDashOffset
+         * @inheritDoc Ext.chart.series.sprite.Series#lineDashOffset
+         */
+/**
+         * @cfg miterLimit
+         * @inheritDoc Ext.chart.series.sprite.Series#miterLimit
+         */
+/**
+         * @cfg shadowColor
+         * @inheritDoc Ext.chart.series.sprite.Series#shadowColor
+         */
+/**
+         * @cfg shadowOffsetX
+         * @inheritDoc Ext.chart.series.sprite.Series#shadowOffsetX
+         */
+/**
+         * @cfg shadowOffsetX
+         * @inheritDoc Ext.chart.series.sprite.Series#shadowOffsetX
+         */
+/**
+         * @cfg shadowBlur
+         * @inheritDoc Ext.chart.series.sprite.Series#shadowBlur
+         */
+/**
+         * @cfg globalAlpha
+         * @inheritDoc Ext.chart.series.sprite.Series#globalAlpha
+         */
+/**
+         * @cfg labelOverflowPadding
+         * @inheritDoc Ext.chart.series.sprite.Series#labelOverflowPadding
+         */
+
+/**
+ * Describes style for an area series.
+ */
+Ext.define('Ext.chart.theme.series.Area', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg step
+         * @inheritDoc Ext.chart.series.sprite.Area#step
+         */
+
+/**
+ * Describes style for a bar series.
+ */
+Ext.define('Ext.chart.theme.series.Bar', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg minBarWidth
+         * @inheritDoc Ext.chart.series.sprite.Bar#minBarWidth
+         */
+/**
+         * @cfg maxBarWidth
+         * @inheritDoc Ext.chart.series.sprite.Bar#maxBarWidth
+         */
+/**
+         * @cfg minGapWidth
+         * @inheritDoc Ext.chart.series.sprite.Bar#minGapWidth
+         */
+/**
+         * @cfg radius
+         * @inheritDoc Ext.chart.series.sprite.Bar#radius
+         */
+/**
+         * @cfg inGroupGapWidth
+         * @inheritDoc Ext.chart.series.sprite.Bar#inGroupGapWidth
+         */
+
+/**
+ * Describes style for a bar3d series.
+ */
+Ext.define('Ext.chart.theme.series.Bar3D', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg saturationFactor
+         * @inheritDoc Ext.chart.series.sprite.Bar3D#saturationFactor
+         */
+/**
+         * @cfg brightnessFactor
+         * @inheritDoc Ext.chart.series.sprite.Bar3D#brightnessFactor
+         */
+/**
+         * @cfg colorSpread
+         * @inheritDoc Ext.chart.series.sprite.Bar3D#colorSpread
+         */
+
+/**
+ * Describes style for a boxplot series.
+ */
+Ext.define('Ext.chart.theme.series.BoxPlot', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg minBoxWidth
+         * @inheritDoc Ext.chart.series.sprite.BoxPlot#minBoxWidth
+         */
+/**
+         * @cfg maxBoxWidth
+         * @inheritDoc Ext.chart.series.sprite.BoxPlot#maxBoxWidth
+         */
+/**
+         * @cfg minGapWidth
+         * @inheritDoc Ext.chart.series.sprite.BoxPlot#minGapWidth
+         */
+
+/**
+ * Describes style for a candlestick series.
+ */
+Ext.define('Ext.chart.theme.series.CandleStick', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg barWidth
+         * @inheritDoc Ext.chart.series.sprite.CandleStick#barWidth
+         */
+/**
+         * @cfg padding
+         * @inheritDoc Ext.chart.series.sprite.CandleStick#padding
+         */
+/**
+         * @cfg ohlcType
+         * @inheritDoc Ext.chart.series.sprite.CandleStick#ohlcType
+         */
+
+/**
+ * Describes style for a line series.
+ */
+Ext.define('Ext.chart.theme.series.Line', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg curve
+         * @inheritDoc Ext.chart.series.sprite.Line#curve
+         */
+/**
+         * @cfg fillArea
+         * @inheritDoc Ext.chart.series.sprite.Line#fillArea
+         */
+/**
+         * @cfg nullStyle
+         * @inheritDoc Ext.chart.series.sprite.Line#nullStyle
+         */
+
+/**
+ * Describes style for a pie series.
+ */
+Ext.define('Ext.chart.theme.series.Pie', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg labelOverflowPadding
+         * @inheritDoc Ext.chart.series.sprite.PieSlice#labelOverflowPadding
+         */
+
+/**
+ * Describes style for a pie3d series.
+ */
+Ext.define('Ext.chart.theme.series.Pie3D', {
+    extend: 'Ext.chart.theme.series.Series',
+    config: {}
+});
+/**
+         * @cfg margin
+         * @inheritDoc Ext.chart.series.sprite.Pie3DPart#margin
+         */
+/**
+         * @cfg thickness
+         * @inheritDoc Ext.chart.series.sprite.Pie3DPart#thickness
+         */
+/**
+         * @cfg bevelWidth
+         * @inheritDoc Ext.chart.series.sprite.Pie3DPart#bevelWidth
+         */
+/**
+         * @cfg distortion
+         * @inheritDoc Ext.chart.series.sprite.Pie3DPart#distortion
+         */
+/**
+         * @cfg baseColor
+         * @inheritDoc Ext.chart.series.sprite.Pie3DPart#baseColor
+         */
+/**
+         * @cfg colorSpread
+         * @inheritDoc Ext.chart.series.sprite.Pie3DPart#colorSpread
+         */
 
 /**
  * A helper class to facilitate common operations on points and vectors.

@@ -1,6 +1,7 @@
 topSuite("Ext.grid.feature.Grouping",
     ['Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Ext.form.field.Text', 'Ext.form.field.Number',
-    'Ext.grid.feature.*', 'Ext.grid.plugin.RowExpander', 'Ext.data.identifier.Negative', 'Ext.data.BufferedStore'],
+    'Ext.grid.feature.*', 'Ext.grid.plugin.RowExpander', 'Ext.data.identifier.Negative', 'Ext.data.BufferedStore',
+    'Ext.toolbar.Paging', 'Ext.button.Button'],
 function() {
     var grid, view, store, menu, schema, groupingFeature,
         synchronousLoad = true,
@@ -2835,6 +2836,229 @@ function() {
         });
     });
 
+    describe('expanding group with cellediting', function() {
+        var store = null,
+            grid = null,
+            view, groupingFeature, plugin, editor;
+
+        function createFakeData(count) {
+            var data = [],
+                half = count / 2,
+                j = 1,
+                text, category;
+
+            for (var i = 0; i < count; i++) {
+
+                if (i > half && j !== 2) {
+                    j++;
+                }
+
+                text = 'Text' + i;
+                category = 'Category' + j;
+
+                data.push([text, category]);
+            }
+
+            return data;
+        }
+
+        beforeEach(function() {
+            store = new Ext.data.Store({
+                fields: [
+                    'text', 'category'
+                ],
+                groupField: 'category',
+                data: createFakeData(100),
+                reader: {
+                    type: 'array'
+                }
+            });
+
+            grid = new Ext.grid.Panel(Ext.apply({
+               renderTo: Ext.getBody(),
+               extend: 'Ext.grid.Panel',
+               width: 300,
+               scrollable: true,
+               requires: [
+                   'GridModel'
+               ],
+               columnLines: true,
+               store: store,
+               columns: [{
+                   text: 'Text',
+                   dataIndex: 'text',
+                   flex: 1,
+                   editor: 'textfield'
+               }],
+                features: [{
+                    id: 'group',
+                    ftype: 'groupingsummary',
+                    groupHeaderTpl: '{name}'
+                }],
+                plugins: {
+                    ptype: 'cellediting',
+                    clicksToEdit: 1
+                }
+            }));
+
+           store = grid.store;
+           view = grid.view;
+           groupingFeature = view.summaryFeature;
+        });
+
+        afterEach(function() {
+            Ext.destroy(grid, store, view, groupingFeature);
+        });
+
+        it('should keep editing after another group expands', function() {
+            var secondGroup = groupingFeature.getRecordGroup(store.getAt((store.getCount() / 2) + 1)),
+                cell = view.getCellInclusive({ row: 0, column: 0 });
+
+            groupingFeature.collapse(secondGroup.getGroupKey());
+            plugin = grid.findPlugin('cellediting');
+            jasmine.fireMouseEvent(cell, 'click');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+            runs(function() {
+                editor = plugin.getActiveEditor();
+                groupingFeature.onGroupClick(view, secondGroup, secondGroup.getGroupKey(), { ctrlKey: false });
+
+                // After another group expands the celleditor should still be in editing mode
+                expect(editor.editing).toBe(true);
+            });
+        });
+
+        it('should keep editing when the group above is collapsed', function() {
+            var firstGroup = groupingFeature.getRecordGroup(store.getAt(1)),
+                row = (store.getCount() / 2) + 1,
+                cell = view.getCellInclusive({ row: row, column: 0 });
+
+            plugin = grid.findPlugin('cellediting');
+            jasmine.fireMouseEvent(cell, 'click');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+            runs(function() {
+                editor = plugin.getActiveEditor();
+
+                // collapse above group
+                groupingFeature.onGroupClick(view, firstGroup, firstGroup.getGroupKey(), { ctrlKey: false });
+                expect(editor.editing).toBe(true);
+            });
+        });
+
+        it('should retain the modified value after another group expands', function() {
+            var secondGroup = groupingFeature.getRecordGroup(store.getAt((store.getCount() / 2) + 1)),
+                cell = view.getCellInclusive({ row: 0, column: 0 });
+
+            groupingFeature.collapse(secondGroup.getGroupKey());
+            plugin = grid.findPlugin('cellediting');
+            jasmine.fireMouseEvent(cell, 'click');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+            runs(function() {
+                editor = plugin.getActiveEditor();
+                editor.setValue('Changed');
+
+                // Expand another group, editor should still have the modified value 
+                groupingFeature.onGroupClick(view, secondGroup, secondGroup.getGroupKey(), { ctrlKey: false });
+                expect(editor.getValue()).toBe('Changed');
+            });
+        });
+
+        it('should not keep editing after the group the editor is in collapses', function() {
+            var firstGroup = groupingFeature.getRecordGroup(store.getAt(1)),
+                cell = view.getCellInclusive({ row: 10, column: 0 });
+
+            plugin = grid.findPlugin('cellediting');
+            jasmine.fireMouseEvent(cell, 'click');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+            runs(function() {
+                editor = plugin.getActiveEditor();
+
+                // collapse group with editor inside
+                groupingFeature.onGroupClick(view, firstGroup, firstGroup.getGroupKey(), { ctrlKey: false });
+                expect(editor.editing).toBe(false);
+            });
+        });
+
+        it('should keep editing after expanding groups, scrolling to bottom and back to top', function() {
+            var secondGroup = groupingFeature.getRecordGroup(store.getAt((store.getCount() / 2) + 1)),
+                cell = grid.view.getCellInclusive({ row: 0, column: 0 });
+
+            groupingFeature.collapse(secondGroup.getGroupKey());
+            plugin = grid.findPlugin('cellediting');
+            jasmine.fireMouseEvent(cell, 'click');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+            runs(function() {
+                editor = plugin.getActiveEditor();
+
+                // scroll to bottom
+                view.scrollTo(0, 10000);
+
+                runs(function() {
+                    // expand next group
+                    groupingFeature.onGroupClick(view, secondGroup, secondGroup.getGroupKey(), { ctrlKey: false });
+
+                    // scroll to bottom
+                    view.scrollTo(0, 10000);
+                    expect(editor.hasFocus).toBe(false);
+                });
+
+                waitAWhile();
+                runs(function() {
+                    // scroll to top, we should still be in edit mode
+                    view.scrollTo(0, 0);
+                    expect(editor.editing).toBe(true);
+                });
+            });
+        });
+
+        it('should not carry over modified value when moving from one cell to another', function() {
+            var row = (store.getCount() / 2) + 1,
+                firstCell = view.getCellInclusive({ row: 0, column: 0 }),
+                secondCell = view.getCellInclusive({ row: row, column: 0 });
+
+            plugin = grid.findPlugin('cellediting');
+            jasmine.fireMouseEvent(firstCell, 'click');
+
+            waitsFor(function() {
+                return plugin.editing;
+            });
+            runs(function() {
+                editor = plugin.getActiveEditor();
+                editor.setValue('A');
+                view.scrollTo(0, 2000);
+            });
+
+            waitAWhile();
+            runs(function() {
+                // Edit another cell
+                jasmine.fireMouseEvent(secondCell, 'click');
+            });
+
+            waitsFor(function() {
+                 return plugin.editing;
+            });
+            runs(function() {
+                // Expect the updated value from the first cell to not be carried over to second cell
+                expect(editor.getValue()).toBe('Text51');
+            });
+        });
+
+    });
+
     describe("move column with filters", function() {
         // Pass a reference to the cmp not an index!
         function dragColumn(from, to, onRight) {
@@ -3169,5 +3393,85 @@ function() {
             });
         });
 
+    });
+
+    describe('grouping + paging', function() {
+        var mystore, ptoolbar, feature, group;
+
+        afterEach(function() {
+            mystore = ptoolbar = feature = group = null;
+        });
+
+        it('should respect startCollapsed when moving to next page', function() {
+            runs(function() {
+
+                function createFakeData(count) {
+                    var firstNames   = ['Ed', 'Tommy', 'Aaron', 'Abe'],
+                        lastNames    = ['Spencer', 'Maintz', 'Conran', 'Elias'];
+
+                    var data = [];
+
+                    for (var i = 0; i < count; i++) {
+                        var firstNameId = Math.floor(Math.random() * firstNames.length),
+                            lastNameId  = Math.floor(Math.random() * lastNames.length),
+                            name        = Ext.String.format("{0} {1}", firstNames[firstNameId], lastNames[lastNameId]);
+
+                        data.push([name]);
+                    }
+
+                    return data;
+                }
+
+                mystore = Ext.create('Ext.data.Store', {
+                    fields: [
+                        'Name'
+                    ],
+                    groupField: 'Name',
+                    autoLoad: true,
+                    proxy: {
+                        type: 'memory',
+                        enablePaging: true,
+                        data: createFakeData(10),
+                        reader: {
+                            type: 'array'
+                        }
+                    },
+                    pageSize: 5
+                });
+
+                feature = Ext.create('Ext.grid.feature.Grouping', {
+                    startCollapsed: true
+                });
+
+                grid = Ext.create('Ext.grid.Panel', {
+                    store: mystore,
+                    columns: [
+                        { text: "Name", width: 120, dataIndex: 'Name' }
+                    ],
+                    features: feature,
+                    dockedItems: [
+                        ptoolbar = Ext.create('Ext.toolbar.Paging', {
+                            dock: 'bottom',
+                            store: mystore
+                        })
+                    ],
+                    renderTo: document.body,
+                    width: 500,
+                    height: 200
+                });
+
+                waitAWhile();
+                runs(function() {
+                    jasmine.fireMouseEvent(ptoolbar.down('#next').el, 'click');
+
+                    expect(mystore.currentPage).toBe(2);
+                    group = feature.getRecordGroup(mystore.getAt(0));
+
+                    // group should not be expanded after moving to next page
+                    expect(feature.isExpanded(group.config.groupKey)).toBe(false);
+                });
+            });
+
+        });
     });
 });

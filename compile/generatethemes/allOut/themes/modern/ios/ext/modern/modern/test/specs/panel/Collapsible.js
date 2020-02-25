@@ -127,6 +127,111 @@ topSuite("Ext.panel.Collapsible", [
         describe('beforeexpand', function() {
             expandCollapse(false);
         });
+
+        describe('initial events', function() {
+            describe('when collapsed', function() {
+                it('should not fire beforecollapse or collapse', function() {
+                    var spy = jasmine.createSpy();
+
+                    makePanel({
+                        collapsed: true,
+                        collapsible: true,
+                        listeners: {
+                            beforecollapse: spy,
+                            collapse: spy
+                        }
+                    });
+                    expect(spy).not.toHaveBeenCalled();
+                });
+
+                it('should fire subsequent events', function() {
+                    var spy = jasmine.createSpy(),
+                        beforeExpandSpy = jasmine.createSpy(),
+                        expandSpy = jasmine.createSpy();
+
+                    makePanel({
+                        collapsed: true,
+                        collapsible: true,
+                        listeners: {
+                            beforecollapse: spy,
+                            collapse: spy,
+                            beforeexpand: beforeExpandSpy,
+                            expand: expandSpy
+                        }
+                    });
+                    expect(spy).not.toHaveBeenCalled();
+                    panel.toggleCollapsed(false, false);
+                    expect(beforeExpandSpy.callCount).toBe(1);
+                    expect(expandSpy.callCount).toBe(1);
+                });
+            });
+
+            describe('when expanded', function() {
+                it('should not fire beforeexpand or expand', function() {
+                    var spy = jasmine.createSpy();
+
+                    makePanel({
+                        collapsible: true,
+                        listeners: {
+                            beforeexpand: spy,
+                            expand: spy
+                        }
+                    });
+                    expect(spy).not.toHaveBeenCalled();
+                });
+
+                it('should fire subsequent events', function() {
+                    var spy = jasmine.createSpy(),
+                        beforeCollapseSpy = jasmine.createSpy(),
+                        collapseSpy = jasmine.createSpy();
+
+                    makePanel({
+                        collapsible: true,
+                        listeners: {
+                            beforeexpand: spy,
+                            expand: spy,
+                            beforecollapse: beforeCollapseSpy,
+                            collapse: collapseSpy
+                        }
+                    });
+                    expect(spy).not.toHaveBeenCalled();
+                    panel.toggleCollapsed(true, false);
+                    expect(beforeCollapseSpy.callCount).toBe(1);
+                    expect(collapseSpy.callCount).toBe(1);
+                });
+            });
+        });
+
+        describe('global events', function() {
+            it('should fire a global expand event', function() {
+                var spy = jasmine.createSpy();
+
+                makePanel({
+                    collapsible: true,
+                    collapsed: true
+                });
+
+                Ext.on('expand', spy);
+                panel.expand(false);
+
+                expect(spy.callCount).toBe(1);
+                Ext.un('expand', spy);
+            });
+
+            it('should fire a global collapse event', function() {
+                var spy = jasmine.createSpy();
+
+                makePanel({
+                    collapsible: true
+                });
+
+                Ext.on('collapse', spy);
+                panel.collapse(false);
+
+                expect(spy.callCount).toBe(1);
+                Ext.un('collapse', spy);
+            })
+        });
     });
 
     describe("titleCollapse", function() {

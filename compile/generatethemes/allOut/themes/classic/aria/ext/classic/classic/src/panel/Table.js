@@ -2147,14 +2147,16 @@ Ext.define('Ext.panel.Table', {
 
     updateBindSelection: function(selModel, selection) {
         var me = this,
+            hasSelection = selection.length > 0,
             selected = null;
+
+        me.hasHadSelection = me.hasHadSelection || hasSelection;
 
         if (!me.ignoreNextSelection) {
             me.ignoreNextSelection = true;
 
-            if (selection.length) {
+            if (hasSelection) {
                 selected = selModel.getLastSelected();
-                me.hasHadSelection = true;
             }
 
             if (me.hasHadSelection) {

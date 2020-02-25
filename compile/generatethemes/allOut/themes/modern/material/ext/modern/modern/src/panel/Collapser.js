@@ -156,11 +156,12 @@ Ext.define('Ext.panel.Collapser', {
 
         me.rendered = true;
         me.ensureCollapseTool();
-        me.initialized = true;
 
         if (me.getCollapsed()) {
             me.doExpandCollapse(true, true);
         }
+
+        me.initialized = true;
 
         me.setupHeaderListeners();
     },
@@ -676,7 +677,8 @@ Ext.define('Ext.panel.Collapser', {
                 types = me.headerChangePosition,
                 direction = me.getDirection(),
                 headerPosition = target.getHeaderPosition(),
-                event = collapsed ? 'collapse' : 'expand';
+                event = collapsed ? 'collapse' : 'expand',
+                globals = Ext.GlobalEvents;
 
             target.bodyWrapElement.setVisible(!collapsed);
 
@@ -698,15 +700,15 @@ Ext.define('Ext.panel.Collapser', {
 
             target.toggleCls(me.expandedCls, !collapsed);
 
-            if (me.initialized && target.hasListeners[event]) {
-                target.fireEvent(event, target);
-            }
+            if (me.initialized) {
+                if (target.hasListeners[event]) {
+                    target.fireEvent(event, target);
+                }
 
-            // This is largely going to be a no-op, since the target will
-            // essentially just call collapser.setCollapsed, however this allows
-            // consumers the ability to override updateCollapsed to detect changes
-            // in state
-            target.setCollapsed(collapsed);
+                if (globals.hasListeners[event]) {
+                    globals.fireEvent(event, target);
+                }
+            }
         },
 
         createDrawer: function() {

@@ -947,6 +947,12 @@ Ext.define('Ext.window.MessageBox', {
 
         me.callParent();
 
+        // Focus the MessageBox if it is closable but has no focusable items
+        // so when the escape key is pressed the MessageBox will close.
+        if (me.closable && !me.defaultFocus) {
+            me.focus();
+        }
+
         return me;
     },
 

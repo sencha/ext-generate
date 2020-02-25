@@ -42,7 +42,7 @@ topSuite('Ext.field.Date', ['Ext.viewport.Viewport', 'Ext.data.validator.Date'],
         if (field.getFloated()) {
             field.show();
         }
- else {
+        else {
             field.render(Ext.getBody());
         }
     }
@@ -237,6 +237,14 @@ topSuite('Ext.field.Date', ['Ext.viewport.Viewport', 'Ext.data.validator.Date'],
 
             expect(field.getMinDate()).toEqual(today);
         });
+
+        it('should be able to be nulled out', function() {
+            makeField({
+                minDate: new Date()
+            });
+            field.setMinDate(null);
+            expect(field.getMinDate()).toBeNull();
+        });
     });
 
     describe('maxDate', function() {
@@ -254,6 +262,14 @@ topSuite('Ext.field.Date', ['Ext.viewport.Viewport', 'Ext.data.validator.Date'],
             });
 
             expect(field.getMaxDate()).toEqual(today);
+        });
+
+        it('should be able to be nulled out', function() {
+            makeField({
+                maxDate: new Date()
+            });
+            field.setMaxDate(null);
+            expect(field.getMaxDate()).toBeNull();
         });
     });
 

@@ -1,4 +1,4 @@
-Ext JS 7.1.0.46 - JavaScript Library
+Ext JS 7.2.0.56 - JavaScript Library
 Copyright (c) 2006-2020, Sencha Inc.
 All rights reserved.
 licensing@sencha.com
@@ -9,7 +9,7 @@ license: http://www.sencha.com/legal/sencha-software-license-agreement
 
 Commercial License
 ------------------------------------------------------------------------------------------
-This version of Sencha Ext JS 7.1.0.46 is licensed commercially. This is the appropriate option 
+This version of Sencha Ext JS 7.2.0.56 is licensed commercially. This is the appropriate option 
 if you are creating proprietary applications and you are not prepared to distribute and 
 share the source code of your application under the GPL v3 license. 
 See http://www.sencha.com/legal/sencha-software-license-agreement for license terms.
@@ -17,7 +17,7 @@ See http://www.sencha.com/legal/sencha-software-license-agreement for license te
 
 Beta License
 ------------------------------------------------------------------------------------------
-If this is a Beta version of Sencha Ext JS 7.1.0.46, use is permitted for internal evaluation 
+If this is a Beta version of Sencha Ext JS 7.2.0.56, use is permitted for internal evaluation 
 and review purposes and not use for production purposes.
 See http://www.sencha.com/legal/sencha-software-license-agreement (Beta License) 
 for license terms. 
@@ -25,14 +25,14 @@ for license terms.
 
 Open Source Licensing
 ------------------------------------------------------------------------------------------
-Open Source Licensing is available for an alternate download of Sencha Ext JS 7.1.0.46.
+Open Source Licensing is available for an alternate download of Sencha Ext JS 7.2.0.56.
 For more details, please visit: www.sencha.com/license/.
-This version of Sencha Ext JS 7.1.0.46 may not be used under an open source license.
+This version of Sencha Ext JS 7.2.0.56 may not be used under an open source license.
 
 
 Third Party Content
 ------------------------------------------------------------------------------------------
-The following third party software is distributed with Ext JS 7.1.0.46 and is 
+The following third party software is distributed with Ext JS 7.2.0.56 and is 
 provided under other licenses and/or has source available from other locations. 
 
 Library: YUI 0.6 (BSD Licensed) for drag-and-drop code.
@@ -59,7 +59,7 @@ Library: Open-Sans
 Location: http://www.fontsquirrel.com/fonts/open-sans
 License: http://www.fontsquirrel.com/fonts/open-sans (Apache 2.0 License)
 
-Ext JS 7.1.0.46 Examples:
+Ext JS 7.2.0.56 Examples:
 
 Library: Silk Icons 
 Location: http://www.famfamfam.com/lab/icons/silk/

@@ -114,11 +114,13 @@ Ext.define('Ext.dataview.plugin.SortableList', {
 
         item.addCls(Ext.baseCSSPrefix + 'item-no-ripple');
 
-        // Clear the translate since drag uses left/top
+        // Clear the translate since drag uses left/top, we'll set it back to
+        // use translate in onDragEnd
         item.translate(0, 0);
+
         info.item = item;
         info.startIndex = item.getRecordIndex();
-        info.listTop = list.getRenderTarget().getTop();
+        info.listTop = list.element.getY();  // y page coordinate (drag is in page)
         info.itemHeight = item.el.measure('h');
         info.halfHeight = info.itemHeight / 2;
 
@@ -129,57 +131,60 @@ Ext.define('Ext.dataview.plugin.SortableList', {
 
     onDrag: function(source, info) {
         var list = this.getList(),
-            top = Math.max(0, info.cursor.current.y - info.listTop),
-            idx = list.bisectPosition(top + info.halfHeight),
-            o = {};
+            gaps = {},
+            // "cursor page y - list's el page y" localizes y to list client coords:
+            clientY = Math.max(0, info.cursor.current.y - info.listTop),
+            // add list's currently rendered scroll top = y pix in infinite range:
+            idx = list.bisectPosition(clientY + list.getVisibleTop() + info.halfHeight);
 
-        o[idx] = info.itemHeight;
-        info.index = idx;
+        // bisectPos returns index in dataItems[], so convert to store index:
+        info.index = idx = idx + list.renderInfo.indexTop;
 
-        list.setGaps(o);
+        gaps[idx] = info.itemHeight;
+
+        list.setGaps(gaps);
     },
 
     onDragEnd: function(source, info) {
         var me = this,
             list = me.getList(),
             item = info.item,
-            style = info.item.el.dom.style,
-            compareItem = list.mapToItem(info.index),
-            top, pos, store, startIndex, index, rec;
+            style = item.el.dom.style,
+            store = list.getStore(),
+            index = info.index,
+            compareItem = list.mapToItem(store.getAt(index)),
+            top, pos, startIndex, rec;
 
         item.getTranslatable().on('animationend', function() {
             if (me.destroyed) {
                 return;
             }
 
-            store = list.getStore();
             startIndex = info.startIndex;
-            index = compareItem ? compareItem.getRecordIndex() : list.getStore().getCount();
             rec = item.getRecord();
 
             list.stickItem(item);
             list.setGaps(null);
+            item.removeCls(Ext.baseCSSPrefix + 'item-no-ripple');
 
-            if (startIndex !== index) {
-                store.insert(index, rec);
-                index = store.indexOf(rec);
-
-                // Since we've moved the item, it may have changed, grab it again
-                item = list.mapToItem(rec);
-                list.fireEvent('dragsort', list, item, index);
+            if (startIndex === index) {
+                return;
             }
 
-            item.removeCls(Ext.baseCSSPrefix + 'item-no-ripple');
+            store.insert(index, rec);
+            index = store.indexOf(rec);
+
+            // Make sure that the dropped record is visible on smaller screens
+            list.ensureVisible(index).then(function() {
+                list.fireEvent('dragsort', list, list.mapToItem(rec), index);
+            });
         }, me, { single: true });
 
-        if (!compareItem) {
-            pos = list.mapToItem(info.index - 1).$y1;
-        }
-        else {
-            pos = compareItem.$y0;
-        }
+        pos = compareItem ? compareItem.$y0 : list.mapToItem(store.getAt(index - 1)).$y1;
 
-        // Dragging uses left/top, so make it translate instead
+        // Dragging uses left/top, so move the coordinate space back
+        // to use translation. This is essentially a no-op as far as
+        // the position is concerned. See onDragStart.
         top = item.element.getTop(true);
         style.left = style.top = '';
         item.translate(0, top);

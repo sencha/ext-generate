@@ -1909,6 +1909,10 @@ Ext.define('Ext.Widget', {
             return value;
         },
 
+        hasHiddenContent: function() {
+            return this.getHidden();
+        },
+
         /**
          * Called for the first instance of this Widget to create an object that contains the
          * listener configs for all of the element references keyed by reference name. The

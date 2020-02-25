@@ -75,6 +75,12 @@ Ext.define('Ext.chart.series.Bar', {
         'Ext.draw.sprite.Rect'
     ],
 
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Bar}
+     */
+
     config: {
         /**
          * @private

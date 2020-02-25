@@ -271,8 +271,8 @@ Ext.define('Ext.ZIndexManager', {
         }
     },
 
-    onAfterComponentRender: function(comp) {
-        if (!this.reflowSuspended && comp.isVisible() && comp.toFrontOnShow) {
+    onComponentReady: function(comp) {
+        if (!this.reflowSuspended && comp.toFrontOnShow && comp.isVisible()) {
             this.zIndexStack.itemChanged(comp, 'hidden');
             this.zIndexStack.sort();
         }
@@ -350,7 +350,10 @@ Ext.define('Ext.ZIndexManager', {
             // it's still possible to render a floating component and have it be visible.
             // Since rendered isn't a global event, we need to react individually on each
             // component and update the state in the collection after render.
-            comp.on('afterrender', me.onAfterComponentRender, me, { single: true });
+            // It is important to use boxready for floated components, because reordering the
+            // z-index stack during render can cause reflows. For components with liquid layouts,
+            // we must use afterrender because they don't participate in layouts
+            comp.on(me.getReadyEvent(comp), me.onComponentReady, me, { single: true });
         }
 
         me.zIndexStack.add(comp);
@@ -366,7 +369,7 @@ Ext.define('Ext.ZIndexManager', {
         var me = this;
 
         delete comp.zIndexManager;
-        comp.un('afterrender', me.onAfterComponentRender, me);
+        comp.un(me.getReadyEvent(comp), me.onComponentReady, me);
         me.zIndexStack.remove(comp);
 
         me.onCollectionSort();
@@ -631,6 +634,10 @@ Ext.define('Ext.ZIndexManager', {
             else {
                 return maskTarget.getBox();
             }
+        },
+
+        getReadyEvent: function(c) {
+            return c.liquidLayout ? 'afterrender' : 'boxready';
         },
 
         scheduleContainerResize: function() {

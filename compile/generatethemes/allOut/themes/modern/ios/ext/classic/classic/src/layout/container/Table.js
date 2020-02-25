@@ -117,24 +117,6 @@ Ext.define('Ext.layout.container.Table', {
         inheritedStateInner.inShrinkWrapTable = true;
     },
 
-    getLayoutItems: function() {
-        var me = this,
-            result = [],
-            items = me.callParent(),
-            len = items.length,
-            item, i;
-
-        for (i = 0; i < len; i++) {
-            item = items[i];
-
-            if (!item.hidden) {
-                result.push(item);
-            }
-        }
-
-        return result;
-    },
-
     getHiddenItems: function() {
         var result = [],
             items = this.owner.items.items,

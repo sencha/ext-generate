@@ -55,6 +55,12 @@ Ext.define('Ext.tip.QuickTip', {
     title: '&#160;',
 
     /**
+     * @cfg checkNestedDelegates
+     * @inheritdoc
+     */
+    checkNestedDelegates: true,
+
+    /**
      * @private
      */
     tagConfig: {

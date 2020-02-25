@@ -6,11 +6,11 @@ global["rimraf"] = require("rimraf");
 global["mkdirp"] = require("mkdirp");
 
 var localSDK = `./localsdk/`
-var outputFolder = `./dist/`
+var outputFolder = `./allOut/`
 var classicFolderLocalSDK = `${localSDK}classic/`;
 var modernFolderLocalSDK = `${localSDK}modern/`;
 
-var folderRemoteSDK = `/Volumes/BOOTCAMP/aaExt/ext-7.1.0.46/`;
+var folderRemoteSDK = `/Volumes/BOOTCAMP/aaExt/ext-7.2.0.56/`;
 
 var classicEnterprisePathsRemoteSDK = [
   `${folderRemoteSDK}build/ext-all-debug.js`,

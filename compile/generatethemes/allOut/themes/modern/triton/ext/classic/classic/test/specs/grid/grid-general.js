@@ -327,6 +327,25 @@ topSuite("grid-general", [
                     });
                 });
 
+                it('should change the selection to null after deselect where initial selection is set before render', function() {
+                    makeGrid(null, 10, {
+                        renderTo: null,
+                        bind: {
+                            selection: '{sel}'
+                        },
+                        viewModel: {}
+                    });
+                    grid.setSelection(store.first());
+                    grid.render(Ext.getBody());
+                    var vm = grid.getViewModel();
+
+                    vm.notify();
+                    expect(vm.get('sel')).toBe(store.first());
+                    grid.getSelectionModel().deselectAll();
+                    vm.notify();
+                    expect(vm.get('sel')).toBeNull();
+                });
+
                 // EXTJS-20159
                 describe("destroy", function() {
                     it("should destroy lockable", function() {

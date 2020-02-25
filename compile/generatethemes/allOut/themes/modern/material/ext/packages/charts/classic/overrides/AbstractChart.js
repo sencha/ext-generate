@@ -28,13 +28,33 @@ Ext.define('Ext.chart.overrides.AbstractChart', {
         if (!this.hasFirstLayout) {
             this.scheduleLayout();
         }
+        else {
+            this.scheduleRedraw();
+        }
     },
 
     allowSchedule: function() {
         return this.rendered;
     },
 
+    scheduleRedraw: function() {
+        var me = this,
+            task = me.scheduleRedrawTask;
+
+        if (!task) {
+            me.scheduleRedrawTask = task = new Ext.util.DelayedTask(me.redraw, me);
+        }
+
+        task.delay(100);
+    },
+
     doDestroy: function() {
+        var re = this.scheduleRedrawTask;
+
+        if (re) {
+            re.cancel();
+        }
+
         this.destroyChart();
         this.callParent();
     }

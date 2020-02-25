@@ -1,7 +1,7 @@
 /*!
- * froala_editor v3.0.6 (https://www.froala.com/wysiwyg-editor)
+ * froala_editor v3.1.0 (https://www.froala.com/wysiwyg-editor)
  * License https://froala.com/wysiwyg-editor/terms/
- * Copyright 2014-2019 Froala Labs
+ * Copyright 2014-2020 Froala Labs
  */
 
 (function (global, factory) {
@@ -163,7 +163,7 @@
     },
     MODULES: {},
     PLUGINS: {},
-    VERSION: '3.0.6',
+    VERSION: '3.1.0',
     INSTANCES: [],
     OPTS_MAPPING: {},
     SHARED: {},
@@ -945,6 +945,34 @@
         }
       } // Remove completely tags in denied tags.
       else if (node.tagName && node.tagName.match(removeTagsRE)) {
+          // https://github.com/froala-labs/froala-editor-js-2/issues/1787
+          // adding styles from style tag to inline styles
+          if (node.tagName == 'STYLE' && editor.helpers.isMac()) {
+            (function () {
+              var styleString = node.innerHTML.trim();
+              var classValues = [];
+              var rxp = /{([^}]+)}/g;
+              var curMatch; // eslint-disable-next-line no-cond-assign
+
+              while (curMatch = rxp.exec(styleString)) {
+                classValues.push(curMatch[1]);
+              }
+
+              var _loop = function _loop(i) {
+                var className = styleString.substring(0, styleString.indexOf('{')).trim();
+                node.parentNode.querySelectorAll(className).forEach(function (item) {
+                  item.removeAttribute('class');
+                  item.setAttribute('style', classValues[i]);
+                });
+                styleString = styleString.substring(styleString.indexOf('}') + 1);
+              };
+
+              for (var i = 0; styleString.indexOf('{') != -1; i++) {
+                _loop(i);
+              }
+            })();
+          }
+
           node.parentNode.removeChild(node);
         } // Unwrap tags not in allowed tags.
         else if (node.tagName && !node.tagName.match(allowedTagsRE)) {
@@ -1329,10 +1357,15 @@
     };
   };
 
+  //Screen Size constants
+
   FroalaEditor.XS = 0;
   FroalaEditor.SM = 1;
   FroalaEditor.MD = 2;
-  FroalaEditor.LG = 3; // Chars to allow.
+  FroalaEditor.LG = 3;
+  var screenSm = 768;
+  var screenMd = 992;
+  var screenLg = 1200; // Chars to allow.
 
   var x = "a-z\\u0080-\\u009f\\u00a1-\\uffff0-9-_\\."; // Common regex to avoid double chars.
 
@@ -1451,17 +1484,29 @@
 
     function getPX(val) {
       return parseInt(val, 10) || 0;
-    }
+    } //https://github.com/froala-labs/froala-editor-js-2/issues/1878
+    //ScreenSize calculation on the fr-box class
+
 
     function screenSize() {
-      var $test = $(editor.doc.createElement('DIV'));
-      $test.addClass('fr-visibility-helper');
-      $('body').first().append($test);
-
       try {
-        var size = getPX($test.css('margin-left'));
-        $test.remove();
-        return size;
+        var width = $('.fr-box').width();
+
+        if (width < screenSm) {
+          return FroalaEditor.XS;
+        }
+
+        if (width >= screenSm && width < screenMd) {
+          return FroalaEditor.SM;
+        }
+
+        if (width >= screenMd && width < screenLg) {
+          return FroalaEditor.MD;
+        }
+
+        if (width >= screenLg) {
+          return FroalaEditor.LG;
+        }
       } catch (ex) {
         return FroalaEditor.LG;
       }
@@ -1498,7 +1543,7 @@
         return url;
       } else if (local_path.test(url)) {
         return url;
-      } else if (new RegExp("^(".concat(FroalaEditor.LinkProtocols.join('|'), "):\\/\\/"), 'i').test(url)) {
+      } else if (new RegExp("^(".concat(FroalaEditor.LinkProtocols.join('|'), "):"), 'i').test(url)) {
         return url;
       }
 
@@ -2845,7 +2890,13 @@
       var add_invisible = false;
 
       while (node !== li) {
-        node = node.parentNode;
+        node = node.parentNode; // https://github.com/froala-labs/froala-editor-js-2/issues/1864
+        // For next sibling list item it was adding unnecessary div tag of elder sibling list.
+
+        if (node.classList.contains('fr-img-space-wrap') || node.classList.contains('fr-img-space-wrap2')) {
+          continue;
+        }
+
         var cls = node.tagName === 'A' && editor.cursor.isAtEnd(marker, node) ? 'fr-to-remove' : '';
 
         if (!add_invisible && node !== li && !editor.node.isBlock(node)) {
@@ -3518,9 +3569,11 @@
           $(marker).replaceWith(FroalaEditor.MARKERS);
           editor.selection.restore();
           return false;
-        } else if (p_node.getAttribute('contenteditable') === 'true') {
-          break;
-        }
+        } // https://github.com/froala-labs/froala-editor-js-2/issues/2070
+        // Break the loop if node has no content and it is editable
+        else if (p_node.innerText.length && p_node.getAttribute('contenteditable') === 'true') {
+            break;
+          }
 
         p_node = p_node.parentNode;
       }
@@ -4267,21 +4320,21 @@
     function n(A) {
       if (!A) return A;
       var n = "";
-      var B = t("charCodeAt"),
+      var e = t("charCodeAt"),
           D = t("fromCharCode");
       var o = h.indexOf(A[0]);
 
       for (var _t = 1; _t < A.length - 2; _t++) {
         var _r = C(++o);
 
-        var _i = A[B](_t),
+        var _i = A[e](_t),
             _c = "";
 
         for (; /[0-9-]/.test(A[_t + 1]);) {
           _c += A[++_t];
         }
 
-        _c = parseInt(_c, 10) || 0, _i = e(_i, _r, _c), _i ^= o - 1 & 31, n += String[D](_i);
+        _c = parseInt(_c, 10) || 0, _i = B(_i, _r, _c), _i ^= o - 1 & 31, n += String[D](_i);
       }
 
       return n;
@@ -4298,7 +4351,7 @@
       return n > 10 ? n % 9 + 1 : n;
     }
 
-    function e(A, t, n) {
+    function B(A, t, n) {
       var C = Math.abs(n);
 
       for (; C-- > 0;) {
@@ -4308,7 +4361,7 @@
       return n < 0 && (A += 123), A;
     }
 
-    function B(t) {
+    function e(t) {
       return t && "block" !== t.css("display") ? (t.remove(), !0) : t && 0 === A.helpers.getPX(t.css("height")) ? (t.remove(), !0) : !(!t || "absolute" !== t.css("position") && "fixed" !== t.css("position")) && (t.remove(), !0);
     }
 
@@ -4317,7 +4370,7 @@
     }
 
     function o() {
-      return B(g) || B(b) || D(g) || D(b);
+      return e(g) || e(b) || D(g) || D(b);
     }
 
     function r() {
@@ -4331,15 +4384,15 @@
       var t = m("9qqG-7amjlwq=="),
           n = m("KA3B3C2A6D1D5H5H1A3=="),
           C = m("3B9B3B5F3C4G3E3=="),
-          e = m("QzbzvxyB2yA-9m=="),
-          B = m("ji1kacwmgG5bc=="),
+          B = m("QzbzvxyB2yA-9m=="),
+          e = m("ji1kacwmgG5bc=="),
           D = m("nmA-13aogi1A3c1jd=="),
           o = m("BA9ggq=="),
           r = m("emznbjbH3fij=="),
           i = m("tkC-22d1qC-13sD1wzF-7=="),
           c = m("tA3jjf=="),
           E = m("1D1brkm=="),
-          f = [t, n, C, e, B, D, o, r, i, c, E];
+          f = [t, n, C, B, e, D, o, r, i, c, E];
 
       for (var _t2 = 0; _t2 < f.length; _t2++) {
         if (String.prototype.endsWith || (String.prototype.endsWith = function (A, t) {
@@ -4369,8 +4422,8 @@
       var n = A.opts.key || [""];
       var C = m(t("ziRA1E3B9pA5B-11D-11xg1A3ZB5D1D4B-11ED2EG2pdeoC1clIH4wB-22yQD5uF4YE3E3A9=="));
       "string" == typeof n && (n = [n]), A.ul = !0;
-      var e = !1,
-          B = 0;
+      var B = !1,
+          e = 0;
 
       for (var _C = 0; _C < n.length; _C++) {
         var _D = c(n[_C]),
@@ -4383,12 +4436,12 @@
             break;
           }
 
-          e = !0, G = u, B = _D[0] || -1;
+          B = !0, G = u, e = _D[0] || -1;
         }
       }
 
       var D = new Image();
-      A.ul === !0 && (r(), D.src = e ? "".concat(t(m(C)), "e=").concat(B) : "".concat(t(m(C)), "u")), A.ul === !0 && (A.events.on("contentChanged", function () {
+      A.ul === !0 && (r(), D.src = B ? "".concat(t(m(C)), "e=").concat(e) : "".concat(t(m(C)), "u")), A.ul === !0 && (A.events.on("contentChanged", function () {
         o() && r();
       }), A.events.on("html.get", function (A) {
         return A + m(l);
@@ -4406,7 +4459,7 @@
     var F = "7D4YH4fkhHB3pqDC3H2E1fkMD1IB1NF1D3QD9wB5rxqlh1A8c2B4ZA3FD2AA6FB5EB3jJG4D2J-7aC-21GB6PC5RE4TC11QD6XC4XE3XH3mlvnqjbaOA2OC2BE6A1fmI-7ujwbc1G5f1F3e1C11mXF4owBG3E1yD1E4F1D2D-8B-8C-7yC-22HD1MF5UE4cWA3D8D6a1B2C3H3a3I3sZA4B3A2akfwEB3xHD5D1F1wIC11pA-16xdxtVI2C9A6YC4a1A2F3B2GA6B4C3lsjyJB1eMA1D-11MF5PE4ja1D3D7byrf1C3e1C7D-16lwqAF3H2A1B-21wNE1MA1OG1HB2A-16tSE5UD4RB3icRA4F-10wtwzBB3E1C3CC2DA8LA2LA1EB1kdH-8uVB7decorg1J2B7B6qjrqGI2J1C6ijehIB1hkemC-13hqkrH4H-7QD6XF5XF3HLNAC3CB2aD2CD2KB10B4ycg1A-8KA4H4B11jVB5TC4yqpB-21pd1E4pedzGB6MD5B3ncB-7MA4LD2JB6PD5uH-8TB9C7YD5XD2E3I3jmiDB3zeimhLD8E2F2JC1H-9ivkPC5lG-10SB1D3H3A-21rc1A3d1E3fsdqwfGA2KA1OrC-22LA6D1B4afUB16SC7AitC-8qYA11fsxcajGA15avjNE2A-9h1hDB16B9tPC1C5F5UC1G3B8d2A5d1D4RnHJ3C3JB5D3ucMG1yzD-17hafjC-8VD3yWC6e1YD2H3ZE2C8C5oBA3H3D2vFA4WzJC4C2i1A-65fNB8afWA1H4A26mvkC-13ZB3E3h1A21BC4eFB2GD2AA5ghqND2A2B2==",
         l = "qD2H-9G3ioD-17qA1tE1B-8qI3A4hA-13C-11E2C1njfldD1E6pg1C-8sC3hfbkcD2G3stC-22gqgB3G2B-7vtoA4nweeD1A31A15B9uC-16A1F5dkykdc1B8dE-11bA3F2D3A9gd1E7F2tlI-8H-7vtxB2A5B2C3B2F2B5A6ldbyC4iqC-22D-17E-13mA3D2dywiB3oxlvfC1H4C2TjqbzlnI3ntB4E3qA2zaqsC6D3pmnkoE3C6D5wvuE3bwifdhB6hch1E4xibD-17dmrC1rG-7pntnF6nB-8F1D2A11C8plrkmF2F3MC-16bocqA2WwA-21ayeA1C4d1isC-22rD-13D6DfjpjtC2E6hB2G2G4A-7D2==",
         a = "MekC-11nB-8tIzpD7pewxvzC6mD-16xerg1==",
-        H = "yD6F5E4G3E1A9D7C3B4F4==";
+        H = "AA15A8B6C4B5A2E2B3B1A7==";
     var G = "sC-7OB2fwhVC4vsG-7ohPA4ZD4D-8f1J3stzB-11bFE2EE1MA2ND1KD1IE4cA-21pSD2D5ve1G3h1A8b1E5ZC3CD2FA16mC5OC5E1hpnG1NA10B1D7hkUD4I-7b2C3C5nXD2E3F3whidEC2EH3GI2mJE2E2bxci1WA10VC7pllSG2F3A7xd1A4ZC3DB2aaeGA2DE4H2E1j1ywD-13FD1A3VE4WA3D8C6wuc1A2hf1B5B7vnrrjA1B9ic1mpbD1oMB1iSB7rWC4RI4G-7upB6jd1A2F3H2EA4FD3kDF4A2moc1anJD1TD4VI4b2C7oeQF4c1E3XC7ZA3C3G3uDB2wGB6D1JC4D1JD4C1hTE6QC5pH4pD3C-22D7c1A3textAA4gdlB2mpozkmhNC1mrxA3yWA5edhg1I2H3B7ozgmvAI3I2B5GD1LD2RSNH1KA1XA5SB4PA3sA9tlmC-9tnf1G3nd1coBH4I2I2JC3C-16LE6A1tnUA3vbwQB1G3f1A20a3A8a1C6pxAB2eniuE1F3kH2lnjB2hB-16XA5PF1G4zwtYA5B-11mzTG2B9pHB3BE2hGH3B3B2cMD5C1F1wzPA8E7VG5H5vD3H-7C8tyvsVF2I1G2A5fE3bg1mgajoyxMA4fhuzSD8aQB2B4g1A20ukb1A4B3F3GG2CujjanIC1ObiB11SD1C5pWC1D4YB8YE5FE-11jXE2F-7jB4CC2G-10uLH4E1C2tA-13yjUH5d1H1A7sWD5E4hmjF-7pykafoGA16hDD4joyD-8OA33B3C2tC7cRE4SA31a1B8d1e2A4F4g1A2A22CC5zwlAC2C1A12==";
 
     var p = function () {
@@ -4447,7 +4500,8 @@
       if (editor.browser.msie) {
         try {
           editor.doc.body.addEventListener('mscontrolselect', function (e) {
-            e.preventDefault();
+            // Add focus to the element when clicked
+            e.srcElement.focus();
             return false;
           });
         } catch (ex) {// ok.
@@ -4910,20 +4964,57 @@
 
       if (collapsed) {
         editor.$el.find('.fr-marker').before(FroalaEditor.INVISIBLE_SPACE).after(FroalaEditor.INVISIBLE_SPACE);
-      } // https://github.com/froala-labs/froala-editor-js-2/issues/1849
-      // Remove zero width spaces when no text is selected
+      }
 
-
-      !editor.selection.text() && $(editor.selection.blocks()[0]).each(function (index, html) {
-        var exp = new RegExp(String.fromCharCode(8203), 'g');
-        var editor = $(html);
-        var txt = editor.html();
-        txt = txt.replace(exp, '');
-        editor.html(txt);
-      });
       editor.html.cleanEmptyTags();
       editor.el.normalize();
-      editor.selection.restore();
+      editor.selection.restore(); // https://github.com/froala-labs/froala-editor-js-2/issues/2168
+
+      var anchorNode = editor.win.getSelection() && editor.win.getSelection().anchorNode;
+
+      if (anchorNode) {
+        var blockParent = editor.node.blockParent(anchorNode);
+        var multiSelection = anchorNode.textContent.replace(/\u200B/g, '').length ? true : false;
+
+        var _editor$win$getSelect = editor.win.getSelection().getRangeAt(0),
+            startOffset = _editor$win$getSelect.startOffset,
+            endOffset = _editor$win$getSelect.endOffset; // Keep only one zero width space and remove all the other zero width spaces if selection consists of only zerowidth spaces.
+
+
+        if (!editor.selection.text().replace(/\u200B/g, '').length) {
+          removeZeroWidth(blockParent, anchorNode);
+        }
+
+        var range = editor.win.getSelection().getRangeAt(0); // Setting the range to the zerowidthspace index
+
+        if (anchorNode.nodeType === Node.TEXT_NODE) {
+          if (!multiSelection || !editor.selection.text().length && startOffset === endOffset) {
+            var newOffset = anchorNode.textContent.search(/\u200B/g) + 1;
+            range.setStart(anchorNode, newOffset);
+            range.setEnd(anchorNode, newOffset);
+          }
+        }
+      }
+    } // Removes zerowidth spaces and keeps only one zero width space for the marker.
+
+
+    function removeZeroWidth(blockParent, compareNode) {
+      if (blockParent && compareNode) {
+        if (blockParent.isSameNode(compareNode)) {
+          // keeping only one zerowidth space if there are multiple
+          blockParent.textContent = blockParent.textContent.replace(/\u200B(?=.*\u200B)/g, '');
+        } else {
+          if (blockParent.nodeType === Node.TEXT_NODE) blockParent.textContent = blockParent.textContent.replace(/\u200B/g, '');
+        }
+
+        if (!blockParent.childNodes.length) {
+          return false;
+        } else if (Array.isArray(blockParent.childNodes)) {
+          blockParent.childNodes.forEach(function (node) {
+            removeZeroWidth(node, compareNode);
+          });
+        }
+      }
     }
     /**
      * Toggle format.
@@ -5267,6 +5358,8 @@
       var n_node = node.nextSibling;
       var txt = node.textContent;
       var parent_node = node.parentNode;
+      var enterTags = ['P', 'DIV', 'BR'];
+      var tagOptsValues = [FroalaEditor.ENTER_P, FroalaEditor.ENTER_DIV, FroalaEditor.ENTER_BR];
 
       if (editor.html.isPreformatted(parent_node)) {
         return;
@@ -5308,7 +5401,7 @@
 
       for (var t = 0; t < txt.length; t++) {
         // Do not use unicodes next to void tags.
-        if (txt.charCodeAt(t) == 32 && (t === 0 || new_text.charCodeAt(t - 1) == 32) && !(p_node && n_node && editor.node.isVoid(p_node) || p_node && n_node && editor.node.isVoid(n_node))) {
+        if (txt.charCodeAt(t) == 32 && (t === 0 || new_text.charCodeAt(t - 1) == 32) && ((editor.opts.enter === FroalaEditor.ENTER_BR || editor.opts.enter === FroalaEditor.ENTER_DIV) && (p_node && p_node.tagName === 'BR' || n_node && n_node.tagName === 'BR') || !(p_node && n_node && editor.node.isVoid(p_node) || p_node && n_node && editor.node.isVoid(n_node)))) {
           new_text += FroalaEditor.UNICODE_NBSP;
         } else {
           new_text += txt[t];
@@ -5320,7 +5413,8 @@
 
 
       if (!n_node || n_node && editor.node.isBlock(n_node) || n_node && n_node.nodeType === Node.ELEMENT_NODE && editor.win.getComputedStyle(n_node) && editor.win.getComputedStyle(n_node).display === 'block') {
-        if (!editor.node.isVoid(p_node)) {
+        // OR(||) condition is for https://github.com/froala-labs/froala-editor-js-2/issues/1949
+        if (!editor.node.isVoid(p_node) || p_node && enterTags.indexOf(p_node.tagName) !== -1 && tagOptsValues.indexOf(editor.opts.enter) !== -1) {
           new_text = new_text.replace(/ $/, FroalaEditor.UNICODE_NBSP);
         }
       } // Previous sibling is not void or block.
@@ -6476,26 +6570,32 @@
           testRange = selRange.cloneRange();
           testRange.selectNodeContents(el);
           testRange.setEnd(selRange.startContainer, selRange.startOffset);
-          atStart = testRange.toString() === '';
+          atStart = selection(testRange);
           testRange.selectNodeContents(el);
           testRange.setStart(selRange.endContainer, selRange.endOffset);
-          atEnd = testRange.toString() === '';
+          atEnd = selection(testRange);
         }
       } else if (editor.doc.selection && editor.doc.selection.type !== 'Control') {
         selRange = editor.doc.selection.createRange();
         testRange = selRange.duplicate();
         testRange.moveToElementText(el);
         testRange.setEndPoint('EndToStart', selRange);
-        atStart = testRange.text === '';
+        atStart = selection(testRange);
         testRange.moveToElementText(el);
         testRange.setEndPoint('StartToEnd', selRange);
-        atEnd = testRange.text === '';
+        atEnd = selection(testRange);
       }
 
       return {
         atStart: atStart,
         atEnd: atEnd
       };
+    } // https://github.com/froala-labs/froala-editor-js-2/issues/1935
+
+
+    function selection(sel) {
+      var result = sel.toString().replace(/[\u200B-\u200D\uFEFF]/g, '');
+      return result === '';
     }
     /**
      * Check if everything is selected inside the editor.
@@ -7310,8 +7410,9 @@
       }
 
       var elms;
-      var ok;
-      elms = editor.el.querySelectorAll("*:empty:not(".concat(els.join('):not('), "):not(.fr-marker)"));
+      var ok; //https://github.com/froala-labs/froala-editor-js-2/issues/1938
+
+      elms = editor.el.querySelectorAll("*:empty:not(".concat(els.join('):not('), "):not(.fr-marker):not(template)"));
 
       do {
         ok = false; // Remove those elements that have no attributes.
@@ -7321,9 +7422,10 @@
             elms[i].parentNode.removeChild(elms[i]);
             ok = true;
           }
-        }
+        } //https://github.com/froala-labs/froala-editor-js-2/issues/1938
 
-        elms = editor.el.querySelectorAll("*:empty:not(".concat(els.join('):not('), "):not(.fr-marker)"));
+
+        elms = editor.el.querySelectorAll("*:empty:not(".concat(els.join('):not('), "):not(.fr-marker):not(template)"));
       } while (elms.length && ok);
     }
     /**
@@ -7863,7 +7965,9 @@
         editor.edit.off();
       }
 
-      editor.events.trigger('html.set');
+      editor.events.trigger('html.set'); //https://github.com/froala-labs/froala-editor-js-2/issues/1920		
+
+      editor.events.trigger('charCounter.update');
     }
 
     function _specifity(selector) {
@@ -7946,6 +8050,33 @@
       return a[3] - b[3];
     }
     /**
+     * Sync inputs when getting the HTML.
+     */
+
+
+    function syncInputs() {
+      var inputs = editor.el.querySelectorAll('input, textarea');
+
+      for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].type === 'checkbox' || inputs[i].type === 'radio') {
+          if (inputs[i].checked) {
+            inputs[i].setAttribute('checked', inputs[i].checked);
+          } else {
+            editor.$(inputs[i]).removeAttr('checked');
+          }
+        }
+        /**
+         * if the input type has value attribute then only updating the value atrribute.
+         * Submit and Reset buttons default value is type names
+         */
+
+
+        if (inputs[i].getAttribute('value')) {
+          inputs[i].setAttribute('value', inputs[i].value);
+        }
+      }
+    }
+    /**
      * Get HTML.
      */
 
@@ -7962,13 +8093,8 @@
       var elms_info = {};
       var i;
       var j;
-      var elems_specs = []; // Sync inputs when getting the HTML.
-
-      var inputs = editor.el.querySelectorAll('input, textarea');
-
-      for (i = 0; i < inputs.length; i++) {
-        inputs[i].setAttribute('value', inputs[i].value);
-      }
+      var elems_specs = [];
+      syncInputs();
 
       if (!editor.opts.useClasses && !keep_classes) {
         var ignoreRegEx = new RegExp("^".concat(editor.opts.htmlIgnoreCSSProperties.join('$|^'), "$"), 'gi');
@@ -8454,6 +8580,7 @@
       blocks: blocks,
       getDoctype: getDoctype,
       set: set,
+      syncInputs: syncInputs,
       get: get,
       getSelected: getSelected,
       insert: insert,
@@ -8465,7 +8592,8 @@
       extractNodeAttrs: extractNodeAttrs,
       extractDoctype: extractDoctype,
       cleanBRs: cleanBRs,
-      _init: _init
+      _init: _init,
+      _setHtml: _setHtml
     };
   };
 
@@ -8655,7 +8783,9 @@
     function _backspace(e) {
       // There is no selection.
       if (editor.selection.isCollapsed()) {
-        editor.cursor.backspace();
+        if (['INPUT', 'BUTTON', 'TEXTAREA'].indexOf(e.target && e.target.tagName) < 0) {
+          editor.cursor.backspace();
+        }
 
         if (editor.helpers.isIOS()) {
           var range = editor.selection.ranges(0);
@@ -8664,7 +8794,10 @@
           var sel = editor.selection.get();
           sel.modify('move', 'forward', 'character');
         } else {
-          e.preventDefault();
+          if (['INPUT', 'BUTTON', 'TEXTAREA'].indexOf(e.target && e.target.tagName) < 0) {
+            e.preventDefault();
+          }
+
           e.stopPropagation();
         }
       } // We have text selected.
@@ -8682,7 +8815,10 @@
 
 
     function _del(e) {
-      e.preventDefault();
+      if (['INPUT', 'BUTTON', 'TEXTAREA'].indexOf(e.target && e.target.tagName) < 0) {
+        e.preventDefault();
+      }
+
       e.stopPropagation(); // There is no selection or only image selection.
       // https://github.com/froala/wysiwyg-editor/issues/3342
 
@@ -8844,6 +8980,48 @@
       editor.selection.restore();
     }
     /**
+     * https://github.com/froala-labs/froala-editor-js-2/issues/1864
+     * Extra Space after Image in list (ul, ol).
+     */
+
+
+    function ImageCaptionSpace(sel_el, e) {
+      if (sel_el.innerHTML.indexOf('<span') > -1 || sel_el.parentElement.innerHTML.indexOf('<span') > -1 || sel_el.parentElement.parentElement.innerHTML.indexOf('<span') > -1) {
+        if (sel_el.classList.contains('fr-img-space-wrap') || sel_el.parentElement.classList.contains('fr-img-space-wrap') || sel_el.parentElement.parentElement.classList.contains('fr-img-space-wrap')) {
+          if ($(sel_el.parentElement).is('p')) {
+            var strHTML = sel_el.parentElement.innerHTML;
+            strHTML = strHTML.replace(/<br>/g, '');
+
+            if (strHTML.length < 1) {
+              sel_el.parentElement.insertAdjacentHTML('afterbegin', '&nbsp;');
+            } else if (strHTML != '&nbsp;' && strHTML != ' ' && e.key == 'Backspace') {
+              _backspace(e);
+            } else if (strHTML != '&nbsp;' && strHTML != ' ' && e.key == 'Delete') {
+              _del(e);
+            }
+
+            return true;
+          } else if ($(sel_el).is('p')) {
+            var orgStr = sel_el.innerHTML;
+
+            var _strHTML = orgStr.replace(/<br>/g, '');
+
+            if (_strHTML.length < 1) {
+              sel_el.insertAdjacentHTML('afterbegin', '&nbsp;');
+            } else if (_strHTML != '&nbsp;' && _strHTML != ' ' && e.key == 'Backspace') {
+              _backspace(e);
+            } else if (_strHTML != '&nbsp;' && _strHTML != ' ' && e.key == 'Delete') {
+              _del(e);
+            }
+
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+    /**
      * Map keyDown actions.
      */
 
@@ -8891,7 +9069,9 @@
 
 
       if (key_code === FroalaEditor.KEYCODE.ENTER) {
-        if (e.shiftKey) {
+        //code edited https://github.com/froala-labs/froala-editor-js-2/issues/1864
+        // added code for fr-inner class check
+        if (e.shiftKey || sel_el.classList.contains('fr-inner') || sel_el.parentElement.classList.contains('fr-inner')) {
           _shiftEnter(e);
         } else {
           _enter(e);
@@ -8901,6 +9081,13 @@
           _ctlBackspace();
         } // Backspace.
         else if (key_code === FroalaEditor.KEYCODE.BACKSPACE && !ctrlKey(e) && !e.altKey) {
+            // https://github.com/froala-labs/froala-editor-js-2/issues/1864
+            if (ImageCaptionSpace(sel_el, e)) {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
             if (!editor.placeholder.isVisible()) {
               _backspace(e);
             } else {
@@ -8913,6 +9100,13 @@
             }
           } // Delete.
           else if (key_code === FroalaEditor.KEYCODE.DELETE && !ctrlKey(e) && !e.altKey && !e.shiftKey) {
+              // https://github.com/froala-labs/froala-editor-js-2/issues/1864
+              if (ImageCaptionSpace(sel_el, e)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
+
               if (!editor.placeholder.isVisible()) {
                 _del(e);
               } else {
@@ -9394,7 +9588,17 @@
     var stop_paste = false;
 
     function _handlePaste(e) {
+      // if content is copied in input tag do the normal paste.
+      if (e.target.nodeName === 'INPUT' && e.target.type === 'text') {
+        return true;
+      }
+
       if (editor.edit.isDisabled()) {
+        return false;
+      } // https://github.com/froala-labs/froala-editor-js-2/issues/2067
+
+
+      if (isContetnEditable(e.target)) {
         return false;
       }
 
@@ -9461,6 +9665,14 @@
       return false;
     }
     /**
+     * check for contentEditable.
+     */
+
+
+    function isContetnEditable(el) {
+      return el && el.contentEditable === 'false';
+    }
+    /**
      * Handle dropping content in the editor.
      */
 
@@ -9468,6 +9680,11 @@
     function _dropPaste(e) {
       if (e.originalEvent) {
         e = e.originalEvent;
+      } // https://github.com/froala-labs/froala-editor-js-2/issues/2067
+
+
+      if (isContetnEditable(e.target)) {
+        return false;
       } // Read data from clipboard.
 
 
@@ -10928,6 +11145,9 @@
         if (editor.opts.disableRightClick) {
           editor.events.$on(editor.$el, 'contextmenu', function (e) {
             if (e.button === 2) {
+              // https://github.com/froala-labs/froala-editor-js-2/issues/2150
+              e.preventDefault();
+              e.stopPropagation();
               return false;
             }
           });
@@ -11641,17 +11861,31 @@
 
       if (editor.$wp) {
         editor.events.on('keydown', ev._editorKeydown);
-      } // Hide all popups on blur.
+      } // Remove popup class on focus as pop up will be hidden on focus of editor
 
+
+      editor.events.on('focus', function () {
+        popups[id].removeClass('focused');
+      }); // Hide all popups on blur.
 
       editor.events.on('blur', function () {
         if (areVisible()) {
           editor.markers.remove();
-        } // https://github.com/froala-labs/froala-editor-js-2/issues/858
+        } // https://github.com/froala-labs/froala-editor-js-2/issues/2044
 
 
-        if (!popups[id].find('iframe').length) {
-          hideAll();
+        if (editor.helpers.isMobile()) {
+          if (popups[id].hasClass('focused')) {
+            hideAll();
+            popups[id].removeClass('focused');
+          } else {
+            popups[id].addClass('focused');
+          }
+        } else {
+          // https://github.com/froala-labs/froala-editor-js-2/issues/858
+          if (!popups[id].find('iframe').length) {
+            hideAll();
+          }
         }
       }); // Update the position of the popup.
 
@@ -12644,7 +12878,7 @@
       editor.events.on('mousedown', function (e) {
         _clearPopupButton(editor);
 
-        if (editor.shared.$f_el) {
+        if (editor.shared.$f_el && editor.el.isSameNode(editor.shared.$f_el[0])) {
           editor.accessibility.restoreSelection();
           e.stopPropagation();
           editor.events.disableBlur();
@@ -13681,7 +13915,7 @@
     codeView: 'M9.4,16.6,4.8,12,9.4,7.4,8,6,2,12l6,6Zm5.2,0L19.2,12,14.6,7.4,16,6l6,6-6,6Z',
     cogs: 'M18.877 12.907a6.459 6.459 0 0 0 0 -1.814l1.952 -1.526a0.468 0.468 0 0 0 0.111 -0.593l-1.851 -3.2a0.461 0.461 0 0 0 -0.407 -0.231 0.421 0.421 0 0 0 -0.157 0.028l-2.3 0.925a6.755 6.755 0 0 0 -1.563 -0.907l-0.352 -2.452a0.451 0.451 0 0 0 -0.453 -0.388h-3.7a0.451 0.451 0 0 0 -0.454 0.388L9.347 5.588A7.077 7.077 0 0 0 7.783 6.5l-2.3 -0.925a0.508 0.508 0 0 0 -0.166 -0.028 0.457 0.457 0 0 0 -0.4 0.231l-1.851 3.2a0.457 0.457 0 0 0 0.111 0.593l1.952 1.526A7.348 7.348 0 0 0 5.063 12a7.348 7.348 0 0 0 0.064 0.907L3.175 14.433a0.468 0.468 0 0 0 -0.111 0.593l1.851 3.2a0.461 0.461 0 0 0 0.407 0.231 0.421 0.421 0 0 0 0.157 -0.028l2.3 -0.925a6.74 6.74 0 0 0 1.564 0.907L9.7 20.864a0.451 0.451 0 0 0 0.454 0.388h3.7a0.451 0.451 0 0 0 0.453 -0.388l0.352 -2.452a7.093 7.093 0 0 0 1.563 -0.907l2.3 0.925a0.513 0.513 0 0 0 0.167 0.028 0.457 0.457 0 0 0 0.4 -0.231l1.851 -3.2a0.468 0.468 0 0 0 -0.111 -0.593Zm-0.09 2.029l-0.854 1.476 -2.117 -0.852 -0.673 0.508a5.426 5.426 0 0 1 -1.164 0.679l-0.795 0.323 -0.33 2.269h-1.7l-0.32 -2.269 -0.793 -0.322a5.3 5.3 0 0 1 -1.147 -0.662L8.2 15.56l-2.133 0.86 -0.854 -1.475 1.806 -1.411 -0.1 -0.847c-0.028 -0.292 -0.046 -0.5 -0.046 -0.687s0.018 -0.4 0.045 -0.672l0.106 -0.854L5.217 9.064l0.854 -1.475 2.117 0.851 0.673 -0.508a5.426 5.426 0 0 1 1.164 -0.679l0.8 -0.323 0.331 -2.269h1.7l0.321 2.269 0.792 0.322a5.3 5.3 0 0 1 1.148 0.661l0.684 0.526 2.133 -0.859 0.853 1.473 -1.8 1.421 0.1 0.847a5 5 0 0 1 0.046 0.679c0 0.193 -0.018 0.4 -0.045 0.672l-0.106 0.853ZM12 14.544A2.544 2.544 0 1 1 14.546 12 2.552 2.552 0 0 1 12 14.544Z',
     columns: 'M20,5H4C2.9,5,2,5.9,2,7v10c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V7C22,5.9,21.1,5,20,5z M8,17.5H4c-0.3,0-0.5-0.2-0.5-0.4  c0,0,0,0,0,0V17v-2H8V17.5z M8,13.5H3.5v-3H8V13.5z M8,9H3.5V7c0-0.3,0.2-0.5,0.4-0.5c0,0,0,0,0,0H8V9z M20.5,17  c0,0.3-0.2,0.5-0.4,0.5c0,0,0,0,0,0H16V15h4.5V17z M20.5,13.5H16v-3h4.5V13.5z M20.5,9H16V6.5h4c0.3,0,0.5,0.2,0.5,0.4c0,0,0,0,0,0  V9z',
-    editLink: 'M17,11.2L12.8,7L5,14.8V19h4.2L17,11.2z M7,16.8v-1.5l5.6-5.6l1.4,1.5l-5.6,5.6H7z M13.5,6.3l0.7-0.7c0.8-0.8,2.1-0.8,2.8,0  c0,0,0,0,0,0L18.4,7c0.8,0.8,0.8,2,0,2.8l-0.7,0.7L13.5,6.3z',
+    edit: 'M17,11.2L12.8,7L5,14.8V19h4.2L17,11.2z M7,16.8v-1.5l5.6-5.6l1.4,1.5l-5.6,5.6H7z M13.5,6.3l0.7-0.7c0.8-0.8,2.1-0.8,2.8,0  c0,0,0,0,0,0L18.4,7c0.8,0.8,0.8,2,0,2.8l-0.7,0.7L13.5,6.3z',
     exitFullscreen: 'M5,16H8v3h2V14H5ZM8,8H5v2h5V5H8Zm6,11h2V16h3V14H14ZM16,8V5H14v5h5V8Z',
     fontAwesome: 'M18.99018,13.98212V7.52679c-.08038-1.21875-1.33929-.683-1.33929-.683-2.933,1.39282-4.36274.61938-5.85938.15625a6.23272,6.23272,0,0,0-2.79376-.20062l-.00946.004A1.98777,1.98777,0,0,0,7.62189,5.106a.984.984,0,0,0-.17517-.05432c-.02447-.0055-.04882-.01032-.0736-.0149A.9565.9565,0,0,0,7.1908,5H6.82539a.9565.9565,0,0,0-.18232.0368c-.02472.00458-.04907.0094-.07348.01484a.985.985,0,0,0-.17523.05438,1.98585,1.98585,0,0,0-.573,3.49585v9.394A1.004,1.004,0,0,0,6.82539,19H7.1908a1.00406,1.00406,0,0,0,1.00409-1.00409V15.52234c3.64221-1.09827,5.19709.64282,7.09888.57587a5.57291,5.57291,0,0,0,3.25446-1.05805A1.2458,1.2458,0,0,0,18.99018,13.98212Z',
     fontFamily: 'M16,19h2L13,5H11L6,19H8l1.43-4h5.14Zm-5.86-6L12,7.8,13.86,13Z',
@@ -15728,7 +15962,7 @@
 
         if (i < wrapperProps.length) {
           // https://github.com/froala-labs/froala-editor-js-2/issues/1928
-          if (wrapperProps[i].trim() === $(wrapper)[0].tagName) {
+          if ($(wrapper).length && wrapperProps[i].trim() === $(wrapper)[0].tagName) {
             wrapper = document.createElement(wrapperProps[i].trim());
           }
 
@@ -16606,6 +16840,14 @@
         return $();
       }
     },
+    //https://github.com/froala-labs/froala-editor-js-2/issues/1874
+    nextAllVisible: function nextAllVisible() {
+      return this.next();
+    },
+    //https://github.com/froala-labs/froala-editor-js-2/issues/1874
+    prevAllVisible: function prevAllVisible() {
+      return this.prev();
+    },
     outerHeight: function outerHeight(margin) {
       if (this.length === 0) return undefined;
       var el = this[0];
@@ -17213,7 +17455,7 @@
 
       if (blocks.length) {
         var alignment = editor.helpers.getAlignment($(blocks[0]));
-        $btn.find('> *').first().replaceWith(editor.icon.create('align-' + alignment));
+        $btn.find('> *').first().replaceWith(editor.icon.create("align-".concat(alignment)));
       }
     }
 
@@ -17222,7 +17464,7 @@
 
       if (blocks.length) {
         var alignment = editor.helpers.getAlignment($(blocks[0]));
-        $dropdown.find('a.fr-command[data-param1="' + alignment + '"]').addClass('fr-active').attr('aria-selected', true);
+        $dropdown.find("a.fr-command[data-param1=\"".concat(alignment, "\"]")).addClass('fr-active').attr('aria-selected', true);
       }
     }
 
@@ -17234,7 +17476,7 @@
 
         alignment = alignment.charAt(0).toUpperCase() + alignment.slice(1);
 
-        if ('align' + alignment === $btn.attr('data-cmd')) {
+        if ("align".concat(alignment) === $btn.attr('data-cmd')) {
           $btn.addClass('fr-active');
         }
       }
@@ -17283,7 +17525,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command fr-title" tabIndex="-1" role="option" data-cmd="align" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.icon.create('align-' + val) + '<span class="fr-sr-only">' + this.language.translate(options[val]) + '</span></a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command fr-title\" tabIndex=\"-1\" role=\"option\" data-cmd=\"align\"data-param1=\"\n        ".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.icon.create("align-".concat(val)), "<span class=\"fr-sr-only\">\n        ").concat(this.language.translate(options[val]), "</span></a></li>");
         }
       }
 
@@ -17362,9 +17604,9 @@
      * Get the char number.
      */
 
-    function count() {
+    var count = function count() {
       return (editor.el.textContent || '').replace(/\u200B/g, '').length;
-    }
+    };
     /**
      * Check chars on typing.
      */
@@ -17448,7 +17690,7 @@
       editor.events.on('charCounter.update', _updateCharNumber);
       editor.events.trigger('charCounter.update');
       editor.events.on('destroy', function () {
-        $(editor.o_win).off('resize.char' + editor.id);
+        $(editor.o_win).off("resize.char".concat(editor.id));
         $counter.removeData().remove();
         $counter = null;
       });
@@ -17482,15 +17724,15 @@
 
       var nonASCIIidentifierStartChars = "\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u0527\u0531-\u0556\u0559\u0561-\u0587\u05D0-\u05EA\u05F0-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u08A0\u08A2-\u08AC\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0977\u0979-\u097F\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C33\u0C35-\u0C39\u0C3D\u0C58\u0C59\u0C60\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D60\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F4\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F0\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191C\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19C1-\u19C7\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5\u1CF6\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FCC\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA697\uA6A0-\uA6EF\uA717-\uA71F\uA722-\uA788\uA78B-\uA78E\uA790-\uA793\uA7A0-\uA7AA\uA7F8-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA80-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uABC0-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC";
       var nonASCIIidentifierChars = "\u0300-\u036F\u0483-\u0487\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u0620-\u0649\u0672-\u06D3\u06E7-\u06E8\u06FB-\u06FC\u0730-\u074A\u0800-\u0814\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0840-\u0857\u08E4-\u08FE\u0900-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962-\u0963\u0966-\u096F\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09D7\u09DF-\u09E0\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A66-\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2-\u0AE3\u0AE6-\u0AEF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B5F-\u0B60\u0B66-\u0B6F\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0BE6-\u0BEF\u0C01-\u0C03\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62-\u0C63\u0C66-\u0C6F\u0C82\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2-\u0CE3\u0CE6-\u0CEF\u0D02\u0D03\u0D46-\u0D48\u0D57\u0D62-\u0D63\u0D66-\u0D6F\u0D82\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E34-\u0E3A\u0E40-\u0E45\u0E50-\u0E59\u0EB4-\u0EB9\u0EC8-\u0ECD\u0ED0-\u0ED9\u0F18\u0F19\u0F20-\u0F29\u0F35\u0F37\u0F39\u0F41-\u0F47\u0F71-\u0F84\u0F86-\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u1000-\u1029\u1040-\u1049\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F-\u109D\u135D-\u135F\u170E-\u1710\u1720-\u1730\u1740-\u1750\u1772\u1773\u1780-\u17B2\u17DD\u17E0-\u17E9\u180B-\u180D\u1810-\u1819\u1920-\u192B\u1930-\u193B\u1951-\u196D\u19B0-\u19C0\u19C8-\u19C9\u19D0-\u19D9\u1A00-\u1A15\u1A20-\u1A53\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1B46-\u1B4B\u1B50-\u1B59\u1B6B-\u1B73\u1BB0-\u1BB9\u1BE6-\u1BF3\u1C00-\u1C22\u1C40-\u1C49\u1C5B-\u1C7D\u1CD0-\u1CD2\u1D00-\u1DBE\u1E01-\u1F15\u200C\u200D\u203F\u2040\u2054\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2D81-\u2D96\u2DE0-\u2DFF\u3021-\u3028\u3099\u309A\uA640-\uA66D\uA674-\uA67D\uA69F\uA6F0-\uA6F1\uA7F8-\uA800\uA806\uA80B\uA823-\uA827\uA880-\uA881\uA8B4-\uA8C4\uA8D0-\uA8D9\uA8F3-\uA8F7\uA900-\uA909\uA926-\uA92D\uA930-\uA945\uA980-\uA983\uA9B3-\uA9C0\uAA00-\uAA27\uAA40-\uAA41\uAA4C-\uAA4D\uAA50-\uAA59\uAA7B\uAAE0-\uAAE9\uAAF2-\uAAF3\uABC0-\uABE1\uABEC\uABED\uABF0-\uABF9\uFB20-\uFB28\uFE00-\uFE0F\uFE20-\uFE26\uFE33\uFE34\uFE4D-\uFE4F\uFF10-\uFF19\uFF3F";
-      var nonASCIIidentifierStart = new RegExp('[' + nonASCIIidentifierStartChars + ']');
-      var nonASCIIidentifier = new RegExp('[' + nonASCIIidentifierStartChars + nonASCIIidentifierChars + ']'); // Whether a single character denotes a newline.
+      var nonASCIIidentifierStart = new RegExp("[".concat(nonASCIIidentifierStartChars, "]"));
+      var nonASCIIidentifier = new RegExp("[".concat(nonASCIIidentifierStartChars, " ").concat(nonASCIIidentifierChars, "]")); // Whether a single character denotes a newline.
 
       exports.newline = /[\n\r\u2028\u2029]/; // Matches a whole line break (where CRLF is considered a single
       // line break). Used to count lines.
       // in javascript, these two differ
       // in python they are the same, different methods are called on them
 
-      exports.lineBreak = new RegExp('\r\n|' + exports.newline.source);
+      exports.lineBreak = new RegExp("\r\n|".concat(exports.newline.source));
       exports.allLineBreaks = new RegExp(exports.lineBreak.source, 'g'); // Test whether a given character code starts an identifier.
 
       exports.isIdentifierStart = function (code) {
@@ -17695,7 +17937,7 @@
           }
 
           var content = '';
-          var reg_match = new RegExp('</' + name + '\\s*>', 'igm');
+          var reg_match = new RegExp("</".concat(name, "\\s*>"), 'igm');
           reg_match.lastIndex = this.pos;
           var reg_array = reg_match.exec(this.input);
           var end_script = reg_array ? reg_array.index : this.input.length; //absolute end of script
@@ -17711,74 +17953,74 @@
 
         this.record_tag = function (tag) {
           //function to record a tag and its parent in this.tags Object
-          if (this.tags[tag + 'count']) {
+          if (this.tags["".concat(tag, "count")]) {
             //check for the existence of this tag type
-            this.tags[tag + 'count']++;
-            this.tags[tag + this.tags[tag + 'count']] = this.indent_level; //and record the present indent level
+            this.tags["".concat(tag, "count")]++;
+            this.tags[tag + this.tags["".concat(tag, "count")]] = this.indent_level; //and record the present indent level
           } else {
             //otherwise initialize this tag type
-            this.tags[tag + 'count'] = 1;
-            this.tags[tag + this.tags[tag + 'count']] = this.indent_level; //and record the present indent level
+            this.tags["".concat(tag, "count")] = 1;
+            this.tags[tag + this.tags["".concat(tag, "count")]] = this.indent_level; //and record the present indent level
           }
 
-          this.tags[tag + this.tags[tag + 'count'] + 'parent'] = this.tags.parent; //set the parent (i.e. in the case of a div this.tags.div1parent)
+          this.tags[tag + this.tags["".concat(tag, "count")] + 'parent'] = this.tags.parent; //set the parent (i.e. in the case of a div this.tags.div1parent)
 
-          this.tags.parent = tag + this.tags[tag + 'count']; //and make this the current parent (i.e. in the case of a div 'div1')
+          this.tags.parent = tag + this.tags["".concat(tag, "count")]; //and make this the current parent (i.e. in the case of a div 'div1')
         };
 
         this.retrieve_tag = function (tag) {
           //function to retrieve the opening tag to the corresponding closer
-          if (this.tags[tag + 'count']) {
+          if (this.tags["".concat(tag, "count")]) {
             //if the openener is not in the Object we ignore it
             var temp_parent = this.tags.parent; //check to see if it's a closable tag.
 
             while (temp_parent) {
               //till we reach '' (the initial value) 
-              if (tag + this.tags[tag + 'count'] === temp_parent) {
+              if (tag + this.tags["".concat(tag, "count")] === temp_parent) {
                 //if this is it use it
                 break;
               }
 
-              temp_parent = this.tags[temp_parent + 'parent']; //otherwise keep on climbing up the DOM Tree
+              temp_parent = this.tags["".concat(temp_parent, "parent")]; //otherwise keep on climbing up the DOM Tree
             }
 
             if (temp_parent) {
               //if we caught something
-              this.indent_level = this.tags[tag + this.tags[tag + 'count']]; //set the indent_level accordingly
+              this.indent_level = this.tags[tag + this.tags["".concat(tag, "count")]]; //set the indent_level accordingly
 
               this.tags.parent = this.tags[temp_parent + 'parent']; //and set the current parent
             }
 
-            delete this.tags[tag + this.tags[tag + 'count'] + 'parent']; //delete the closed tags parent reference...
+            delete this.tags[tag + this.tags["".concat(tag, "count")] + 'parent']; //delete the closed tags parent reference...
 
-            delete this.tags[tag + this.tags[tag + 'count']]; //...and the tag itself
+            delete this.tags[tag + this.tags["".concat(tag, "count")]]; //...and the tag itself
 
-            if (this.tags[tag + 'count'] === 1) {
-              delete this.tags[tag + 'count'];
+            if (this.tags["".concat(tag, "count")] === 1) {
+              delete this.tags["".concat(tag, "count")];
             } else {
-              this.tags[tag + 'count']--;
+              this.tags["".concat(tag, "count")]--;
             }
           }
         };
 
         this.indent_to_tag = function (tag) {
           // Match the indentation level to the last use of this tag, but don't remove it.
-          if (!this.tags[tag + 'count']) {
+          if (!this.tags["".concat(tag, "count")]) {
             return;
           }
 
           var temp_parent = this.tags.parent;
 
           while (temp_parent) {
-            if (tag + this.tags[tag + 'count'] === temp_parent) {
+            if (tag + this.tags["".concat(tag, "count")] === temp_parent) {
               break;
             }
 
-            temp_parent = this.tags[temp_parent + 'parent'];
+            temp_parent = this.tags["".concat(temp_parent, "parent")];
           }
 
           if (temp_parent) {
-            this.indent_level = this.tags[tag + this.tags[tag + 'count']];
+            this.indent_level = this.tags[tag + this.tags["".concat(tag, "count")]];
           }
         };
 
@@ -17854,7 +18096,7 @@
                 input_char += this.get_unformatted('}}');
 
                 if (content.length && content[content.length - 1] != ' ' && content[content.length - 1] != '<') {
-                  input_char = ' ' + input_char;
+                  input_char = " ".concat(input_char);
                 }
 
                 space = true;
@@ -17938,7 +18180,7 @@
             }
           } else if (this.is_unformatted(tag_check, unformatted)) {
             // do not reformat the "unformatted" tags
-            comment = this.get_unformatted('</' + tag_check + '>', tag_complete); //...delegate to get_unformatted function
+            comment = this.get_unformatted("</".concat(tag_check, ">"), tag_complete); //...delegate to get_unformatted function
 
             content.push(comment);
             tag_end = this.pos - 1;
@@ -18124,7 +18366,7 @@
               return token;
             }
 
-            return [token, 'TK_' + type];
+            return [token, "TK_".concat(type)];
           }
 
           if (this.current_mode === 'CONTENT') {
@@ -18143,7 +18385,7 @@
             if (typeof token != 'string') {
               return token;
             } else {
-              var tag_name_type = 'TK_TAG_' + this.tag_type;
+              var tag_name_type = "TK_TAG_".concat(this.tag_type);
               return [token, tag_name_type];
             }
           }
@@ -18372,7 +18614,8 @@
           case 'TK_SCRIPT':
             if (multi_parser.token_text !== '') {
               multi_parser.print_newline(false, multi_parser.output);
-              var text = multi_parser.token_text;
+              var _multi_parser = multi_parser,
+                  text = _multi_parser.token_text;
 
               var _beautifier = void 0;
 
@@ -19922,7 +20165,8 @@
 
         var javadoc = false;
         var starless = false;
-        var lastIndent = current_token.whitespace_before;
+        var _current_token = current_token,
+            lastIndent = _current_token.whitespace_before;
         var lastIndentLength = lastIndent.length; // block comment starts with a new line
 
         print_newline(false, true);
@@ -19943,7 +20187,7 @@
 
           if (javadoc) {
             // javadoc: reformat and re-indent
-            print_token(' ' + ltrim(lines[j]));
+            print_token(" ".concat(ltrim(lines[j])));
           } else if (starless && lines[j].length > lastIndentLength) {
             // starless: re-indent non-empty content, avoiding trim
             print_token(lines[j].substring(lastIndentLength));
@@ -20451,7 +20695,7 @@
             parser_pos += 1;
             block_comment_pattern.lastIndex = parser_pos;
             var comment_match = block_comment_pattern.exec(input);
-            comment = '/*' + comment_match[0];
+            comment = "/*".concat(comment_match[0]);
             parser_pos += comment_match[0].length;
             var directives = get_directives(comment);
 
@@ -20473,7 +20717,7 @@
 
             var _comment_match = comment_pattern.exec(input);
 
-            comment = '//' + _comment_match[0];
+            comment = "//".concat(_comment_match[0]);
             parser_pos += _comment_match[0].length;
             return [comment, 'TK_COMMENT'];
           }
@@ -20614,7 +20858,7 @@
               parser_pos += 1;
             }
 
-            return [trim(resulting_string) + '\n', 'TK_UNKNOWN'];
+            return ["".concat(trim(resulting_string), "\n"), 'TK_UNKNOWN'];
           } // Spidermonkey-specific sharp variables for circular references
           // https://developer.mozilla.org/En/Sharp_variables_in_JavaScript
           // http://mxr.mozilla.org/mozilla-central/source/js/src/jsscan.cpp around line 1935
@@ -20723,7 +20967,7 @@
               pos += 4;
             } else {
               // some common escape, e.g \n
-              out += '\\' + c;
+              out += "\\".concat(c);
               continue;
             }
 
@@ -20738,15 +20982,15 @@
             if (escaped >= 0x00 && escaped < 0x20) {
               // leave 0x00...0x1f escaped
               if (c === 'x') {
-                out += '\\x' + s_hex;
+                out += "\\x".concat(s_hex);
               } else {
-                out += "\\u" + s_hex;
+                out += "\\u".concat(s_hex);
               }
 
               continue;
             } else if (escaped === 0x22 || escaped === 0x27 || escaped === 0x5c) {
               // single-quote, apostrophe, backslash - escape these
-              out += '\\' + String.fromCharCode(escaped);
+              out += "\\".concat(String.fromCharCode(escaped));
             } else if (c === 'x' && escaped > 0x7e && escaped <= 0xff) {
               // we bail out on \x7f..\xff,
               // leaving whole string escaped,
@@ -20805,9 +21049,9 @@
      * Check if code view is enabled.
      */
 
-    function isActive() {
+    var isActive = function isActive() {
       return editor.$box.hasClass('fr-code-view');
-    }
+    };
 
     function get() {
       if (code_mirror) {
@@ -20886,7 +21130,7 @@
               if (this.value.length === 0) {
                 this.style.height = 'auto';
               } else {
-                this.style.height = this.scrollHeight + 'px';
+                this.style.height = "".concat(this.scrollHeight, "px");
               }
             } else {
               this.removeAttribute('rows');
@@ -21010,7 +21254,11 @@
       if (!val) {
         editor.$box.toggleClass('fr-code-view', false);
 
-        _showText($btn);
+        _showText($btn); // https://github.com/froala-labs/froala-editor-js-2/issues/2036
+        // fire codeView.update event when switching to html view
+
+
+        editor.events.trigger('codeView.update');
       } else {
         editor.popups.hideAll();
 
@@ -21058,7 +21306,7 @@
       $html_area.attr('dir', editor.opts.direction); // Exit code view button for inline toolbar.
 
       if (!editor.$box.hasClass('fr-basic')) {
-        $back_button = $('<a data-cmd="html" title="Code View" class="fr-command fr-btn html-switch' + (editor.helpers.isMobile() ? '' : ' fr-desktop') + '" role="button" tabIndex="-1"><i class="fa fa-code"></i></button>');
+        $back_button = $("<a data-cmd=\"html\" title=\"Code View\" class=\"fr-command fr-btn html-switch".concat(editor.helpers.isMobile() ? '' : ' fr-desktop', "\" role=\"button\" tabIndex=\"-1\"><i class=\"fa fa-code\"></i></button>"));
         editor.$box.append($back_button);
         editor.events.bindClick(editor.$box, 'a.html-switch', function () {
           editor.events.trigger('commands.before', ['html']);
@@ -21257,7 +21505,7 @@
         }
       }
 
-      return colors_html + '</div>';
+      return "".concat(colors_html, "</div>");
     }
     /*
      * Register keyboard events.
@@ -21591,9 +21839,9 @@
       e.originalEvent.dataTransfer.setData('text', 'Froala');
     }
 
-    function _tagOK(tag_under) {
+    var _tagOK = function _tagOK(tag_under) {
       return !(tag_under && (tag_under.tagName === 'HTML' || tag_under.tagName === 'BODY' || editor.node.isElement(tag_under)));
-    }
+    };
 
     function _setHelperSize(top, left, width) {
       if (editor.opts.iframe) {
@@ -21974,13 +22222,13 @@
      */
 
 
-    function _init() {
+    var _init = function _init() {
       if (editor.opts.editInPopup) {
         _initPopup();
 
         _initEvents();
       }
-    }
+    };
 
     return {
       _init: _init,
@@ -24620,7 +24868,7 @@
         desc: 'Aruba Flag'
       }, {
         code: '1f1e6-1f1fd',
-        desc: 'Åland Islands Flag'
+        desc: '√Öland Islands Flag'
       }, {
         code: '1f1e6-1f1ff',
         desc: 'Azerbaijan Flag'
@@ -24650,7 +24898,7 @@
         desc: 'Benin Flag'
       }, {
         code: '1f1e7-1f1f1',
-        desc: 'St. Barthélemy Flag'
+        desc: 'St. Barth√©lemy Flag'
       }, {
         code: '1f1e7-1f1f2',
         desc: 'Bermuda Flag'
@@ -24701,7 +24949,7 @@
         desc: 'Switzerland Flag'
       }, {
         code: '1f1e8-1f1ee',
-        desc: 'Côte D’ivoire Flag'
+        desc: 'C√¥te D‚Äôivoire Flag'
       }, {
         code: '1f1e8-1f1f0',
         desc: 'Cook Islands Flag'
@@ -24725,7 +24973,7 @@
         desc: 'Cape Verde Flag'
       }, {
         code: '1f1e8-1f1fc',
-        desc: 'Curaçao Flag'
+        desc: 'Cura√ßao Flag'
       }, {
         code: '1f1e8-1f1fd',
         desc: 'Christmas Island Flag'
@@ -25124,7 +25372,7 @@
         desc: 'Qatar Flag'
       }, {
         code: '1f1f7-1f1ea',
-        desc: 'Réunion Flag'
+        desc: 'R√©union Flag'
       }, {
         code: '1f1f7-1f1f4',
         desc: 'Romania Flag'
@@ -25181,7 +25429,7 @@
         desc: 'South Sudan  Flag'
       }, {
         code: '1f1f8-1f1f9',
-        desc: 'São Tomé & Príncipe Flag'
+        desc: 'S√£o Tom√© & Pr√≠ncipe Flag'
       }, {
         code: '1f1f8-1f1fb',
         desc: 'El Salvador Flag'
@@ -25654,7 +25902,7 @@
       var emoticon_html = '';
       selectedCategory.emoticons.forEach(function (emoticon) {
         var compiledCode = emoticon.code.split('-').reduce(function (compiledCode, code) {
-          return compiledCode ? compiledCode + '&zwj;' + '&#x' + code.toLowerCase() + ';' : '&#x' + code.toLowerCase() + ';';
+          return compiledCode ? "".concat(compiledCode, "&zwj;&#x").concat(code.toLowerCase(), ";") : "&#x".concat(code.toLowerCase(), ";");
         }, '');
         var imageMap = {
           image: emoticon.code.toLowerCase(),
@@ -25823,18 +26071,18 @@
      */
 
 
-    function _encodeEntities(html) {
+    var _encodeEntities = function _encodeEntities(html) {
       if (html.length === 0) return '';
       return editor.clean.exec(html, _encode).replace(/\&amp;/g, '&');
-    }
+    };
     /*
      * Initialize.
      */
 
 
-    function _init() {
+    var _init = function _init() {
       if (!editor.opts.htmlSimpleAmpersand) {
-        editor.opts.entities = editor.opts.entities + '&amp;';
+        editor.opts.entities = "".concat(editor.opts.entities, "&amp;");
       } // Do escape.
 
 
@@ -25845,13 +26093,13 @@
 
       for (var i = 0; i < entities_text.length; i++) {
         var chr = entities_text.charAt(i);
-        _map[chr] = entities_array[i] + ';';
-        _reg_exp += '\\' + chr + (i < entities_text.length - 1 ? '|' : '');
+        _map[chr] = "".concat(entities_array[i], ";");
+        _reg_exp += "\\".concat(chr + (i < entities_text.length - 1 ? '|' : ''));
       }
 
-      _reg_exp = new RegExp('(' + _reg_exp + ')', 'g');
+      _reg_exp = new RegExp("(".concat(_reg_exp, ")"), 'g');
       editor.events.on('html.get', _encodeEntities, true);
-    }
+    };
 
     return {
       _init: _init
@@ -25959,12 +26207,12 @@
 
       if ($popup) {
         var $layer = $popup.find('.fr-file-progress-bar-layer');
-        $layer.find('h3').text(message + (progress ? ' ' + progress + '%' : ''));
+        $layer.find('h3').text(message + (progress ? " ".concat(progress, "%") : ''));
         $layer.removeClass('fr-error');
 
         if (progress) {
           $layer.find('div').removeClass('fr-indeterminate');
-          $layer.find('div > span').css('width', progress + '%');
+          $layer.find('div > span').css('width', "".concat(progress, "%"));
         } else {
           $layer.find('div').addClass('fr-indeterminate');
         }
@@ -26001,7 +26249,7 @@
       } // Insert the link.
 
 
-      editor.html.insert('<a href="' + link + '" target="_blank" id="fr-inserted-file" class="fr-file">' + text + '</a>'); // Get the file.
+      editor.html.insert("<a href=\"".concat(link, "\" target=\"_blank\" id=\"fr-inserted-file\" class=\"fr-file\">").concat(text, "</a>")); // Get the file.
 
       var $file = editor.$el.find('#fr-inserted-file');
       $file.removeAttr('id');
@@ -26241,7 +26489,7 @@
             if (editor.opts.fileUploadToS3.uploadURL) {
               url = editor.opts.fileUploadToS3.uploadURL;
             } else {
-              url = 'https://' + editor.opts.fileUploadToS3.region + '.amazonaws.com/' + editor.opts.fileUploadToS3.bucket;
+              url = "https://".concat(editor.opts.fileUploadToS3.region, ".amazonaws.com/").concat(editor.opts.fileUploadToS3.bucket);
             }
           }
 
@@ -26335,12 +26583,12 @@
         editor.opts.fileInsertButtons.splice(editor.opts.fileInsertButtons.indexOf('fileUpload'), 1);
       }
 
-      file_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.fileInsertButtons) + '</div>'; // File upload layer.
+      file_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.fileInsertButtons), "</div>"); // File upload layer.
 
       var upload_layer = '';
 
       if (editor.opts.fileUpload) {
-        upload_layer = '<div class="fr-file-upload-layer fr-layer fr-active" id="fr-file-upload-layer-' + editor.id + '"><strong>' + editor.language.translate('Drop file') + '</strong><br>(' + editor.language.translate('or click') + ')<div class="fr-form"><input type="file" name="' + editor.opts.fileUploadParam + '" accept="' + (editor.opts.fileAllowedTypes.indexOf('*') >= 0 ? '/' : '') + editor.opts.fileAllowedTypes.join(', ').toLowerCase() + '" tabIndex="-1" aria-labelledby="fr-file-upload-layer-' + editor.id + '" role="button"></div></div>';
+        upload_layer = "<div class=\"fr-file-upload-layer fr-layer fr-active\" id=\"fr-file-upload-layer-".concat(editor.id, "\"><strong>").concat(editor.language.translate('Drop file'), "</strong><br>(").concat(editor.language.translate('or click'), ")<div class=\"fr-form\"><input type=\"file\" name=\"").concat(editor.opts.fileUploadParam, "\" accept=\"").concat(editor.opts.fileAllowedTypes.indexOf('*') >= 0 ? '/' : '').concat(editor.opts.fileAllowedTypes.join(', ').toLowerCase(), "\" tabIndex=\"-1\" aria-labelledby=\"fr-file-upload-layer-").concat(editor.id, "\" role=\"button\"></div></div>");
       } // Progress bar.
 
 
@@ -26565,7 +26813,7 @@
 
     function refreshOnShow($btn, $dropdown) {
       $dropdown.find('.fr-command.fr-active').removeClass('fr-active').attr('aria-selected', false);
-      $dropdown.find('.fr-command[data-param1="' + _getSelection() + '"]').addClass('fr-active').attr('aria-selected', true);
+      $dropdown.find(".fr-command[data-param1=\"".concat(_getSelection(), "\"]")).addClass('fr-active').attr('aria-selected', true);
     }
 
     function _getArray(val) {
@@ -26655,7 +26903,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="fontFamily" data-param1="' + val + '" style="font-family: ' + val + '" title="' + options[val] + '">' + options[val] + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"fontFamily\" data-param1=\"".concat(val, "\" \n        style=\"font-family: ").concat(val, "\" title=\"").concat(options[val], "\">").concat(options[val], "</a></li>");
         }
       }
 
@@ -26698,11 +26946,11 @@
       var val = $(editor.selection.element()).css('font-size');
 
       if (editor.opts.fontSizeUnit === 'pt') {
-        val = Math.round(parseFloat(val, 10) * 72 / 96) + 'pt';
+        val = "".concat(Math.round(parseFloat(val, 10) * 72 / 96), "pt");
       }
 
       $dropdown.find('.fr-command.fr-active').removeClass('fr-active').attr('aria-selected', false);
-      $dropdown.find('.fr-command[data-param1="' + val + '"]').addClass('fr-active').attr('aria-selected', true);
+      $dropdown.find(".fr-command[data-param1=\"".concat(val, "\"]")).addClass('fr-active').attr('aria-selected', true);
     }
 
     function refresh($btn) {
@@ -26710,7 +26958,7 @@
         var val = editor.helpers.getPX($(editor.selection.element()).css('font-size'));
 
         if (editor.opts.fontSizeUnit === 'pt') {
-          val = Math.round(parseFloat(val, 10) * 72 / 96) + 'pt';
+          val = "".concat(Math.round(parseFloat(val, 10) * 72 / 96), "pt");
         }
 
         $btn.find('> span').text(val);
@@ -26741,7 +26989,7 @@
 
       for (var i = 0; i < options.length; i++) {
         var val = options[i];
-        c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="fontSize" data-param1="' + val + this.opts.fontSizeUnit + '" title="' + val + '">' + val + '</a></li>';
+        c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"fontSize\" data-param1=\"".concat(val).concat(this.opts.fontSizeUnit, "\" title=\"").concat(val, "\">").concat(val, "</a></li>");
       }
 
       c += '</ul>';
@@ -26787,7 +27035,6 @@
      */
 
     function _inputMouseDown(e) {
-      e.preventDefault();
       editor.selection.clear();
       $(this).data('mousedown', true);
     }
@@ -26881,6 +27128,12 @@
 
 
     function showEditPopup(input) {
+      var hideEditPopups = ['checkbox', 'radio'];
+
+      if (hideEditPopups.indexOf(input.type) != -1) {
+        return;
+      }
+
       var $popup = editor.popups.get('forms.edit');
       if (!$popup) $popup = _initEditPopup();
       current_input = input;
@@ -26905,6 +27158,8 @@
 
         if ($input.is('button')) {
           $popup.find('input[type="text"][name="text"]').val($input.text());
+        } else if ($input.is('input[type=button]') || $input.is('input[type=submit]') || $input.is('input[type=reset]')) {
+          $popup.find('input[type="text"][name="text"]').val($input.val());
         } else {
           $popup.find('input[type="text"][name="text"]').val($input.attr('placeholder'));
         }
@@ -27019,15 +27274,23 @@
 
       if (input) {
         var $input = $(input);
-        var val = $popup.find('input[type="text"][name="text"]').val() || '';
+        var inputBtns = ['button', 'submit', 'reset'];
+        var val = $popup.find('input[type="text"][name="text"]').val() || ''; // https://github.com/froala-labs/froala-editor-js-2/issues/1988
+        // update the text content if input is a button
 
-        if (val.length) {
-          if ($input.is('button')) {
+        if ($input.is('button')) {
+          if (val.length) {
             $input.text(val);
           } else {
+            // If tag is button, Update empty text.
+            $input.text("\u200B");
+          }
+        } else if (inputBtns.indexOf(input.type) != -1) {
+          $input.attr('value', val);
+        } // update the place holder if input type is text
+        else {
             $input.attr('placeholder', val);
           }
-        }
 
         editor.popups.hide('forms.update');
         showEditPopup(input);
@@ -27112,7 +27375,8 @@
     }
   });
   FroalaEditor.DefineIcon('inputEdit', {
-    NAME: 'edit'
+    NAME: 'edit',
+    SVG_KEY: 'edit'
   });
   FroalaEditor.RegisterCommand('inputEdit', {
     title: 'Edit Button',
@@ -27153,9 +27417,9 @@
      * Check if fullscreen mode is active.
      */
 
-    function isActive() {
+    var isActive = function isActive() {
       return editor.$box.hasClass('fr-fullscreen');
-    }
+    };
     /**
      * Turn fullscreen on.
      */
@@ -27187,8 +27451,8 @@
 
       height = editor.opts.height;
       max_height = editor.opts.heightMax;
-      z_index = editor.opts.zIndex; // Take second toolbar into consideration when in fullscreen mode
-
+      z_index = editor.opts.z_index;
+      // Take second toolbar into consideration when in fullscreen mode
       editor.opts.height = editor.o_win.innerHeight - (editor.opts.toolbarInline ? 0 : editor.$tb.outerHeight() + (editor.$second_tb ? editor.$second_tb.outerHeight() : 0));
       editor.opts.zIndex = 2147483641;
       editor.opts.heightMax = null;
@@ -27461,7 +27725,7 @@
      * Init Help.
      */
 
-    function _init() {}
+    var _init = function _init() {};
     /*
      * Build html body.
      */
@@ -27477,14 +27741,14 @@
 
         var group = '<table>'; // Set title.
 
-        group += '<thead><tr><th>' + editor.language.translate(set.title) + '</th></tr></thead>';
+        group += "<thead><tr><th>".concat(editor.language.translate(set.title), "</th></tr></thead>");
         group += '<tbody>'; // Build commands table.
 
         for (var j = 0; j < set.commands.length; j++) {
           var command = set.commands[j];
           group += '<tr>';
-          group += '<td>' + editor.language.translate(command.desc) + '</td>';
-          group += '<td>' + command.val.replace('OSkey', editor.helpers.isMac() ? '&#8984;' : 'Ctrl+') + '</td>';
+          group += "<td>".concat(editor.language.translate(command.desc), "</td>");
+          group += "<td>".concat(command.val.replace('OSkey', editor.helpers.isMac() ? '&#8984;' : 'Ctrl+'), "</td>");
           group += '</tr>';
         } // End table.
 
@@ -27505,7 +27769,7 @@
 
     function show() {
       if (!$modal) {
-        var head = '<h4>' + editor.language.translate('Shortcuts') + '</h4>';
+        var head = "<h4>".concat(editor.language.translate('Shortcuts'), "</h4>");
 
         var body = _buildBody();
 
@@ -27527,9 +27791,9 @@
      */
 
 
-    function hide() {
+    var hide = function hide() {
       editor.modals.hide(modal_id);
-    }
+    };
 
     return {
       _init: _init,
@@ -27708,8 +27972,8 @@
       }
 
       if (!$img.hasClass('fr-dii') && !$img.hasClass('fr-dib')) {
-        $img.addClass('fr-fi' + getAlign($img)[0]);
-        $img.addClass('fr-di' + getDisplay($img)[0]); // Reset inline style.
+        $img.addClass("fr-fi".concat(getAlign($img)[0]));
+        $img.addClass("fr-di".concat(getDisplay($img)[0])); // Reset inline style.
 
         $img.css('margin', '');
         $img.css('float', '');
@@ -27880,7 +28144,7 @@
 
 
     function _getHandler(pos) {
-      return '<div class="fr-handler fr-h' + pos + '"></div>';
+      return "<div class=\"fr-handler fr-h".concat(pos, "\"></div>");
     }
     /**
      * Set the image with
@@ -27973,7 +28237,7 @@
           width = ((width + diff_x) / $(p_node).outerWidth() * 100).toFixed(2);
           if (editor.opts.imageRoundPercent) width = Math.round(width); // Set the image width.
 
-          _setWidth(width + '%'); // Get the real image width after resize.
+          _setWidth("".concat(width, "%")); // Get the real image width after resize.
 
 
           if (hasCaption()) {
@@ -27984,7 +28248,7 @@
 
 
           if (real_image_size !== width && !editor.opts.imageRoundPercent) {
-            _setWidth(real_image_size + '%');
+            _setWidth("".concat(real_image_size, "%"));
           }
 
           $current_image.css('height', '').removeAttr('height');
@@ -28039,6 +28303,9 @@
 
         editor.undo.saveStep();
         editor.events.trigger('image.resizeEnd', [get()]);
+      } else {
+        //https://github.com/froala-labs/froala-editor-js-2/issues/1916
+        $image_resizer.removeClass('fr-active');
       }
     }
     /**
@@ -28051,7 +28318,7 @@
       if ($current_image) $current_image.addClass('fr-error'); // https://github.com/froala/wysiwyg-editor/issues/3407
 
       if (error_messages[code]) {
-        _showErrorMessage(error_messages[code]);
+        _showErrorMessage(editor.language.translate(error_messages[code]));
       } else {
         _showErrorMessage(editor.language.translate('Something went wrong. Please try again.'));
       } // Remove image if it exists.
@@ -28167,12 +28434,12 @@
 
       if ($popup) {
         var $layer = $popup.find('.fr-image-progress-bar-layer');
-        $layer.find('h3').text(message + (progress ? ' ' + progress + '%' : ''));
+        $layer.find('h3').text(message + (progress ? " ".concat(progress, "%") : ''));
         $layer.removeClass('fr-error');
 
         if (progress) {
           $layer.find('div').removeClass('fr-indeterminate');
-          $layer.find('div > span').css('width', progress + '%');
+          $layer.find('div > span').css('width', "".concat(progress, "%"));
         } else {
           $layer.find('div').addClass('fr-indeterminate');
         }
@@ -28227,7 +28494,7 @@
             insert(img_url, true, [], $current_image);
           };
 
-          xhr.open('GET', editor.opts.imageCORSProxy + '/' + img_url, true);
+          xhr.open('GET', "".concat(editor.opts.imageCORSProxy, "/").concat(img_url), true);
           xhr.responseType = 'blob';
           xhr.send();
         } else {
@@ -28262,6 +28529,10 @@
 
 
     function insert(link, sanitize, data, $existing_img, response) {
+      if ($existing_img && typeof $existing_img === 'string') {
+        $existing_img = editor.$($existing_img);
+      }
+
       editor.edit.off();
 
       _setProgressMessage(editor.language.translate('Loading image'));
@@ -28310,7 +28581,7 @@
             for (attr in data) {
               if (data.hasOwnProperty(attr)) {
                 if (attr != 'link') {
-                  $img.attr('data-' + attr, data[attr]);
+                  $img.attr("data-".concat(attr), data[attr]);
                 }
               }
             }
@@ -28470,8 +28741,8 @@
         for (attr in data) {
           if (data.hasOwnProperty(attr)) {
             if (attr != 'link') {
-              data_str += ' data-' + attr + '="' + data[attr] + '"';
-              $img.attr('data-str' + attr, data[attr]);
+              data_str += " data-".concat(attr, "=\"").concat(data[attr], "\"");
+              $img.attr("data-str".concat(attr), data[attr]);
             }
           }
         }
@@ -28480,11 +28751,11 @@
       var width = editor.opts.imageDefaultWidth;
 
       if (width && width != 'auto') {
-        width = editor.opts.imageResizeWithPercent ? '100%' : width + 'px';
+        width = editor.opts.imageResizeWithPercent ? '100%' : "".concat(width, "px");
       } // Create image object and set the load event.
 
 
-      $img.attr('style', width ? 'width: ' + width + ';' : '');
+      $img.attr('style', width ? "width: ".concat(width, ";") : '');
 
       _setStyle($img, editor.opts.imageDefaultDisplay, editor.opts.imageDefaultAlign);
 
@@ -28609,9 +28880,7 @@
         if (!$image_placeholder) {
           _addImage(link, null, _sendRequest);
         } else {
-          // https://github.com/froala-labs/froala-editor-js-2/issues/1866
-          // Add load event for the image element
-          $image_placeholder.get(0).addEventListener('load', _sendRequest); // Image might be corrupted.
+          $image_placeholder.on('load', _sendRequest); // Image might be corrupted.
 
           $image_placeholder.on('error', function () {
             _sendRequest();
@@ -28734,7 +29003,7 @@
             if (editor.opts.imageUploadToS3.uploadURL) {
               url = editor.opts.imageUploadToS3.uploadURL;
             } else {
-              url = 'https://' + editor.opts.imageUploadToS3.region + '.amazonaws.com/' + editor.opts.imageUploadToS3.bucket;
+              url = "https://".concat(editor.opts.imageUploadToS3.region, ".amazonaws.com/").concat(editor.opts.imageUploadToS3.bucket);
             }
           }
 
@@ -28751,13 +29020,23 @@
 
     function _bindInsertEvents($popup) {
       // Drag over the dropable area.
-      editor.events.$on($popup, 'dragover dragenter', '.fr-image-upload-layer', function () {
+      editor.events.$on($popup, 'dragover dragenter', '.fr-image-upload-layer', function (e) {
         $(this).addClass('fr-drop');
+
+        if (editor.browser.msie || editor.browser.edge) {
+          e.preventDefault();
+        }
+
         return false;
       }, true); // Drag end.
 
-      editor.events.$on($popup, 'dragleave dragend', '.fr-image-upload-layer', function () {
+      editor.events.$on($popup, 'dragleave dragend', '.fr-image-upload-layer', function (e) {
         $(this).removeClass('fr-drop');
+
+        if (editor.browser.msie || editor.browser.edge) {
+          e.preventDefault();
+        }
+
         return false;
       }, true); // Drop.
 
@@ -28918,8 +29197,9 @@
       }, true); // Drop inside the editor.
 
       editor.events.on('drop', _drop);
-      editor.events.on('element.beforeDrop', _beforeElementDrop);
-      editor.events.on('mousedown window.mousedown', _markExit);
+      editor.events.on('element.beforeDrop', _beforeElementDrop); //https://github.com/froala-labs/froala-editor-js-2/issues/1916
+
+      editor.events.on('window.mousedown', _markExit);
       editor.events.on('window.touchmove', _unmarkExit);
       editor.events.on('mouseup window.mouseup', function () {
         if ($current_image) {
@@ -28979,7 +29259,7 @@
               $img.after('<br>');
             } else {
               var $parent = $(editor.node.blockParent($img.get(0)));
-              $parent.after('<' + editor.html.defaultTag() + '><br></' + editor.html.defaultTag() + '>');
+              $parent.after("<".concat(editor.html.defaultTag(), "><br></").concat(editor.html.defaultTag(), ">"));
             }
           }
         });
@@ -29009,7 +29289,7 @@
       var buttonList = editor.button.buildList(editor.opts.imageInsertButtons);
 
       if (buttonList !== '') {
-        image_buttons = '<div class="fr-buttons fr-tabs">' + buttonList + '</div>';
+        image_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(buttonList, "</div>");
       }
 
       var uploadIndex = editor.opts.imageInsertButtons.indexOf('imageUpload');
@@ -29024,7 +29304,7 @@
           active = '';
         }
 
-        upload_layer = '<div class="fr-image-upload-layer' + active + ' fr-layer" id="fr-image-upload-layer-' + editor.id + '"><strong>' + editor.language.translate('Drop image') + '</strong><br>(' + editor.language.translate('or click') + ')<div class="fr-form"><input type="file" accept="image/' + editor.opts.imageAllowedTypes.join(', image/').toLowerCase() + '" tabIndex="-1" aria-labelledby="fr-image-upload-layer-' + editor.id + '" role="button"></div></div>';
+        upload_layer = "<div class=\"fr-image-upload-layer".concat(active, " fr-layer\" id=\"fr-image-upload-layer-").concat(editor.id, "\"><strong>").concat(editor.language.translate('Drop image'), "</strong><br>(").concat(editor.language.translate('or click'), ")<div class=\"fr-form\"><input type=\"file\" accept=\"image/").concat(editor.opts.imageAllowedTypes.join(', image/').toLowerCase(), "\" tabIndex=\"-1\" aria-labelledby=\"fr-image-upload-layer-").concat(editor.id, "\" role=\"button\"></div></div>");
       } // Image by url layer.
 
 
@@ -29037,7 +29317,7 @@
           active = '';
         }
 
-        by_url_layer = '<div class="fr-image-by-url-layer' + active + ' fr-layer" id="fr-image-by-url-layer-' + editor.id + '"><div class="fr-input-line"><input id="fr-image-by-url-layer-text-' + editor.id + '" type="text" placeholder="http://" tabIndex="1" aria-required="true"></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="imageInsertByURL" tabIndex="2" role="button">' + editor.language.translate('Insert') + '</button></div></div>';
+        by_url_layer = "<div class=\"fr-image-by-url-layer".concat(active, " fr-layer\" id=\"fr-image-by-url-layer-").concat(editor.id, "\"><div class=\"fr-input-line\"><input id=\"fr-image-by-url-layer-text-").concat(editor.id, "\" type=\"text\" placeholder=\"http://\" tabIndex=\"1\" aria-required=\"true\"></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"imageInsertByURL\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('Insert'), "</button></div></div>");
       } // Progress bar.
 
 
@@ -29111,10 +29391,10 @@
 
 
       var image_buttons = '';
-      image_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.imageAltButtons) + '</div>'; // Image by url layer.
+      image_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.imageAltButtons), "</div>"); // Image by url layer.
 
       var alt_layer = '';
-      alt_layer = '<div class="fr-image-alt-layer fr-layer fr-active" id="fr-image-alt-layer-' + editor.id + '"><div class="fr-input-line"><input id="fr-image-alt-layer-text-' + editor.id + '" type="text" placeholder="' + editor.language.translate('Alternative Text') + '" tabIndex="1"></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="imageSetAlt" tabIndex="2" role="button">' + editor.language.translate('Update') + '</button></div></div>';
+      alt_layer = "<div class=\"fr-image-alt-layer fr-layer fr-active\" id=\"fr-image-alt-layer-".concat(editor.id, "\"><div class=\"fr-input-line\"><input id=\"fr-image-alt-layer-text-").concat(editor.id, "\" type=\"text\" placeholder=\"").concat(editor.language.translate('Alternative Text'), "\" tabIndex=\"1\"></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"imageSetAlt\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('Update'), "</button></div></div>");
       var template = {
         buttons: image_buttons,
         alt_layer: alt_layer // Set the template in the popup.
@@ -29205,10 +29485,10 @@
 
 
       var image_buttons = '';
-      image_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.imageSizeButtons) + '</div>'; // Size layer.
+      image_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.imageSizeButtons), "</div>"); // Size layer.
 
       var size_layer = '';
-      size_layer = '<div class="fr-image-size-layer fr-layer fr-active" id="fr-image-size-layer-' + editor.id + '"><div class="fr-image-group"><div class="fr-input-line"><input id="fr-image-size-layer-width-' + editor.id + '" type="text" name="width" placeholder="' + editor.language.translate('Width') + '" tabIndex="1"></div><div class="fr-input-line"><input id="fr-image-size-layer-height' + editor.id + '" type="text" name="height" placeholder="' + editor.language.translate('Height') + '" tabIndex="1"></div></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="imageSetSize" tabIndex="2" role="button">' + editor.language.translate('Update') + '</button></div></div>';
+      size_layer = "<div class=\"fr-image-size-layer fr-layer fr-active\" id=\"fr-image-size-layer-".concat(editor.id, "\"><div class=\"fr-image-group\"><div class=\"fr-input-line\"><input id=\"fr-image-size-layer-width-'").concat(editor.id, "\" type=\"text\" name=\"width\" placeholder=\"").concat(editor.language.translate('Width'), "\" tabIndex=\"1\"></div><div class=\"fr-input-line\"><input id=\"fr-image-size-layer-height").concat(editor.id, "\" type=\"text\" name=\"height\" placeholder=\"").concat(editor.language.translate('Height'), "\" tabIndex=\"1\"></div></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"imageSetSize\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('Update'), "</button></div></div>");
       var template = {
         buttons: image_buttons,
         size_layer: size_layer // Set the template in the popup.
@@ -29291,7 +29571,7 @@
 
 
       $popup.find('.fr-layer').removeClass('fr-active');
-      $popup.find('.fr-' + name + '-layer').addClass('fr-active');
+      $popup.find(".fr-".concat(name, "-layer")).addClass('fr-active');
       editor.popups.show('image.insert', left, top, $current_image ? $current_image.outerHeight() : 0);
       editor.accessibility.focusPopup($popup);
     }
@@ -29725,8 +30005,8 @@
           for (var i = 0; i < imgs.length; i++) {
             var width = imgs[i].style.width || $(imgs[i]).width();
             var height = imgs[i].style.height || $(imgs[i]).height();
-            if (width) imgs[i].setAttribute('width', ('' + width).replace(/px/, ''));
-            if (height) imgs[i].setAttribute('height', ('' + height).replace(/px/, ''));
+            if (width) imgs[i].setAttribute('width', "".concat(width).replace(/px/, ''));
+            if (height) imgs[i].setAttribute('height', "".concat(height).replace(/px/, ''));
           }
         });
       }
@@ -29780,14 +30060,23 @@
       replace();
       showProgressBar();
       $current_image.on('load', function () {
+        var loadEvents = [];
+
         _repositionResizer(); // https://github.com/froala/wysiwyg-editor/issues/3407
 
 
         if ($(editor.popups.get('image.insert').get(0)).find('div.fr-active.fr-error').length < 1) {
           showProgressBar();
-        }
+        } // https://github.com/froala-labs/froala-editor-js-2/issues/1866
 
-        $(this).off('load');
+
+        $(this).data('events').find(function (event) {
+          if (event[0] === 'load') {
+            loadEvents.push(event);
+          }
+        }); // turn off the event if it is registered only once
+
+        loadEvents.length <= 1 && $(this).off('load');
       });
       var splitSrc = $(img).attr('src').split(','); // Convert image to blob.
 
@@ -29853,10 +30142,10 @@
                 } // Update image and process it.
 
 
-                img.src = canvas.toDataURL('image/' + imgExt);
+                img.src = canvas.toDataURL("image/".concat(imgExt));
               };
 
-              _img.src = (img.src.indexOf('blob:') === 0 ? '' : editor.opts.imageCORSProxy + '/') + img.src;
+              _img.src = (img.src.indexOf('blob:') === 0 ? '' : "".concat(editor.opts.imageCORSProxy, "/")) + img.src;
             } // Images without http (Safari ones.).
             else if (img.src.indexOf('http') !== 0 || img.src.indexOf('https://mail.google.com/mail') === 0) {
                 editor.selection.save();
@@ -29879,7 +30168,7 @@
       }
 
       editor.undo.saveStep();
-      editor.html.insert('<img data-fr-image-pasted="true" src="' + result + '"' + (width ? ' style="width: ' + width + ';"' : '') + '>');
+      editor.html.insert("<img data-fr-image-pasted=\"true\" src=\"".concat(result, "\"").concat(width ? " style=\"width: ".concat(width, ";\"") : '', ">"));
       var $img = editor.$el.find('img[data-fr-image-pasted="true"]');
 
       if ($img) {
@@ -30047,11 +30336,11 @@
         $img.removeClass('fr-fil fr-fir fr-dib fr-dii');
 
         if (_align) {
-          $img.addClass('fr-fi' + _align[0]);
+          $img.addClass("fr-fi".concat(_align[0]));
         }
 
         if (_display) {
-          $img.addClass('fr-di' + _display[0]);
+          $img.addClass("fr-di".concat(_display[0]));
         }
       } else {
         if (_display == 'inline') {
@@ -30066,21 +30355,21 @@
               'float': 'none',
               marginBottom: '',
               marginTop: '',
-              maxWidth: 'calc(100% - ' + 2 * editor.opts.imageDefaultMargin + 'px)',
+              maxWidth: "calc(100% - ".concat(2 * editor.opts.imageDefaultMargin, "px)"),
               textAlign: 'center'
             });
           } else if (_align == 'left') {
             $img.css({
               'float': 'left',
               marginLeft: 0,
-              maxWidth: 'calc(100% - ' + editor.opts.imageDefaultMargin + 'px)',
+              maxWidth: "calc(100% - ".concat(editor.opts.imageDefaultMargin, "px)"),
               textAlign: 'left'
             });
           } else {
             $img.css({
               'float': 'right',
               marginRight: 0,
-              maxWidth: 'calc(100% - ' + editor.opts.imageDefaultMargin + 'px)',
+              maxWidth: "calc(100% - ".concat(editor.opts.imageDefaultMargin, "px)"),
               textAlign: 'right'
             });
           }
@@ -30089,7 +30378,7 @@
             display: 'block',
             'float': 'none',
             verticalAlign: 'top',
-            margin: editor.opts.imageDefaultMargin + 'px auto',
+            margin: "".concat(editor.opts.imageDefaultMargin, "px auto"),
             textAlign: 'center'
           });
 
@@ -30221,7 +30510,7 @@
 
     function refreshAlign($btn) {
       if ($current_image) {
-        $btn.find('> *').first().replaceWith(editor.icon.create('image-align-' + getAlign()));
+        $btn.find('> *').first().replaceWith(editor.icon.create("image-align-".concat(getAlign())));
       }
     }
     /**
@@ -30231,7 +30520,7 @@
 
     function refreshAlignOnShow($btn, $dropdown) {
       if ($current_image) {
-        $dropdown.find('.fr-command[data-param1="' + getAlign() + '"]').addClass('fr-active').attr('aria-selected', true);
+        $dropdown.find(".fr-command[data-param1=\"".concat(getAlign(), "\"]")).addClass('fr-active').attr('aria-selected', true);
       }
     }
     /**
@@ -30268,7 +30557,7 @@
 
     function refreshDisplayOnShow($btn, $dropdown) {
       if ($current_image) {
-        $dropdown.find('.fr-command[data-param1="' + getDisplay() + '"]').addClass('fr-active').attr('aria-selected', true);
+        $dropdown.find(".fr-command[data-param1=\"".concat(getDisplay(), "\"]")).addClass('fr-active').attr('aria-selected', true);
       }
     }
     /**
@@ -30388,6 +30677,22 @@
 
         if ($current_image.parent().is('a')) {
           $el = $current_image.parent();
+        } // code start https://github.com/froala-labs/froala-editor-js-2/issues/1864
+        // check the li placement
+
+
+        var $listParent = $current_image.parents('ul') && $current_image.parents('ul').length > 0 ? $current_image.parents('ul') : $current_image.parents('ol') && $current_image.parents('ol').length > 0 ? $current_image.parents('ol') : [];
+
+        if ($listParent.length > 0) {
+          var totLi = $listParent.find('li').length,
+              $currLi = $current_image.parents('li'),
+              $newLi = document.createElement("li");
+
+          if (totLi - 1 === $currLi.index()) {
+            // if li placement last then add one extra li
+            $listParent.append($newLi);
+            $newLi.innerHTML = '&nbsp;';
+          }
         }
 
         var splitAttrs;
@@ -30399,10 +30704,11 @@
         } // Issue 2861
 
 
-        var current_width = editor.opts.imageResizeWithPercent ? (oldWidth.indexOf('px') > -1 ? null : oldWidth) || '100%' : $current_image.width() + 'px';
-        $el.wrap('<span ' + (!editor.browser.mozilla ? 'contenteditable="false"' : '') + 'class="fr-img-caption ' + $current_image.attr('class') + '" style="' + (!editor.opts.useClasses ? $el.attr('style') : '') + '" draggable="false"></span>');
+        var current_width = editor.opts.imageResizeWithPercent ? (oldWidth.indexOf('px') > -1 ? null : oldWidth) || '100%' : $current_image.width() + 'px'; // https://github.com/froala-labs/froala-editor-js-2/issues/1864
+
+        $el.wrap('<div class="fr-img-space-wrap"><span ' + (!editor.browser.mozilla ? 'contenteditable="false"' : '') + 'class="fr-img-caption ' + $current_image.attr('class') + '" style="' + (!editor.opts.useClasses ? $el.attr('style') : '') + '" draggable="false"></span><p class="fr-img-space-wrap2">&nbsp;</p></div>');
         $el.wrap('<span class="fr-img-wrap"></span>');
-        $current_image.after('<span class="fr-inner"' + (!editor.browser.mozilla ? ' contenteditable="true"' : '') + '>' + FroalaEditor.START_MARKER + editor.language.translate('Image Caption') + FroalaEditor.END_MARKER + '</span>');
+        $current_image.after("<span class=\"fr-inner\"".concat(!editor.browser.mozilla ? ' contenteditable="true"' : '', ">").concat(FroalaEditor.START_MARKER).concat(editor.language.translate('Image Caption')).concat(FroalaEditor.END_MARKER, "</span>"));
         $current_image.removeAttr('class').removeAttr('style').removeAttr('width');
         $current_image.parents('.fr-img-caption').css('width', current_width);
 
@@ -30587,7 +30893,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command fr-title" tabIndex="-1" role="option" data-cmd="imageAlign" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.icon.create('image-align-' + val) + '<span class="fr-sr-only">' + this.language.translate(options[val]) + '</span></a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command fr-title\" tabIndex=\"-1\" role=\"option\" data-cmd=\"imageAlign\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.icon.create("image-align-".concat(val)), "<span class=\"fr-sr-only\">").concat(this.language.translate(options[val]), "</span></a></li>");
         }
       }
 
@@ -30680,7 +30986,7 @@
         if (options.hasOwnProperty(cls)) {
           var val = options[cls];
           if (_typeof(val) == 'object') val = val.title;
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="imageStyle" data-param1="' + cls + '">' + this.language.translate(val) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"imageStyle\" data-param1=\"".concat(cls, "\">").concat(this.language.translate(val), "</a></li>");
         }
       }
 
@@ -30829,9 +31135,9 @@
         var body;
 
         if (editor.opts.imageManagerPreloader) {
-          body = '<img class="fr-preloader" id="fr-preloader" alt="' + editor.language.translate('Loading') + '.." src="' + editor.opts.imageManagerPreloader + '" style="display: none;">';
+          body = "<img class=\"fr-preloader\" id=\"fr-preloader\" alt=\"".concat(editor.language.translate('Loading'), "..\" src=\"").concat(editor.opts.imageManagerPreloader, "\" style=\"display: none;\">");
         } else {
-          body = '<span class="fr-preloader" id="fr-preloader" style="display: none;">' + editor.language.translate('Loading') + '</span>';
+          body = "<span class=\"fr-preloader\" id=\"fr-preloader\" style=\"display: none;\">".concat(editor.language.translate('Loading'), "</span>");
         } // Image list.
 
 
@@ -30908,7 +31214,6 @@
           url: editor.opts.imageManagerLoadURL,
           method: editor.opts.imageManagerLoadMethod,
           data: editor.opts.imageManagerLoadParams,
-          dataType: 'json',
           crossDomain: editor.opts.requestWithCORS,
           withCredentials: editor.opts.requestWithCredentials,
           headers: editor.opts.requestHeaders,
@@ -30941,7 +31246,7 @@
         page = 0;
         image_count = 0;
         loaded_images = 0;
-        images = imgs; // Load files.
+        images = JSON.parse(imgs); // Load files.
 
         _infiniteScroll();
       } // Throw error while parsing the response.
@@ -31020,8 +31325,8 @@
               // Remove trailing spaces.
               tags[i] = tags[i].trim(); // Add tag.
 
-              if ($image_tags.find('a[title="' + tags[i] + '"]').length === 0) {
-                $image_tags.append('<a role="button" title="' + tags[i] + '">' + tags[i] + '</a>');
+              if ($image_tags.find("a[title=\"".concat(tags[i], "\"]")).length === 0) {
+                $image_tags.append("<a role=\"button\" title=\"".concat(tags[i], "\">").concat(tags[i], "</a>"));
               }
             } // Set img tag attribute.
 
@@ -31030,8 +31335,8 @@
           } // Image has only one tag.
           else {
               // Add tag to the tag list.
-              if ($image_tags.find('a[title="' + image.tag.trim() + '"]').length === 0) {
-                $image_tags.append('<a role="button" title="' + image.tag.trim() + '">' + image.tag.trim() + '</a>');
+              if ($image_tags.find("a[title=\"".concat(image.tag.trim(), "\"]")).length === 0) {
+                $image_tags.append("<a role=\"button\" title=\"".concat(image.tag.trim(), "\">").concat(image.tag.trim(), "</a>"));
               } // Set img tag attribute.
 
 
@@ -31048,7 +31353,7 @@
         for (var key in image) {
           if (image.hasOwnProperty(key)) {
             if (key !== 'thumb' && key !== 'url' && key !== 'tag') {
-              $img.attr('data-' + key, image[key]);
+              $img.attr("data-".concat(key), image[key]);
             }
           }
         } // Add image and insert and delete buttons to the image container.
@@ -31143,13 +31448,13 @@
       var get_images = [];
 
       for (var i = loaded_images - 1; i >= from; i--) {
-        var $image = $media_files.find('.fr-image-' + i);
+        var $image = $media_files.find(".fr-image-".concat(i));
 
         if ($image.length) {
           get_images.push($image); // Add images here before deleting them so the on load callback is triggered.
 
           $(document.createElement('div')).attr('id', 'fr-image-hidden-container').append($image);
-          $media_files.find('.fr-image-' + i).remove();
+          $media_files.find(".fr-image-".concat(i)).remove();
         }
       }
 
@@ -31246,7 +31551,7 @@
 
     function _updateTags() {
       $modal.find('#fr-modal-tags > a').each(function () {
-        if ($modal.find('#fr-image-list [data-tag*="' + $(this).text() + '"]').length === 0) {
+        if ($modal.find("#fr-image-list [data-tag*=\"".concat($(this).text(), "\"]")).length === 0) {
           $(this).removeClass('fr-selected-tag').hide();
         }
       });
@@ -31472,7 +31777,7 @@
 
       $body.on('scroll', _infiniteScroll); // Click on image tags button.
 
-      editor.events.bindClick($modal, 'button#fr-modal-more-' + editor.sid, _toggleTags); // Select an image tag.
+      editor.events.bindClick($modal, "button#fr-modal-more-".concat(editor.sid), _toggleTags); // Select an image tag.
 
       editor.events.bindClick($image_tags, 'a', _selectTag);
     }
@@ -31567,7 +31872,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="inlineClass" data-param1="' + val + '" title="' + options[val] + '">' + options[val] + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"inlineClass\" data-param1=\"".concat(val, "\" title=\"").concat(options[val], "\">").concat(options[val], "</a></li>");
         }
       }
 
@@ -31597,18 +31902,15 @@
 
   FroalaEditor.PLUGINS.inlineStyle = function (editor) {
     function apply(val) {
-      if (editor.selection.text() !== '') {
-        var splits = val.split(';');
+      // https://github.com/froala-labs/froala-editor-js-2/issues/1934
+      var splits = val.split(';');
 
-        for (var i = 0; i < splits.length; i++) {
-          var new_split = splits[i].split(':');
+      for (var i = 0; i < splits.length; i++) {
+        var new_split = splits[i].split(':');
 
-          if (splits[i].length && new_split.length == 2) {
-            editor.format.applyStyle(new_split[0].trim(), new_split[1].trim());
-          }
+        if (splits[i].length && new_split.length == 2) {
+          editor.format.applyStyle(new_split[0].trim(), new_split[1].trim());
         }
-      } else {
-        editor.html.insert('<span style="' + val + '">' + FroalaEditor.INVISIBLE_SPACE + FroalaEditor.MARKERS + '</span>');
       }
     }
 
@@ -31627,7 +31929,7 @@
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
           var inlineStyle = options[val] + (options[val].indexOf('display:block;') === -1 ? ' display:block;' : '');
-          c += '<li role="presentation"><span style="' + inlineStyle + '" role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="inlineStyle" data-param1="' + options[val] + '" title="' + this.language.translate(val) + '">' + this.language.translate(val) + '</a></span></li>';
+          c += "<li role=\"presentation\"><span style=\"".concat(inlineStyle, "\" role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"inlineStyle\" data-param1=\"").concat(options[val], "\" title=\"").concat(this.language.translate(val), "\">").concat(this.language.translate(val), "</a></span></li>");
         }
       }
 
@@ -31975,19 +32277,19 @@
      */
 
 
-    function _mouseDown() {
+    var _mouseDown = function _mouseDown() {
       mouseDownFlag = true;
 
       _hide();
-    }
+    };
     /*
      * Notify that mouse is no longer pressed.
      */
 
 
-    function _mouseUp() {
+    var _mouseUp = function _mouseUp() {
       mouseDownFlag = false;
-    }
+    };
     /*
      * Add new line between the tags.
      */
@@ -32007,18 +32309,18 @@
       if ($tag1 == null) {
         // If the tag is in a TD tag then just add <br> no matter what the default_tag is.
         if (default_tag && $tag2.parent().get(0).tagName != 'TD' && $tag2.parents(default_tag).length === 0) {
-          $tag2.before('<' + default_tag + '>' + FroalaEditor.MARKERS + '<br></' + default_tag + '>');
+          $tag2.before("<".concat(default_tag, ">").concat(FroalaEditor.MARKERS, "<br></").concat(default_tag, ">"));
         } else {
-          $tag2.before(FroalaEditor.MARKERS + '<br>');
+          $tag2.before("".concat(FroalaEditor.MARKERS, "<br>"));
         } // The line break needs to be done either after the last element in the editor or between the 2 tags.
         // Either way the line break is after the first tag.
 
       } else {
         // If the tag is in a TD tag then just add <br> no matter what the default_tag is.
         if (default_tag && $tag1.parent().get(0).tagName != 'TD' && $tag1.parents(default_tag).length === 0) {
-          $tag1.after('<' + default_tag + '>' + FroalaEditor.MARKERS + '<br></' + default_tag + '>');
+          $tag1.after("<".concat(default_tag, ">").concat(FroalaEditor.MARKERS, "<br></").concat(default_tag, ">"));
         } else {
-          $tag1.after(FroalaEditor.MARKERS + '<br>');
+          $tag1.after("".concat(FroalaEditor.MARKERS, "<br>"));
         }
       } // Cursor is now at the beginning of the new line.
 
@@ -32036,7 +32338,7 @@
     function _initLineBreaker() {
       // Append line breaker HTML to editor wrapper.
       if (!editor.shared.$line_breaker) {
-        editor.shared.$line_breaker = $(document.createElement('div')).attr('class', 'fr-line-breaker').html('<a class="fr-floating-btn" role="button" tabIndex="-1" title="' + editor.language.translate('Break') + '"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="17" y="7" width="2" height="8"/><rect x="10" y="13" width="7" height="2"/><path d="M10.000,10.000 L10.000,18.013 L5.000,14.031 L10.000,10.000 Z"/></svg></a>');
+        editor.shared.$line_breaker = $(document.createElement('div')).attr('class', 'fr-line-breaker').html("<a class=\"fr-floating-btn\" role=\"button\" tabIndex=\"-1\" title=\"".concat(editor.language.translate('Break'), "\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect x=\"17\" y=\"7\" width=\"2\" height=\"8\"/><rect x=\"10\" y=\"13\" width=\"7\" height=\"2\"/><path d=\"M10.000,10.000 L10.000,18.013 L5.000,14.031 L10.000,10.000 Z\"/></svg></a>"));
       }
 
       $line_breaker = editor.shared.$line_breaker; // Editor shared destroy.
@@ -32138,13 +32440,32 @@
         var $blk = $(blocks[0]);
         $dropdown.find('.fr-command').each(function () {
           var lineH = $(this).data('param1');
-          var active = ($blk.attr('style') || '').indexOf('line-height: ' + lineH + ';') >= 0;
+          var blkStyle = $blk.attr('style');
+          var active = (blkStyle || '').indexOf('line-height: ' + lineH + ';') >= 0; // Check if style contains line-height property, when text is pasted from other sources
+          // If not make `default` text selected
+
+          if (blkStyle) {
+            var lineStyle = blkStyle.substring(blkStyle.indexOf('line-height'));
+            var value = lineStyle.substr(0, lineStyle.indexOf(';')); // get value of line-height
+
+            var lineHeight = value && value.split(':')[1];
+
+            if ((!lineHeight || !lineHeight.length) && $blk.text() === 'Default') {
+              active = true;
+            }
+          } // keep `default` text selected always
+
+
+          if ((!blkStyle || blkStyle.indexOf('line-height') === -1) && lineH === '') {
+            active = true;
+          }
+
           $(this).toggleClass('fr-active', active).attr('aria-selected', active);
         });
       }
     }
 
-    function _init() {}
+    var _init = function _init() {};
 
     return {
       _init: _init,
@@ -32162,7 +32483,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command ' + val + '" tabIndex="-1" role="option" data-cmd="lineHeight" data-param1="' + options[val] + '" title="' + this.language.translate(val) + '">' + this.language.translate(val) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command ".concat(val, "\" tabIndex=\"-1\" role=\"option\" data-cmd=\"lineHeight\" data-param1=\"").concat(options[val], "\" title=\"").concat(this.language.translate(val), "\">").concat(this.language.translate(val), "</a></li>");
         }
       }
 
@@ -32516,25 +32837,25 @@
       var link_buttons = '';
 
       if (editor.opts.linkInsertButtons.length >= 1) {
-        link_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.linkInsertButtons) + '</div>';
+        link_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.linkInsertButtons), "</div>");
       }
 
       var checkmark = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="10" height="10" viewBox="0 0 32 32"><path d="M27 4l-15 15-7-7-5 5 12 12 20-20z" fill="#FFF"></path></svg>'; // Image by url layer.
 
       var input_layer = '';
       var tab_idx = 0;
-      input_layer = '<div class="fr-link-insert-layer fr-layer fr-active" id="fr-link-insert-layer-' + editor.id + '">';
-      input_layer += '<div class="fr-input-line"><input id="fr-link-insert-layer-url-' + editor.id + '" name="href" type="text" class="fr-link-attr" placeholder="' + editor.language.translate('URL') + '" tabIndex="' + ++tab_idx + '"></div>';
+      input_layer = "<div class=\"fr-link-insert-layer fr-layer fr-active\" id=\"fr-link-insert-layer-".concat(editor.id, "\">");
+      input_layer += "<div class=\"fr-input-line\"><input id=\"fr-link-insert-layer-url-".concat(editor.id, "\" name=\"href\" type=\"text\" class=\"fr-link-attr\" placeholder=\"").concat(editor.language.translate('URL'), "\" tabIndex=\"").concat(++tab_idx, "\"></div>");
 
       if (editor.opts.linkText) {
-        input_layer += '<div class="fr-input-line"><input id="fr-link-insert-layer-text-' + editor.id + '" name="text" type="text" class="fr-link-attr" placeholder="' + editor.language.translate('Text') + '" tabIndex="' + ++tab_idx + '"></div>';
+        input_layer += "<div class=\"fr-input-line\"><input id=\"fr-link-insert-layer-text-".concat(editor.id, "\" name=\"text\" type=\"text\" class=\"fr-link-attr\" placeholder=\"").concat(editor.language.translate('Text'), "\" tabIndex=\"").concat(++tab_idx, "\"></div>");
       } // Add any additional fields.
 
 
       for (var attr in editor.opts.linkAttributes) {
         if (editor.opts.linkAttributes.hasOwnProperty(attr)) {
           var placeholder = editor.opts.linkAttributes[attr];
-          input_layer += '<div class="fr-input-line"><input name="' + attr + '" type="text" class="fr-link-attr" placeholder="' + editor.language.translate(placeholder) + '" tabIndex="' + ++tab_idx + '"></div>';
+          input_layer += "<div class=\"fr-input-line\"><input name=\"".concat(attr, "\" type=\"text\" class=\"fr-link-attr\" placeholder=\"").concat(editor.language.translate(placeholder), "\" tabIndex=\"").concat(++tab_idx, "\"></div>");
         }
       }
 
@@ -32542,7 +32863,7 @@
         input_layer += "<div class=\"fr-checkbox-line\"><span class=\"fr-checkbox\"><input name=\"target\" class=\"fr-link-attr\" data-checked=\"_blank\" type=\"checkbox\" id=\"fr-link-target-".concat(editor.id, "\" tabIndex=\"").concat(++tab_idx, "\"><span>").concat(checkmark, "</span></span><label id=\"fr-label-target-").concat(editor.id, "\">").concat(editor.language.translate('Open in new tab'), "</label></div>");
       }
 
-      input_layer += '<div class="fr-action-buttons"><button class="fr-command fr-submit" role="button" data-cmd="linkInsert" href="#" tabIndex="' + ++tab_idx + '" type="button">' + editor.language.translate('Insert') + '</button></div></div>';
+      input_layer += "<div class=\"fr-action-buttons\"><button class=\"fr-command fr-submit\" role=\"button\" data-cmd=\"linkInsert\" href=\"#\" tabIndex=\"".concat(++tab_idx, "\" type=\"button\">").concat(editor.language.translate('Insert'), "</button></div></div>");
       var template = {
         buttons: link_buttons,
         input_layer: input_layer // Set the template in the popup.
@@ -32751,7 +33072,7 @@
 
       if (editor.opts.linkConvertEmailAddress) {
         if (editor.helpers.isEmail(href) && !/^mailto:.*/i.test(href)) {
-          href = 'mailto:' + href;
+          href = "mailto:".concat(href);
         }
       } // Check if is local path.
 
@@ -32824,9 +33145,16 @@
         if (!$current_image) {
           $link.prepend(FroalaEditor.START_MARKER).append(FroalaEditor.END_MARKER);
         } // Set attributes.
+        // https://github.com/froala-labs/froala-editor-js-2/issues/2023
 
 
-        $link.attr(attrs);
+        for (var prop in attrs) {
+          if (!attrs[prop]) {
+            $link.removeAttr(prop);
+          } else {
+            $link.attr(prop, attrs[prop]);
+          }
+        }
 
         if (!$current_image) {
           editor.selection.restore();
@@ -32839,12 +33167,12 @@
 
           if (editor.selection.isCollapsed()) {
             text = text.length === 0 ? original_href : text;
-            editor.html.insert('<a href="' + href + '">' + FroalaEditor.START_MARKER + text.replace(/&/g, '&amp;').replace(/</, '&lt;', '>', '&gt;') + FroalaEditor.END_MARKER + '</a>');
+            editor.html.insert("<a href=\"".concat(href, "\">").concat(FroalaEditor.START_MARKER).concat(text.replace(/&/g, '&amp;').replace(/</, '&lt;', '>', '&gt;')).concat(FroalaEditor.END_MARKER, "</a>"));
             editor.selection.restore();
           } else {
             if (text.length > 0 && text != editor.selection.text().replace(/\n/g, '')) {
               editor.selection.remove();
-              editor.html.insert('<a href="' + href + '">' + FroalaEditor.START_MARKER + text.replace(/&/g, '&amp;') + FroalaEditor.END_MARKER + '</a>');
+              editor.html.insert("<a href=\"".concat(href, "\">").concat(FroalaEditor.START_MARKER).concat(text.replace(/&/g, '&amp;')).concat(FroalaEditor.END_MARKER, "</a>"));
               editor.selection.restore();
             } else {
               _split(); // Add link.
@@ -32857,7 +33185,7 @@
           }
         } else {
           // Just wrap current image with a link.
-          $current_image.wrap('<a href="' + href + '"></a>');
+          $current_image.wrap("<a href=\"".concat(href, "\"></a>"));
 
           if (editor.image.hasCaption()) {
             $current_image.parent().append($current_image.parents('.fr-img-caption').find('.fr-inner'));
@@ -33058,7 +33386,17 @@
         if (link.href.indexOf('mailto:') !== -1) {
           this.o_win.open(link.href).close();
         } else {
-          this.o_win.open(link.href, '_blank', 'noopener');
+          // Setting the context of the opening link to _self for opening it within window
+          if (!link.target) {
+            link.target = '_self';
+          }
+
+          if (this.browser.msie || this.browser.edge) {
+            // noopener is not supported in IE and EDGE
+            this.o_win.open(link.href, link.target);
+          } else {
+            this.o_win.open(link.href, link.target, 'noopener');
+          }
         }
 
         this.popups.hide('link.edit');
@@ -33068,7 +33406,7 @@
   });
   FroalaEditor.DefineIcon('linkEdit', {
     NAME: 'edit',
-    SVG_KEY: 'editLink'
+    SVG_KEY: 'edit'
   });
   FroalaEditor.RegisterCommand('linkEdit', {
     title: 'Edit Link',
@@ -33151,7 +33489,7 @@
       var options = this.opts.linkList;
 
       for (var i = 0; i < options.length; i++) {
-        c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="linkList" data-param1="' + i + '">' + (options[i].displayText || options[i].text) + '</a></li>';
+        c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"linkList\" data-param1=\"".concat(i, "\">").concat(options[i].displayText || options[i].text, "</a></li>");
       }
 
       c += '</ul>';
@@ -33230,7 +33568,7 @@
 
       for (var cls in options) {
         if (options.hasOwnProperty(cls)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="linkStyle" data-param1="' + cls + '">' + this.language.translate(options[cls]) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"linkStyle\" data-param1=\"".concat(cls, "\">").concat(this.language.translate(options[cls]), "</a></li>");
         }
       }
 
@@ -33273,11 +33611,11 @@
     var $ = editor.$;
 
     function _openFlag(tag_name) {
-      return '<span class="fr-open-' + tag_name.toLowerCase() + '"></span>';
+      return "<span class=\"fr-open-".concat(tag_name.toLowerCase(), "\"></span>");
     }
 
     function _closeFlag(tag_name) {
-      return '<span class="fr-close-' + tag_name.toLowerCase() + '"></span>';
+      return "<span class=\"fr-close-".concat(tag_name.toLowerCase(), "\"></span>");
     }
     /**
      * Replace list type.
@@ -33297,7 +33635,7 @@
 
       for (var _i = lists.length - 1; _i >= 0; _i--) {
         var $l = $(lists[_i]);
-        $l.replaceWith('<' + tag_name.toLowerCase() + ' ' + editor.node.attributes($l.get(0)) + '>' + $l.html() + '</' + tag_name.toLowerCase() + '>');
+        $l.replaceWith("<".concat(tag_name.toLowerCase(), " ").concat(editor.node.attributes($l.get(0)), ">").concat($l.html(), "</").concat(tag_name.toLowerCase(), ">"));
       }
     }
     /**
@@ -33325,24 +33663,25 @@
           var margin_left = editor.helpers.getPX($(blocks[i]).css(prop)) || 0;
           blocks[i].style.marginLeft = null; // Start indentation relative to the first element.
 
-          if (start_margin === null) start_margin = margin_left; // Update open tag.
+          if (start_margin === null) start_margin = margin_left; //https://github.com/froala-labs/froala-editor-js-2/issues/2435
+          // Update open tag.
 
-          var open_tag = start_margin > 0 ? '<' + tag_name + ' style="' + prop + ': ' + start_margin + 'px "' + '>' : '<' + tag_name + '>';
-          var end_tag = '</' + tag_name + '>'; // Subsctract starting.
+          var open_tag = start_margin > 0 ? "<".concat(tag_name, " style=\"").concat(prop, ": ").concat(start_margin, "px \">") : "<".concat(tag_name, ">");
+          var end_tag = "</".concat(tag_name, ">"); // Subsctract starting.
 
           margin_left = margin_left - start_margin; // Keep wrapping.
 
           while (margin_left / editor.opts.indentMargin > 0) {
-            open_tag += '<' + tag_name + '>';
+            open_tag += "</".concat(tag_name, ">");
             end_tag += end_tag;
             margin_left = margin_left - editor.opts.indentMargin;
           } // Default tag.
 
 
           if (default_tag && blocks[i].tagName.toLowerCase() == default_tag) {
-            $(blocks[i]).replaceWith(open_tag + '<li' + editor.node.attributes(blocks[i]) + '>' + $(blocks[i]).html() + '</li>' + end_tag);
+            $(blocks[i]).replaceWith("".concat(open_tag, "<li").concat(editor.node.attributes(blocks[i]), ">").concat($(blocks[i]).html(), "</li>").concat(end_tag));
           } else {
-            $(blocks[i]).wrap(open_tag + '<li></li>' + end_tag);
+            $(blocks[i]).wrap("".concat(open_tag, "<li></li>").concat(end_tag));
           }
         }
       }
@@ -33383,13 +33722,13 @@
           var li_attrs = ''; // https://github.com/froala/wysiwyg-editor/issues/1765 .
 
           if (li_class) {
-            li_attrs += ' class="' + li_class + '"';
+            li_attrs += " class=\"".concat(li_class, "\"");
           }
 
           var prop = editor.opts.direction == 'rtl' || $li.css('direction') == 'rtl' ? 'margin-right' : 'margin-left';
 
-          if (editor.helpers.getPX($(parent_node).css(prop)) && ($(parent_node).attr('style') || '').indexOf(prop + ':') >= 0) {
-            li_attrs += ' style="' + prop + ':' + editor.helpers.getPX($(parent_node).css(prop)) + 'px;"';
+          if (editor.helpers.getPX($(parent_node).css(prop)) && ($(parent_node).attr('style') || '').indexOf("".concat(prop, ":")) >= 0) {
+            li_attrs += " style=\"".concat(prop, ":").concat(editor.helpers.getPX($(parent_node).css(prop)), "px;\"");
           } // When we have a default tag.
 
 
@@ -33464,7 +33803,8 @@
 
     function format(tag_name, list_type) {
       var i;
-      var blocks; // Wrap.
+      var blocks;
+      editor.html.syncInputs(); // Wrap.
 
       editor.selection.save();
       editor.html.wrap(true, true, true, true);
@@ -33582,7 +33922,7 @@
             if (prev_nl) {
               $(prev_nl).append($(blocks[i]));
             } else {
-              var $new_nl = $('<' + blocks[i].parentNode.tagName + '>');
+              var $new_nl = $("<".concat(blocks[i].parentNode.tagName, ">"));
               $(prev_li).append($new_nl);
               $new_nl.append($(blocks[i]));
             }
@@ -33837,8 +34177,12 @@
 
 
     function _style($blk, val) {
-      if (!val) val = 'div class="fr-temp-div"' + (editor.node.isEmpty($blk.get(0), true) ? ' data-empty="true"' : '');
-      $blk.replaceWith($('<' + val + ' ' + editor.node.attributes($blk.get(0)) + '>').html($blk.html()).removeAttr('data-empty'));
+      if (!val) val = 'div class="fr-temp-div"' + (editor.node.isEmpty($blk.get(0), true) ? ' data-empty="true"' : ''); //1708 Paragraph Format
+
+      if (val == "H1" || val == "H2" || val == "H3" || val == "H4" || val == "H5") {
+        var $checkstyle = editor.node.attributes($blk.get(0));
+        if ($checkstyle.includes("font-size:")) $blk.replaceWith($('<' + val + ' ' + editor.node.attributes($blk.get(0)).replace(/font-size:[0-9]+px;?/, "") + '>').html($blk.html()).removeAttr('data-empty'));else $blk.replaceWith($('<' + val + ' ' + editor.node.attributes($blk.get(0)) + '>').html($blk.html()).removeAttr('data-empty'));
+      } else $blk.replaceWith($('<' + val + ' ' + editor.node.attributes($blk.get(0)) + '>').html($blk.html()).removeAttr('data-empty'));
     }
     /**
      * Apply style.
@@ -34047,7 +34391,7 @@
       }
     }
 
-    function _init() {}
+    var _init = function _init() {};
 
     return {
       _init: _init,
@@ -34065,7 +34409,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command ' + val + '" tabIndex="-1" role="option" data-cmd="paragraphStyle" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.language.translate(options[val]) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command ".concat(val, "\" tabIndex=\"-1\" role=\"option\" data-cmd=\"paragraphStyle\" data-param1=\"").concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.language.translate(options[val]), "</a></li>");
         }
       }
 
@@ -34094,7 +34438,7 @@
   FroalaEditor.PLUGINS.print = function (editor) {
     function _prepare(callback) {
       // Get editor content for printing.
-      var contents = editor.$el.html(); // Get or create the iframe for printing.
+      var contents = editor.html.get(); // Get or create the iframe for printing.
 
       var print_iframe = null;
 
@@ -34131,7 +34475,8 @@
 
       print_iframe.addEventListener('load', listener); // Build printing document.
 
-      var frame_doc = print_iframe.contentWindow;
+      var _print_iframe = print_iframe,
+          frame_doc = _print_iframe.contentWindow;
       frame_doc.document.open();
       frame_doc.document.write('<!DOCTYPE html><html ' + (editor.opts.documentReady ? 'style="margin: 0; padding: 0;"' : '') + '><head><title>' + document.title + '</title>'); // Add styles.
 
@@ -34250,7 +34595,7 @@
       var $ = editor.$;
 
       if (!editor.shared.$qi_image_input) {
-        editor.shared.$qi_image_input = $(document.createElement('input')).attr('accept', 'image/' + editor.opts.imageAllowedTypes.join(', image/').toLowerCase()).attr('name', 'quickInsertImage' + this.id).attr('style', 'display: none;').attr('type', 'file');
+        editor.shared.$qi_image_input = $(document.createElement('input')).attr('accept', 'image/' + editor.opts.imageAllowedTypes.join(', image/').toLowerCase()).attr('name', "quickInsertImage".concat(this.id)).attr('style', 'display: none;').attr('type', 'file');
         $('body').first().append(editor.shared.$qi_image_input);
         editor.events.$on(editor.shared.$qi_image_input, 'change', function () {
           var inst = $(this).data('inst');
@@ -34489,7 +34834,7 @@
 
             if (info) {
               if (!info.requiredPlugin || FroalaEditor.PLUGINS[info.requiredPlugin] && editor.opts.pluginsEnabled.indexOf(info.requiredPlugin) >= 0) {
-                btns_html += '<a class="fr-btn fr-floating-btn" role="button" title="' + editor.language.translate(info.title) + '" tabIndex="-1" data-cmd="' + btns[i] + '" style="transition-delay: ' + 0.025 * idx++ + 's;">' + editor.icon.create(info.icon) + '</a>';
+                btns_html += "<a class=\"fr-btn fr-floating-btn\" role=\"button\" title=\"".concat(editor.language.translate(info.title), "\" tabIndex=\"-1\" data-cmd=\"").concat(btns[i], "\" style=\"transition-delay: ").concat(0.025 * idx++, "s;\">").concat(editor.icon.create(info.icon), "</a>");
               }
             }
           }
@@ -34554,11 +34899,11 @@
     function _initquickInsert() {
       if (!editor.shared.$quick_insert) {
         // Append quick insert HTML to editor wrapper.
-        editor.shared.$quick_insert = $(document.createElement('div')).attr('class', 'fr-quick-insert').html('<a class="fr-floating-btn" role="button" tabIndex="-1" title="' + editor.language.translate('Quick Insert') + '">' + editor.icon.create('quickInsert') + '</a>'); //'<div class="fr-quick-insert"><a class="fr-floating-btn" role="button" tabIndex="-1" title="' + editor.language.translate('Quick Insert') + '">' + editor.icon.create('quickInsert') + '</a></div>')
+        editor.shared.$quick_insert = $(document.createElement('div')).attr('class', 'fr-quick-insert').html("<a class=\"fr-floating-btn\" role=\"button\" tabIndex=\"-1\" title=\"".concat(editor.language.translate('Quick Insert'), "\">").concat(editor.icon.create('quickInsert'), "</a>")); //'<div class="fr-quick-insert"><a class="fr-floating-btn" role="button" tabIndex="-1" title="' + editor.language.translate('Quick Insert') + '">' + editor.icon.create('quickInsert') + '</a></div>')
       }
 
-      $quick_insert = editor.shared.$quick_insert; // Quick Insert tooltip.
-
+      $quick_insert = editor.shared.$quick_insert;
+      // Quick Insert tooltip.
       editor.tooltip.bind(editor.$box, '.fr-quick-insert > a.fr-floating-btn'); // Editor destroy.
 
       editor.events.on('destroy', function () {
@@ -34747,8 +35092,8 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          var shortcut = this.shortcuts.get('quote.' + val);
-          c += '<li role="presentation"><a class="fr-command fr-active ' + val + '" tabIndex="-1" role="option" data-cmd="quote" data-param1="' + val + '" title="' + options[val] + '">' + this.language.translate(options[val]) + (shortcut ? '<span class="fr-shortcut">' + shortcut + '</span>' : '') + '</a></li>';
+          var shortcut = this.shortcuts.get("quote.".concat(val));
+          c += "<li role=\"presentation\"><a class=\"fr-command fr-active ".concat(val, "\" tabIndex=\"-1\" role=\"option\" data-cmd=\"quote\" data-param1=\"").concat(val, "\" title=\"").concat(options[val], "\">").concat(this.language.translate(options[val])).concat(shortcut ? "<span class=\"fr-shortcut\">".concat(shortcut, "</span>") : '', "</a></li>");
         }
       }
 
@@ -34844,7 +35189,8 @@
     }
 
     function _mightSave() {
-      clearTimeout(_timeout);
+      clearTimeout(_timeout); // Added 0 seconds as to get the timeoutid so that for if there is another request the previous pending request will get cleared out. 
+
       _timeout = setTimeout(function () {
         var html = editor.html.get();
 
@@ -34853,7 +35199,7 @@
           _force = false;
           save(html);
         }
-      }, editor.opts.saveInterval);
+      }, 0);
     }
     /**
      * Reset the saving interval.
@@ -34881,7 +35227,10 @@
     function _init() {
       if (editor.opts.saveInterval) {
         _last_html = editor.html.get();
-        editor.events.on('contentChanged', _mightSave);
+        editor.events.on('contentChanged', function () {
+          // Added timeinterval which user has entered else default will be 10000ms. 
+          setTimeout(_mightSave, editor.opts.saveInterval);
+        });
         editor.events.on('keydown destroy', function () {
           clearTimeout(_timeout);
         });
@@ -36811,7 +37160,7 @@
       var table_buttons = '';
 
       if (editor.opts.tableInsertButtons.length > 0) {
-        table_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.tableInsertButtons) + '</div>';
+        table_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.tableInsertButtons), "</div>");
       }
 
       var template = {
@@ -36848,13 +37197,13 @@
 
       var $select_size = $table_cell.parent(); // Update size in title.
 
-      $select_size.siblings('.fr-table-size-info').html(row + ' &times; ' + col); // Remove hover and fr-active-item class from all cells.
+      $select_size.siblings('.fr-table-size-info').html("".concat(row, " &times; ").concat(col)); // Remove hover and fr-active-item class from all cells.
 
       $select_size.find('> span').removeClass('hover fr-active-item'); // Add hover class only to the correct cells.
 
       for (var i = 1; i <= editor.opts.tableInsertMaxSize; i++) {
         for (var j = 0; j <= editor.opts.tableInsertMaxSize; j++) {
-          var $cell = $select_size.find('> span[data-row="' + i + '"][data-col="' + j + '"]');
+          var $cell = $select_size.find("> span[data-row=\"".concat(i, "\"][data-col=\"").concat(j, "\"]"));
 
           if (i <= row && j <= col) {
             $cell.addClass('hover');
@@ -36892,7 +37241,7 @@
             cls += ' hover';
           }
 
-          rows_columns += '<span class="fr-command ' + cls + '" tabIndex="-1" data-cmd="tableInsert" data-row="' + i + '" data-col="' + j + '" data-param1="' + i + '" data-param2="' + j + '" style="display: ' + display + ';" role="button"><span></span><span class="fr-sr-only">' + i + ' &times; ' + j + '&nbsp;&nbsp;&nbsp;</span></span>';
+          rows_columns += "<span class=\"fr-command ".concat(cls, "\" tabIndex=\"-1\" data-cmd=\"tableInsert\" data-row=\"").concat(i, "\" data-col=\"").concat(j, "\" data-param1=\"").concat(i, "\" data-param2=\"").concat(j, "\" style=\"display: ").concat(display, ";\" role=\"button\"><span></span><span class=\"fr-sr-only\">").concat(i, " &times; ").concat(j, "&nbsp;&nbsp;&nbsp;</span></span>");
         }
 
         rows_columns += '<div class="new-line"></div>';
@@ -37012,14 +37361,14 @@
       var table_buttons = '';
 
       if (editor.opts.tableColorsButtons.length > 0) {
-        table_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.tableColorsButtons) + '</div>';
+        table_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.tableColorsButtons), "</div>");
       } // Custom HEX.
 
 
       var custom_color = '';
 
       if (editor.opts.colorsHEXInput) {
-        custom_color = '<div class="fr-color-hex-layer fr-table-colors-hex-layer fr-active fr-layer" id="fr-table-colors-hex-layer-' + editor.id + '"><div class="fr-input-line"><input maxlength="7" id="fr-table-colors-hex-layer-text-' + editor.id + '" type="text" placeholder="' + editor.language.translate('HEX Color') + '" tabIndex="1" aria-required="true"></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="tableCellBackgroundCustomColor" tabIndex="2" role="button">' + editor.language.translate('OK') + '</button></div></div>';
+        custom_color = "<div class=\"fr-color-hex-layer fr-table-colors-hex-layer fr-active fr-layer\" id=\"fr-table-colors-hex-layer-".concat(editor.id, "\"><div class=\"fr-input-line\"><input maxlength=\"7\" id=\"fr-table-colors-hex-layer-text-").concat(editor.id, "\" type=\"text\" placeholder=\"").concat(editor.language.translate('HEX Color'), "\" tabIndex=\"1\" aria-required=\"true\"></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"tableCellBackgroundCustomColor\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('OK'), "</button></div></div>");
       }
 
       var template = {
@@ -37053,9 +37402,9 @@
         }
 
         if (editor.opts.tableColors[i] != 'REMOVE') {
-          colors_html += '<span class="fr-command" style="background: ' + editor.opts.tableColors[i] + ';" tabIndex="-1" role="button" data-cmd="tableCellBackgroundColor" data-param1="' + editor.opts.tableColors[i] + '"><span class="fr-sr-only">' + editor.language.translate('Color') + ' ' + editor.opts.tableColors[i] + '&nbsp;&nbsp;&nbsp;</span></span>';
+          colors_html += "<span class=\"fr-command\" style=\"background: ".concat(editor.opts.tableColors[i], ";\" tabIndex=\"-1\" role=\"button\" data-cmd=\"tableCellBackgroundColor\" data-param1=\"").concat(editor.opts.tableColors[i], "\"><span class=\"fr-sr-only\">").concat(editor.language.translate('Color'), " ").concat(editor.opts.tableColors[i], "&nbsp;&nbsp;&nbsp;</span></span>");
         } else {
-          colors_html += '<span class="fr-command" data-cmd="tableCellBackgroundColor" tabIndex="-1" role="button" data-param1="REMOVE" title="' + editor.language.translate('Clear Formatting') + '">' + editor.icon.create('tableColorRemove') + '<span class="fr-sr-only">' + editor.language.translate('Clear Formatting') + '</span></span>';
+          colors_html += "<span class=\"fr-command\" data-cmd=\"tableCellBackgroundColor\" tabIndex=\"-1\" role=\"button\" data-param1=\"REMOVE\" title=\"".concat(editor.language.translate('Clear Formatting'), "\">").concat(editor.icon.create('tableColorRemove'), "<span class=\"fr-sr-only\">").concat(editor.language.translate('Clear Formatting'), "</span></span>");
         }
       }
 
@@ -37157,7 +37506,7 @@
 
       $popup.find('.fr-selected-color').removeClass('fr-selected-color fr-active-item'); // Find the selected color.
 
-      $popup.find('span[data-param1="' + color + '"]').addClass('fr-selected-color fr-active-item');
+      $popup.find("span[data-param1=\"".concat(color, "\"]")).addClass('fr-selected-color fr-active-item');
       $input.val(color).trigger('change');
     }
     /*
@@ -37558,9 +37907,9 @@
             var td; // Might be a td or a th.
 
             if ($row.find('th').length > 0) {
-              td = '<th style="width: ' + new_width.toFixed(4) + '%;"><br></th>';
+              td = "<th style=\"width: ".concat(new_width.toFixed(4), "%;\"><br></th>");
             } else {
-              td = '<td style="width: ' + new_width.toFixed(4) + '%;"><br></td>';
+              td = "<td style=\"width: ".concat(new_width.toFixed(4), "%;\"><br></td>");
             } // Insert exactly at the beginning.
 
 
@@ -37950,7 +38299,7 @@
           $cell = $(cells[i]); // If cell is empty, don't add only <br> tags.
 
           if ($cell.html() != '<br>' && $cell.html() !== '') {
-            content += '<br>' + $cell.html();
+            content += "<br>".concat($cell.html());
           } // Remove cell.
 
 
@@ -38122,8 +38471,8 @@
 
 
           width = width / parent_width * 100 / 2;
-          $selected_cell.css('width', width.toFixed(4) + '%');
-          $new_td.css('width', width.toFixed(4) + '%');
+          $selected_cell.css('width', "".concat(width.toFixed(4), "%"));
+          $new_td.css('width', "".concat(width.toFixed(4), "%"));
         } // Add a new td after the current one.
 
 
@@ -38538,11 +38887,12 @@
 
       if (e.target.tagName == 'TD' || e.target.tagName == 'TH') {
         cell = e.target;
-      } else if ($target.closest('td', $target.closest('tr')[0]).length > 0) {
-        cell = $target.closest('td', $target.closest('tr')[0]).get(0);
-      } else if ($target.closest('th', $target.closest('thead')[0]).length > 0) {
-        cell = $target.closest('th', $target.closest('thead')[0]).get(0);
-      } // Cell should reside inside editor.
+      } //https://github.com/froala-labs/froala-editor-js-2/issues/1779
+      else if ($target.closest('th', $target.closest('thead')[0]).length > 0) {
+          cell = $target.closest('th', $target.closest('thead')[0]).get(0);
+        } else if ($target.closest('td', $target.closest('tr')[0]).length > 0) {
+          cell = $target.closest('td', $target.closest('tr')[0]).get(0);
+        } // Cell should reside inside editor.
 
 
       if (editor.$el.html.toString().search(cell) === -1) return null;
@@ -38593,9 +38943,9 @@
             mouseDownCellFlag = true;
             var tag_name = cell.tagName.toLowerCase(); // Select multiple cells using Shift key
 
-            if (e.shiftKey && editor.$el.find(tag_name + '.fr-selected-cell').length > 0) {
+            if (e.shiftKey && editor.$el.find("".concat(tag_name, ".fr-selected-cell")).length > 0) {
               // Cells must be in the same table.
-              if ($(editor.$el.find(tag_name + '.fr-selected-cell').closest('table')).is($(cell).closest('table'))) {
+              if ($(editor.$el.find("".concat(tag_name, ".fr-selected-cell")).closest('table')).is($(cell).closest('table'))) {
                 // Select cells between.
                 selectCells(mouseDownCell, cell); // Do nothing if cells are not in the same table.
               } else {
@@ -38633,7 +38983,9 @@
     function _mouseUp(e) {
       // Mouse down started in a popup and ends in the editor.
       // https://github.com/froala/wysiwyg-editor/issues/3190
-      if (editor.popups.areVisible()) {
+      // Toolbar freezes with checkboxes inside table
+      // https://github.com/froala-labs/froala-editor-js-2/issues/1859
+      if (!editor.edit.isDisabled() && editor.popups.areVisible()) {
         return true;
       } // User clicked somewhere else in the editor (except the toolbar).
       // We need this because mouse down is not triggered outside the editor.
@@ -38706,6 +39058,9 @@
 
 
     function _mouseEnter(e) {
+      // https://github.com/froala-labs/froala-editor-js-2/issues/1859
+      editor.events.$on($('input'), 'click', _inputOnClick);
+
       if (mouseDownCellFlag === true && editor.opts.tableEditButtons.length > 0) {
         var $cell = $(e.currentTarget); // Cells should be in the same table.
 
@@ -39379,15 +39734,15 @@
 
             if (editor.opts.direction == 'rtl' && second === 0 || editor.opts.direction != 'rtl' && second !== 0) {
               width = (table_width + release_position - initial_positon) / table_width * table_percentage;
-              $table.css('margin-right', 'calc(100% - ' + Math.round(width).toFixed(4) + '% - ' + Math.round(left_margin).toFixed(4) + '%)');
+              $table.css('margin-right', "calc(100% - ".concat(Math.round(width).toFixed(4), "% - ").concat(Math.round(left_margin).toFixed(4), "%)"));
             } // Left border RTL or LTR.
             else if (editor.opts.direction == 'rtl' && second !== 0 || editor.opts.direction != 'rtl' && second === 0) {
                 width = (table_width - release_position + initial_positon) / table_width * table_percentage;
-                $table.css('margin-left', 'calc(100% - ' + Math.round(width).toFixed(4) + '% - ' + Math.round(right_margin).toFixed(4) + '%)');
+                $table.css('margin-left', "calc(100% - ".concat(Math.round(width).toFixed(4), "% - ").concat(Math.round(right_margin).toFixed(4), "%)"));
               } // Update table width.
 
 
-            $table.css('width', Math.round(width).toFixed(4) + '%');
+            $table.css('width', "".concat(Math.round(width).toFixed(4), "%"));
           }
 
         editor.selection.restore();
@@ -39577,7 +39932,7 @@
     function _initInsertHelper() {
       // Append insert helper HTML to editor wrapper.
       if (!editor.shared.$ti_helper) {
-        editor.shared.$ti_helper = $(document.createElement('div')).attr('class', 'fr-insert-helper').html('<a class="fr-floating-btn" role="button" tabIndex="-1" title="' + editor.language.translate('Insert') + '"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M22,16.75 L16.75,16.75 L16.75,22 L15.25,22.000 L15.25,16.75 L10,16.75 L10,15.25 L15.25,15.25 L15.25,10 L16.75,10 L16.75,15.25 L22,15.25 L22,16.75 Z"/></svg></a>'); // Click on insert helper.
+        editor.shared.$ti_helper = $(document.createElement('div')).attr('class', 'fr-insert-helper').html("<a class=\"fr-floating-btn\" role=\"button\" tabIndex=\"-1\" title=\"".concat(editor.language.translate('Insert'), "\"><svg viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22,16.75 L16.75,16.75 L16.75,22 L15.25,22.000 L15.25,16.75 L10,16.75 L10,15.25 L15.25,15.25 L15.25,10 L16.75,10 L16.75,15.25 L22,15.25 L22,16.75 Z\"/></svg></a>")); // Click on insert helper.
 
         editor.events.bindClick(editor.shared.$ti_helper, 'a', function () {
           var $td = $insert_helper.data('selected-cell');
@@ -39775,6 +40130,15 @@
                 }
               }
       }
+    }
+    /*
+    *  Clicking inside an input element
+       https://github.com/froala-labs/froala-editor-js-2/issues/1859
+    */
+
+
+    function _inputOnClick(e) {
+      mouseDownCellFlag = false;
     }
     /*
      * Init table.
@@ -40115,7 +40479,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="tableColumns" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.language.translate(options[val]) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"tableColumns\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.language.translate(options[val]), "</a></li>");
         }
       }
 
@@ -40151,7 +40515,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="tableCells" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.language.translate(options[val]) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"tableCells\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.language.translate(options[val]), "</a></li>");
         }
       }
 
@@ -40209,7 +40573,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="tableStyle" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.language.translate(options[val]) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"tableStyle\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.language.translate(options[val]), "</a></li>");
         }
       }
 
@@ -40297,7 +40661,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="tableCellVerticalAlign" data-param1="' + val.toLowerCase() + '" title="' + this.language.translate(options[val]) + '">' + this.language.translate(val) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"tableCellVerticalAlign\" data-param1=\"".concat(val.toLowerCase(), "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.language.translate(val), "</a></li>");
         }
       }
 
@@ -40348,7 +40712,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command fr-title" tabIndex="-1" role="option" data-cmd="tableCellHorizontalAlign" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.icon.create('align-' + val) + '<span class="fr-sr-only">' + this.language.translate(options[val]) + '</span></a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command fr-title\" tabIndex=\"-1\" role=\"option\" data-cmd=\"tableCellHorizontalAlign\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.icon.create("align-".concat(val)), "<span class=\"fr-sr-only\">").concat(this.language.translate(options[val]), "</span></a></li>");
         }
       }
 
@@ -40363,7 +40727,7 @@
       var $ = this.$;
 
       if (selected_cells.length) {
-        $btn.find('> *').first().replaceWith(this.icon.create('align-' + this.helpers.getAlignment($(selected_cells[0]))));
+        $btn.find('> *').first().replaceWith(this.icon.create("align-".concat(this.helpers.getAlignment($(selected_cells[0])))));
       }
     },
     refreshOnShow: function refreshOnShow($btn, $dropdown) {
@@ -40385,7 +40749,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command" tabIndex="-1" role="option" data-cmd="tableCellStyle" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.language.translate(options[val]) + '</a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command\" tabIndex=\"-1\" role=\"option\" data-cmd=\"tableCellStyle\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.language.translate(options[val]), "</a></li>");
         }
       }
 
@@ -40420,7 +40784,7 @@
     SVG_KEY: 'remove'
   });
 
-  FroalaEditor.URLRegEx = "(^| |\\u00A0)(" + FroalaEditor.LinkRegEx + '|' + '([a-z0-9+-_.]{1,}@[a-z0-9+-_.]{1,}\\.[a-z0-9+\-_]{1,})' + ')$';
+  FroalaEditor.URLRegEx = "(^| |\\u00A0)(".concat(FroalaEditor.LinkRegEx, "|([a-z0-9+-_.]{1,}@[a-z0-9+-_.]{1,}\\.[a-z0-9+-_]{1,}))$");
 
   FroalaEditor.PLUGINS.url = function (editor) {
     var $ = editor.$;
@@ -40441,22 +40805,22 @@
 
       if (editor.opts.linkConvertEmailAddress) {
         if (editor.helpers.isEmail(link) && !/^mailto:.*/i.test(link)) {
-          link = 'mailto:' + link;
+          link = "mailto:".concat(link);
         }
       } else if (editor.helpers.isEmail(link)) {
         return p1 + p2;
       }
 
       if (!/^((http|https|ftp|ftps|mailto|tel|sms|notes|data)\:)/i.test(link)) {
-        link = '//' + link;
+        link = "//".concat(link);
       }
 
-      return (p1 ? p1 : '') + '<a' + (editor.opts.linkAlwaysBlank ? ' target="_blank"' : '') + (rel ? ' rel="' + rel + '"' : '') + ' data-fr-linked="true" href="' + link + '">' + p2.replace(/&amp;/g, '&').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</a>' + dots;
+      return (p1 ? p1 : '') + "<a".concat(editor.opts.linkAlwaysBlank ? ' target="_blank"' : '').concat(rel ? " rel=\"".concat(rel, "\"") : '', " data-fr-linked=\"true\" href=\"").concat(link, "\">").concat(p2.replace(/&amp;/g, '&').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'), "</a>").concat(dots);
     }
 
-    function _getRegEx() {
+    var _getRegEx = function _getRegEx() {
       return new RegExp(FroalaEditor.URLRegEx, 'gi');
-    }
+    };
     /*
      * Convert link paterns from html into hyperlinks.
      */
@@ -40551,7 +40915,7 @@
             }
           }
 
-          return '<a' + (editor.opts.linkAlwaysBlank ? ' target="_blank"' : '') + (rel_attr ? ' rel="' + rel_attr + '"' : '') + ' href="' + html + '" >' + html + '</a>';
+          return "<a".concat(editor.opts.linkAlwaysBlank ? ' target="_blank"' : '').concat(rel_attr ? " rel=\"".concat(rel_attr, "\"") : '', " href=\"").concat(html, "\" >").concat(html, "</a>");
         }
       });
     }
@@ -40595,7 +40959,7 @@
     html: '<iframe width="640" height="360" src="{url}&wmode=opaque" frameborder="0" allowfullscreen></iframe>',
     provider: 'youtube'
   }, {
-    test_regex: /^.*(?:vimeo.com)\/(?:channels(\/\w+\/)?|groups\/*\/videos\/​\d+\/|video\/|)(\d+)(?:$|\/|\?)/,
+    test_regex: /^.*(?:vimeo.com)\/(?:channels(\/\w+\/)?|groups\/*\/videos\/‚Äã\d+\/|video\/|)(\d+)(?:$|\/|\?)/,
     url_regex: /(?:https?:\/\/)?(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:[a-zA-Z0-9_\-]+)?(\/[a-zA-Z0-9_\-]+)?/i,
     url_text: 'https://player.vimeo.com/video/$1',
     html: '<iframe width="640" height="360" src="{url}" frameborder="0" allowfullscreen></iframe>',
@@ -40736,7 +41100,7 @@
           active = '';
         }
 
-        by_url_layer = '<div class="fr-video-by-url-layer fr-layer' + active + '" id="fr-video-by-url-layer-' + editor.id + '"><div class="fr-input-line"><input id="fr-video-by-url-layer-text-' + editor.id + '" type="text" placeholder="' + editor.language.translate('Paste in a video URL') + '" tabIndex="1" aria-required="true"></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="videoInsertByURL" tabIndex="2" role="button">' + editor.language.translate('Insert') + '</button></div></div>';
+        by_url_layer = "<div class=\"fr-video-by-url-layer fr-layer".concat(active, "\" id=\"fr-video-by-url-layer-").concat(editor.id, "\"><div class=\"fr-input-line\"><input id=\"fr-video-by-url-layer-text-").concat(editor.id, "\" type=\"text\" placeholder=\"").concat(editor.language.translate('Paste in a video URL'), "\" tabIndex=\"1\" aria-required=\"true\"></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"videoInsertByURL\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('Insert'), "</button></div></div>");
       } // Video embed layer.
 
 
@@ -40749,7 +41113,7 @@
           active = '';
         }
 
-        embed_layer = '<div class="fr-video-embed-layer fr-layer' + active + '" id="fr-video-embed-layer-' + editor.id + '"><div class="fr-input-line"><textarea id="fr-video-embed-layer-text' + editor.id + '" type="text" placeholder="' + editor.language.translate('Embedded Code') + '" tabIndex="1" aria-required="true" rows="5"></textarea></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="videoInsertEmbed" tabIndex="2" role="button">' + editor.language.translate('Insert') + '</button></div></div>';
+        embed_layer = "<div class=\"fr-video-embed-layer fr-layer".concat(active, "\" id=\"fr-video-embed-layer-").concat(editor.id, "\"><div class=\"fr-input-line\"><textarea id=\"fr-video-embed-layer-text").concat(editor.id, "\" type=\"text\" placeholder=\"").concat(editor.language.translate('Embedded Code'), "\" tabIndex=\"1\" aria-required=\"true\" rows=\"5\"></textarea></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"videoInsertEmbed\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('Insert'), "</button></div></div>");
       } // Video upload layer.
 
 
@@ -40762,11 +41126,11 @@
           active = '';
         }
 
-        upload_layer = '<div class="fr-video-upload-layer fr-layer' + active + '" id="fr-video-upload-layer-' + editor.id + '"><strong>' + editor.language.translate('Drop video') + '</strong><br>(' + editor.language.translate('or click') + ')<div class="fr-form"><input type="file" accept="video/' + editor.opts.videoAllowedTypes.join(', video/').toLowerCase() + '" tabIndex="-1" aria-labelledby="fr-video-upload-layer-' + editor.id + '" role="button"></div></div>';
+        upload_layer = "<div class=\"fr-video-upload-layer fr-layer".concat(active, "\" id=\"fr-video-upload-layer-").concat(editor.id, "\"><strong>").concat(editor.language.translate('Drop video'), "</strong><br>(").concat(editor.language.translate('or click'), ")<div class=\"fr-form\"><input type=\"file\" accept=\"video/").concat(editor.opts.videoAllowedTypes.join(', video/').toLowerCase(), "\" tabIndex=\"-1\" aria-labelledby=\"fr-video-upload-layer-").concat(editor.id, "\" role=\"button\"></div></div>");
       } // Progress bar.
 
 
-      var progress_bar_layer = '<div class="fr-video-progress-bar-layer fr-layer"><h3 tabIndex="-1" class="fr-message">Uploading</h3><div class="fr-loader"><span class="fr-progress"></span></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-dismiss" data-cmd="videoDismissError" tabIndex="2" role="button">OK</button></div></div>';
+      var progress_bar_layer = "<div class=\"fr-video-progress-bar-layer fr-layer\"><h3 tabIndex=\"-1\" class=\"fr-message\">Uploading</h3><div class=\"fr-loader\"><span class=\"fr-progress\"></span></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-dismiss\" data-cmd=\"videoDismissError\" tabIndex=\"2\" role=\"button\">OK</button></div></div>";
       var template = {
         buttons: video_buttons,
         by_url_layer: by_url_layer,
@@ -40808,7 +41172,7 @@
 
 
       $popup.find('.fr-layer').removeClass('fr-active');
-      $popup.find('.fr-' + name + '-layer').addClass('fr-active');
+      $popup.find(".fr-".concat(name, "-layer")).addClass('fr-active');
       editor.popups.show('video.insert', left, top, 0);
       editor.accessibility.focusPopup($popup);
     }
@@ -40867,7 +41231,7 @@
         replaced = true;
       }
 
-      editor.html.insert('<span contenteditable="false" draggable="true" class="fr-jiv fr-video fr-deletable">' + embedded_code + '</span>', false, editor.opts.videoSplitHTML);
+      editor.html.insert("<span contenteditable=\"false\" draggable=\"true\" class=\"fr-jiv fr-video fr-deletable\">".concat(embedded_code, "</span>"), false, editor.opts.videoSplitHTML);
       editor.popups.hide('video.insert');
       var $video = editor.$el.find('.fr-jiv');
       $video.removeClass('fr-jiv');
@@ -40944,7 +41308,7 @@
             for (attr in data) {
               if (data.hasOwnProperty(attr)) {
                 if (attr != 'link') {
-                  $video.find('video').attr('data-' + attr, data[attr]);
+                  $video.find('video').attr("data-".concat(attr), data[attr]);
                 }
               }
             }
@@ -41044,12 +41408,12 @@
 
       if ($popup) {
         var $layer = $popup.find('.fr-video-progress-bar-layer');
-        $layer.find('h3').text(message + (progress ? ' ' + progress + '%' : ''));
+        $layer.find('h3').text(message + (progress ? " ".concat(progress, "%") : ''));
         $layer.removeClass('fr-error');
 
         if (progress) {
           $layer.find('div').removeClass('fr-indeterminate');
-          $layer.find('div > span').css('width', progress + '%');
+          $layer.find('div > span').css('width', "".concat(progress, "%"));
         } else {
           $layer.find('div').addClass('fr-indeterminate');
         }
@@ -41084,7 +41448,7 @@
       var video = null;
 
       if (!/^http/.test(link)) {
-        link = 'https://' + link;
+        link = "https://".concat(link);
       }
 
       if (editor.helpers.isURL(link)) {
@@ -41261,7 +41625,7 @@
         for (attr in data) {
           if (data.hasOwnProperty(attr)) {
             if (attr != 'link') {
-              data_str += ' data-' + attr + '="' + data[attr] + '"';
+              data_str += " data-".concat(attr, "=\"").concat(data[attr], "\"");
             }
           }
         }
@@ -41270,7 +41634,7 @@
       var width = editor.opts.videoDefaultWidth;
 
       if (width && width != 'auto') {
-        width = width + 'px';
+        width = "".concat(width, "px");
       } // Create video object and set the load event.
 
 
@@ -41423,7 +41787,7 @@
 
 
     function _getHandler(pos) {
-      return '<div class="fr-handler fr-h' + pos + '"></div>';
+      return "<div class=\"fr-handler fr-h".concat(pos, "\"></div>");
     }
 
     function _resizeVideo(e, initPageX, direction, step) {
@@ -41816,7 +42180,7 @@
             if (editor.opts.videoUploadToS3.uploadURL) {
               url = editor.opts.videoUploadToS3.uploadURL;
             } else {
-              url = 'https://' + editor.opts.videoUploadToS3.region + '.amazonaws.com/' + editor.opts.videoUploadToS3.bucket;
+              url = "https://".concat(editor.opts.videoUploadToS3.region, ".amazonaws.com/").concat(editor.opts.videoUploadToS3.bucket);
             }
           }
 
@@ -42018,10 +42382,10 @@
 
 
       var video_buttons = '';
-      video_buttons = '<div class="fr-buttons fr-tabs">' + editor.button.buildList(editor.opts.videoSizeButtons) + '</div>'; // Size layer.
+      video_buttons = "<div class=\"fr-buttons fr-tabs\">".concat(editor.button.buildList(editor.opts.videoSizeButtons), "</div>"); // Size layer.
 
       var size_layer = '';
-      size_layer = '<div class="fr-video-size-layer fr-layer fr-active" id="fr-video-size-layer-' + editor.id + '"><div class="fr-video-group"><div class="fr-input-line"><input id="fr-video-size-layer-width-' + editor.id + '" type="text" name="width" placeholder="' + editor.language.translate('Width') + '" tabIndex="1"></div><div class="fr-input-line"><input id="fr-video-size-layer-height-' + editor.id + '" type="text" name="height" placeholder="' + editor.language.translate('Height') + '" tabIndex="1"></div></div><div class="fr-action-buttons"><button type="button" class="fr-command fr-submit" data-cmd="videoSetSize" tabIndex="2" role="button">' + editor.language.translate('Update') + '</button></div></div>';
+      size_layer = "<div class=\"fr-video-size-layer fr-layer fr-active\" id=\"fr-video-size-layer-".concat(editor.id, "\"><div class=\"fr-video-group\"><div class=\"fr-input-line\"><input id=\"fr-video-size-layer-width-").concat(editor.id, "\" type=\"text\" name=\"width\" placeholder=\"").concat(editor.language.translate('Width'), "\" tabIndex=\"1\"></div><div class=\"fr-input-line\"><input id=\"fr-video-size-layer-height-").concat(editor.id, "\" type=\"text\" name=\"height\" placeholder=\"").concat(editor.language.translate('Height'), "\" tabIndex=\"1\"></div></div><div class=\"fr-action-buttons\"><button type=\"button\" class=\"fr-command fr-submit\" data-cmd=\"videoSetSize\" tabIndex=\"2\" role=\"button\">").concat(editor.language.translate('Update'), "</button></div></div>");
       var template = {
         buttons: video_buttons,
         size_layer: size_layer // Set the template in the popup.
@@ -42115,7 +42479,7 @@
 
     function refreshAlign($btn) {
       if (!$current_video) return false;
-      $btn.find('>*').first().replaceWith(editor.icon.create('video-align-' + getAlign()));
+      $btn.find('>*').first().replaceWith(editor.icon.create("video-align-".concat(getAlign())));
     }
     /**
      * Refresh the align option from the dropdown.
@@ -42124,7 +42488,7 @@
 
     function refreshAlignOnShow($btn, $dropdown) {
       if ($current_video) {
-        $dropdown.find('.fr-command[data-param1="' + getAlign() + '"]').addClass('fr-active').attr('aria-selected', true);
+        $dropdown.find(".fr-command[data-param1=\"".concat(getAlign(), "\"]")).addClass('fr-active').attr('aria-selected', true);
       }
     }
     /**
@@ -42184,7 +42548,7 @@
 
     function refreshDisplayOnShow($btn, $dropdown) {
       if ($current_video) {
-        $dropdown.find('.fr-command[data-param1="' + getDisplay() + '"]').addClass('fr-active').attr('aria-selected', true);
+        $dropdown.find(".fr-command[data-param1=\"".concat(getDisplay(), "\"]")).addClass('fr-active').attr('aria-selected', true);
       }
     }
     /**
@@ -42238,7 +42602,7 @@
     function _setStyle($video, _display, _align) {
       if (!editor.opts.htmlUntouched && editor.opts.useClasses) {
         $video.removeClass('fr-fvl fr-fvr fr-dvb fr-dvi');
-        $video.addClass('fr-fv' + _align[0] + ' fr-dv' + _display[0]);
+        $video.addClass("fr-fv".concat(_align[0], " fr-dv").concat(_display[0]));
       } else {
         if (_display == 'inline') {
           $video.css({
@@ -42287,8 +42651,8 @@
 
     function _convertStyleToClasses($video) {
       if (!$video.hasClass('fr-dvi') && !$video.hasClass('fr-dvb')) {
-        $video.addClass('fr-fv' + getAlign($video)[0]);
-        $video.addClass('fr-dv' + getDisplay($video)[0]);
+        $video.addClass("fr-fv".concat(getAlign($video)[0]));
+        $video.addClass("fr-dv".concat(getDisplay($video)[0]));
       }
     }
     /**
@@ -42383,13 +42747,19 @@
         e.stopPropagation(); // initialize drag and drop on blocks for traditional browsers
 
         if (editor.browser.msie || editor.browser.edge) {
-          e.target.dragDrop();
+          // https://github.com/froala/wysiwyg-editor/issues/3608
+          if (!e.target.innerText) {
+            e.target.dragDrop();
 
-          _edit.call(this, e);
+            _edit.call(this, e);
+          }
         }
       });
       editor.events.$on(editor.$el, 'click touchend', 'span.fr-video', function (e) {
-        if ($(this).parents('[contenteditable]').not('.fr-element').not('.fr-img-caption').not('body').first().attr('contenteditable') == 'false') return true;
+        // https://github.com/froala/wysiwyg-editor/issues/3608
+        // When contenteditable attribute is not allowed, user will be able press enter,
+        // which will copy fr-video class within p tag causes #3608
+        if (e.target.innerText.length || $(this).parents('[contenteditable]').not('.fr-element').not('.fr-img-caption').not('body').first().attr('contenteditable') == 'false') return true;
 
         _edit.call(this, e);
       });
@@ -42676,7 +43046,7 @@
 
       for (var val in options) {
         if (options.hasOwnProperty(val)) {
-          c += '<li role="presentation"><a class="fr-command fr-title" tabIndex="-1" role="option" data-cmd="videoAlign" data-param1="' + val + '" title="' + this.language.translate(options[val]) + '">' + this.icon.create('video-align-' + val) + '<span class="fr-sr-only">' + this.language.translate(options[val]) + '</span></a></li>';
+          c += "<li role=\"presentation\"><a class=\"fr-command fr-title\" tabIndex=\"-1\" role=\"option\" data-cmd=\"videoAlign\" data-param1=\"".concat(val, "\" title=\"").concat(this.language.translate(options[val]), "\">").concat(this.icon.create("video-align-".concat(val)), "<span class=\"fr-sr-only\">").concat(this.language.translate(options[val]), "</span></a></li>");
         }
       }
 
@@ -43044,6 +43414,9 @@
 
         if (node.nodeType === Node.ELEMENT_NODE) {
           // Skip the first child which is an mso-list:Ignore node.
+          // 1854 For handling extra characters 
+          if (node.getAttribute('style') === 'mso-list:\nIgnore') node.setAttribute("style", "mso-list:Ignore");
+
           if (node.getAttribute('style') === 'mso-list:Ignore') {
             node.parentNode.removeChild(node);
           }
@@ -43067,33 +43440,51 @@
      */
 
 
-    function _buildList(node, head_style_hash, level) {
+    function _buildList(node, head_style_hash, level, prev_margin) {
       // Check ol/ul.
       var order_regex = /[0-9a-zA-Z]./gi;
       var is_ordered = false;
-      var next_order;
       var prev_order;
       var previous_element_sibling;
-      var list_type_node = node.querySelector('span[style="mso-list:Ignore"]');
+      var browser = navigator.userAgent.toLowerCase();
+
+      if (browser.indexOf('safari') != -1) {
+        if (browser.indexOf('chrome') > -1) {
+          browser = 1; // Chrome
+        } else {
+          browser = 'safari'; // Safari
+        }
+      }
+
+      if (node.innerHTML.includes('mso-list:\nIgnore')) {
+        node.innerHTML = node.innerHTML.replace(/mso-list:\nIgnore/gi, 'mso-list:Ignore');
+      }
+
+      var list_type_node = node.querySelector('span[style="mso-list:Ignore"]'); //this is added to check the browser is safari as we are not getting html same as chrome
+
+      if (list_type_node == null && browser == 'safari') {
+        list_type_node = node.querySelector('span[lang="PT-BR"]');
+      }
+
       var contents;
       var listObj;
       var list_tag;
-      var listStyle; // Checking the list is ordered or unordered
+      var listStyle;
+      var startIndexUpperAlpha = 64;
+      var startIndexLowerAlpha = 96; // Checking the list is ordered or unordered
 
       if (list_type_node) {
         is_ordered = is_ordered || order_regex.test(list_type_node.textContent);
-      } // Get the list type
+      }
+
+      var listType;
+      if (list_type_node !== null) listType = list_type_node.textContent.trim().split('.')[0]; // Get the list type
       // const list_tag = is_ordered ? 'ol' : 'ul'
 
-
       if (is_ordered == true) {
-        var listType = list_type_node.textContent.trim().split('.')[0];
+        listType = list_type_node.textContent.trim().split('.')[0];
 
-        if (listType == 'a') {
-          listStyle = 'lower-alpha;';
-        } else if (listType == 'A') {
-          listStyle = 'upper-alpha;';
-        } else if (listType == '1') {
+        if (listType == '1') {
           listStyle = 'decimal;';
         } else if (listType == 'i') {
           listStyle = 'lower-roman;';
@@ -43101,16 +43492,82 @@
           listStyle = 'upper-roman;';
         } else if (listType == 'o') {
           listStyle = 'circle;';
-        }
+        } //https://github.com/froala-labs/froala-editor-js-2/issues/1887
+        // to check the bullet lists
+        else if (!listType.match(/^v$/)) {
+            if (listType.match(/^[a-z]$/) || listType.match(/^[a-z]\)$/)) {
+              listStyle = 'lower-alpha;';
+            } else if (listType.match(/^[A-Z]$/) || listType.match(/^[A-Z]\)$/)) {
+              listStyle = 'upper-alpha;';
+            }
+          }
 
         listStyle = 'list-style-type: ' + listStyle;
         list_tag = 'ol';
       } else {
+        if (list_type_node != null) listType = list_type_node.textContent.trim().split('.')[0];
+
+        if (listType == '¬ß') {
+          listStyle = 'square;';
+        } else if (listType == "¬∑") {
+          listStyle = 'disc;';
+        }
+
+        listStyle = 'list-style-type: ' + listStyle;
         list_tag = 'ul';
       } // creating new list
 
 
-      var s = listStyle ? '<' + list_tag + ' style = "' + listStyle + '">' : '<' + list_tag + '>';
+      var classType = ''; // https://github.com/froala-labs/froala-editor-js-2/issues/1860
+
+      if (list_type_node != undefined && list_type_node.textContent != undefined && !isNaN(parseInt(list_type_node.textContent.trim().split('.')[1], 10))) {
+        classType = ' class="decimal_type" ';
+      }
+
+      var s; // https://github.com/froala-labs/froala-editor-js-2/issues/1887
+
+      var next_level = _getListLevel(node);
+
+      var margin = node.style.marginLeft;
+      var size;
+
+      if (margin.includes('in')) {
+        size = 'in';
+        margin = parseFloat(margin) - 0.5;
+      } else if (margin.includes('pt')) {
+        size = 'px';
+        margin = parseFloat(margin) - 10;
+      }
+
+      if (next_level == 1) {
+        s = listStyle ? '<' + list_tag + ' style = "' + listStyle + '; margin-left:' + margin + size + ';">' : '<' + list_tag + ' style="margin-left:' + margin + size + ';"' + '>'; // https://github.com/froala-labs/froala-editor-js-2/issues/1887
+
+        if (listStyle == 'list-style-type: upper-alpha;') {
+          var index = listType.charCodeAt(0) - startIndexUpperAlpha;
+          s = listStyle ? '<' + list_tag + classType + ' start="' + index + '"' + ' style = "' + listStyle + ' margin-left:' + margin + size + ';">' : '<' + list_tag + '>';
+        } else if (listStyle == 'list-style-type: lower-alpha;') {
+          var _index = listType.charCodeAt(0) - startIndexLowerAlpha;
+
+          s = listStyle ? '<' + list_tag + classType + ' start="' + _index + '"' + ' style = "' + listStyle + 'margin-left:' + margin + size + ';">' : '<' + list_tag + '>';
+        } else {
+          s = listStyle ? '<' + list_tag + classType + ' style = "' + listStyle + ';margin-left:' + margin + size + ';">' : '<' + list_tag + ' style="margin-left:' + margin + size + ';"' + '>';
+        }
+      } else {
+        // https://github.com/froala-labs/froala-editor-js-2/issues/1887
+        if (listStyle == 'list-style-type: upper-alpha;') {
+          var _index2 = listType.charCodeAt(0) - startIndexUpperAlpha;
+
+          s = listStyle ? '<' + list_tag + classType + ' style = "' + listStyle + ' start="' + _index2 + '">' : '<' + list_tag + '>';
+        } else if (listStyle == 'list-style-type: lower-alpha;') {
+          var _index3 = listType.charCodeAt(0) - startIndexLowerAlpha;
+
+          s = listStyle ? '<' + list_tag + classType + ' style = "' + listStyle + ' start="' + _index3 + '">' : '<' + list_tag + '>';
+        } else {
+          s = listStyle ? '<' + list_tag + classType + ' style = "' + listStyle + '">' : '<' + list_tag + '>';
+        }
+      }
+
+      var tagClosedFlag = false;
 
       while (node) {
         // Stop at first sibling that is not a list.
@@ -43125,19 +43582,19 @@
         } // getting level of next node
 
 
-        var next_level = _getListLevel(node); // Set the level if it's the first level or use the same
+        var _next_level = _getListLevel(node); // Set the level if it's the first level or use the same
 
 
-        level = level || next_level; // Create new list if next node level is greater than current one
+        level = level || _next_level; // Create new list if next node level is greater than current one
 
-        if (next_level > level) {
-          listObj = _buildList(node, head_style_hash, next_level);
+        if (_next_level > level) {
+          listObj = _buildList(node, head_style_hash, _next_level, node.style.marginLeft);
           s += listObj.el.outerHTML; // Getting the subsequent node after creating new list
 
           node = listObj.currentNode; // Need to start over to check if next node might be on same level
 
           continue;
-        } else if (next_level < level) {
+        } else if (_next_level < level) {
           // Lower level found. Current list is done.
           break;
         } else {
@@ -43145,7 +43602,6 @@
           // Checking the order of next element.
           if (node.firstElementChild && node.firstElementChild.firstElementChild && node.firstElementChild.firstElementChild.firstChild) {
             order_regex.lastIndex = 0;
-            next_order = order_regex.test(node.firstElementChild.firstElementChild.firstChild.data || node.firstElementChild.firstElementChild.firstChild.firstChild && node.firstElementChild.firstElementChild.firstChild.firstChild.data || '');
           } // Checking the order of current element.
 
 
@@ -43154,13 +43610,37 @@
             prev_order = order_regex.test(previous_element_sibling.firstElementChild.firstElementChild.firstChild.data || previous_element_sibling.firstElementChild.firstElementChild.firstChild.firstChild && previous_element_sibling.firstElementChild.firstElementChild.firstChild.firstChild.data || '');
           } // If levels are same,we are comparing the order of the next element.
           // If the order is same it will append the element in existing list else will create a new list.
+          // https://github.com/froala-labs/froala-editor-js-2/issues/1861
+          // Added condition for ul and ol lists to differentiate the behavior of the list with different type of lists.
 
 
-          if (prev_order === undefined || prev_order === next_order) {
-            contents = _getListContent(node, head_style_hash);
+          var isMarginEqual = false;
+
+          if (!prev_margin && !node.style.marginLeft || prev_margin && node.style.marginLeft && prev_margin === node.style.marginLeft) {
+            isMarginEqual = true;
+          }
+
+          prev_margin = node.style.marginLeft;
+
+          if (isMarginEqual || prev_order === undefined) {
+            contents = _getListContent(node, head_style_hash); // https://github.com/froala-labs/froala-editor-js-2/issues/1860
+
+            if (node.nextSibling.innerText != undefined && node.nextSibling.innerText != undefined && !s.includes('class="decimal_type"')) {
+              if (!isNaN(parseInt(node.nextSibling.innerText.trim().split('.')[1], 10))) {
+                s = s.substring(3, 0) + ' class="decimal_type"' + s.substring(3, s.length);
+              }
+            }
+
             s += '<li>' + contents + '</li>';
           } else {
-            listObj = _buildList(node, head_style_hash, next_level);
+            // https://github.com/froala-labs/froala-editor-js-2/issues/1861
+            if (_next_level == 1) {
+              s += '</' + list_tag + '>';
+              tagClosedFlag = true;
+              previous_element_sibling = null;
+            }
+
+            listObj = _buildList(node, head_style_hash, _next_level, node.style.marginLeft);
             s += listObj.el.outerHTML;
             node = listObj.currentNode;
           }
@@ -43171,6 +43651,17 @@
 
         if (tmp) {
           previous_element_sibling = tmp.previousElementSibling;
+        } // https://github.com/froala-labs/froala-editor-js-2/issues/1854
+
+
+        if (node && !_isList(node)) {
+          // Skip bookmarks.
+          if (node.outerHTML && node.outerHTML.indexOf('mso-bookmark') > 0 && (node.textContent || '').length == 0) {
+            node = node.nextElementSibling;
+            continue;
+          }
+
+          break;
         } // Remove the used node
 
 
@@ -43178,13 +43669,14 @@
 
         node = tmp;
       } // Finish list
+      // https://github.com/froala-labs/froala-editor-js-2/issues/1861
 
 
-      s += '</' + list_tag + '>'; // Convert string to node element.
+      if (!tagClosedFlag) s += '</' + list_tag + '>'; // Convert string to node element.
 
       var div = document.createElement('div');
       div.innerHTML = s;
-      var element = div.firstElementChild; // Returning list element and current node
+      var element = div; // Returning list element and current node
 
       return {
         el: element,
@@ -43199,7 +43691,8 @@
 
       if (parentStyles) {
         allowedStyles.forEach(function (style) {
-          var foundVal = parentStyles.match(new RegExp(style + ':.*;'));
+          //https://github.com/froala-labs/froala-editor-js-2/issues/1852
+          var foundVal = parentStyles.match(new RegExp(style + ':.*(;|)'));
 
           if (foundVal) {
             styles += foundVal[0] + ';';
@@ -44066,6 +44559,15 @@
                     nextNode = null;
                   }
                 }
+              } //https://github.com/froala-labs/froala-editor-js-2/issues/1859
+
+
+              if (node.data.indexOf('[if supportFields]') > -1) {
+                if (node.data.indexOf('FORMCHECKBOX') > -1) {
+                  var checkbox = document.createElement('input');
+                  checkbox.type = "checkbox";
+                  node.parentNode.insertBefore(checkbox, node.nextSibling);
+                }
               }
 
               _removeNode(node);
@@ -44081,8 +44583,9 @@
         // Element node.
         if (node.nodeType === Node.ELEMENT_NODE) {
           var tag_name = node.tagName; // Empty. Skip br tag.
+          // https://github.com/froala-labs/froala-editor-js-2/issues/1859
 
-          if (!node.innerHTML && ['BR', 'IMG'].indexOf(tag_name) === -1) {
+          if (!node.innerHTML && ['BR', 'IMG', 'INPUT'].indexOf(tag_name) === -1) {
             var parent = node.parentNode; // Remove recursively.
 
             while (parent) {
@@ -44135,7 +44638,8 @@
 
     return {
       _init: _init,
-      clean: clean
+      clean: clean,
+      _wordClean: _wordClean
     };
   };
 

@@ -147,11 +147,11 @@ Ext.define('Ext.field.Select', {
     /**
      * @event change
      * Fires when selection has changed.
-     *
+     * 
      * This includes keystrokes that edit the text (if editable).
-     * @param {Ext.field.Select} this
-     * @param {Ext.data.Model} newValue The corresponding record for the new value
-     * @param {Ext.data.Model} oldValue The corresponding record for the old value
+     * @param {Ext.field.Select} this This field
+     * @param {Mixed} newValue The new value
+     * @param {Mixed} oldValue The original value
      */
 
     /**

@@ -31,3 +31,34 @@ $grid-header-trigger-border:
     }
 
 }
+
+.#{$prefix}group-header {
+    border-right-width: 0;
+    &:after {
+        content: '';
+        width: $grid-column-header-border-width;
+        height: 100%;
+        background: $grid-header-border-color;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+
+@if $include-rtl {
+    .#{$prefix}rtl.#{$prefix}group-header {
+        border-left-width: 0;
+        &:before {
+            content: '';
+            width: $grid-column-header-border-width;
+            height: 100%;
+            background: $grid-header-border-color;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        &:after {
+            width: 0;
+        }
+    }
+}

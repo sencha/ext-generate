@@ -193,6 +193,114 @@ topSuite("Ext.data.virtual.Range", [
         expect(range.length).toBe(end - begin);
     }
 
+    describe("goto return value", function() {
+        function makeRange(cfg) {
+            range = store.createActiveRange(cfg);
+        }
+
+        it("should return a promise that resolves when the range completes", function() {
+            var spy = jasmine.createSpy();
+
+            makeRange();
+            range.goto(0, pageSize).then(spy);
+            flushNextLoad();
+            completeLatest();
+            waitsForSpy(spy, 'promise completes', 500);
+            runs(function() {
+                expect(spy.calls[0].args).toEqual([range]);
+                expectRecords(0, pageSize);
+            });
+        });
+
+        it("should wait for multiple pages when required", function() {
+            var spy = jasmine.createSpy();
+
+            makeRange();
+            range.goto(0, pageSize * 3).then(spy);
+            flushNextLoad();
+            completeLatest();
+            waits(50);
+            runs(function() {
+                expect(spy).not.toHaveBeenCalled();
+            });
+            runs(function() {
+                completeLatest();
+            });
+            waits(50);
+            runs(function() {
+                expect(spy).not.toHaveBeenCalled();
+            });
+            runs(function() {
+                completeLatest();
+            });
+            waitsForSpy(spy, 'promise completes', 500);
+            runs(function() {
+                expect(spy.calls[0].args).toEqual([range]);
+                expectRecords(0, pageSize * 3);
+            });
+        });
+
+        it("should resolve immediately if all pages are already satisfied", function() {
+            var spy = jasmine.createSpy();
+
+            makeRange();
+            range.goto(0, pageSize);
+            flushNextLoad();
+            completeLatest();
+            range.goto(0, pageSize - 1).then(spy);
+            waitsForSpy(spy, 'promise completes', 500);
+            expectRecords(0, pageSize);
+        });
+
+        it("should resolve if it only needs to load partial pages", function() {
+            var spy = jasmine.createSpy();
+
+            makeRange();
+            range.goto(0, pageSize);
+            flushNextLoad();
+            completeLatest();
+            range.goto(0, pageSize * 2).then(spy);
+            flushNextLoad();
+            completeLatest();
+            waitsForSpy(spy, 'promise completes', 500);
+            expectRecords(0, pageSize * 2);
+        });
+
+        it("should cancel existing promises if a new range is requested", function() {
+            var spy1 = jasmine.createSpy(),
+                spy2 = jasmine.createSpy();
+
+            makeRange();
+            range.goto(0, pageSize).then(spy1);
+            range.goto(pageSize * 4, pageSize * 5).then(spy2);
+            flushNextLoad();
+            completeLatest();
+            waitsForSpy(spy1, 'cancelled', 50);
+            waitsForSpy(spy2, 'finished', 50);
+            runs(function() {
+                expect(spy1.calls[0].args).toEqual([null]);
+                expect(spy2.calls[0].args).toEqual([range]);
+                expectRecords(pageSize * 4, pageSize * 5);
+            });
+        });
+
+        it("should timeout if the timeout is reached", function() {
+            var spy = jasmine.createSpy();
+
+            makeRange({
+                waitTimeout: 1
+            });
+            range.goto(0, pageSize).then(spy);
+            waits(50);
+            flushNextLoad();
+            completeLatest();
+            waitsForSpy(spy, 'cancelled', 100);
+            runs(function() {
+                expect(spy.calls[0].args).toEqual([null]);
+            });
+        });
+    });
+
     describe("without prefetching", function() {
         function makeRange(cfg) {
             range = store.createActiveRange(Ext.apply({

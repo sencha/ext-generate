@@ -54,11 +54,6 @@ exports.setGlobals =() => {
   info.Toolkit = info.toolkit.charAt(0).toUpperCase() + info.toolkit.slice(1);
   info.toolkitshown = `-${info.toolkit}`;
   info.version = '7.2.0';
-  //info.reactPrefix = 'Ext';
-
-  //info.shortname = process.argv[2];
-  //info.Shortname = info.shortname.charAt(0).toUpperCase() + info.shortname.slice(1);
-
 
   info.framework = 'elements';
   info.suffixParm = process.argv[2];
@@ -75,9 +70,8 @@ exports.setGlobals =() => {
     info.name = info.bundle.substring(1)
   }
 
-
-const AllClassesFolder = '/Users/marcgusmano';
-//const AllClassesFolder = '.';
+//const AllClassesFolder = '/Users/marcgusmano';
+const AllClassesFolder = '/Volumes/BOOTCAMP';
 
 info.data = require(`${AllClassesFolder}/AllClassesFiles/docs/${info.toolkit}/${info.toolkit}-all-classes-flatten.json`);
 info.wantedxtypes = require(`./npmpackage/${toolkit}/${info.suffixParm}`).getXtypes();

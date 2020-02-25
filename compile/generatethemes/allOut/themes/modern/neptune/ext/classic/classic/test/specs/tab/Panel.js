@@ -298,6 +298,29 @@ topSuite("Ext.tab.Panel", ['Ext.form.field.Text', 'Ext.app.ViewModel'], function
                 });
             });
         });
+
+        describe('scrolling', function() {
+            it('should not scroll all the way to the left when left scroller is clicked', function() {
+                var tabBar, scroller;
+
+                createTabPanelWithTabs(12, {
+                    width: 300,
+                    height: 200,
+                    activeTab: 0
+                });
+
+                runs(function() {
+                    tabPanel.setActiveTab(11);
+                    tabBar = tabPanel.getTabBar();
+                    scroller = tabBar.getEl().down('.x-box-scroller-left');
+                    jasmine.fireMouseEvent(scroller, 'click');
+                });
+                waitAWhile();
+                runs(function() {
+                    expect(tabBar.getScrollable().getPosition().x).toBeGreaterThan(0);
+                });
+            });
+        });
     });
 
     describe("the layout", function() {

@@ -264,6 +264,9 @@ Ext.define('Ext.route.Router', {
         var routes = this.routes,
             delimiter = this.getMultipleToken(),
             name = config.name || url,
+            //<debug>
+            version = Ext.getVersion().parts.slice(0, 3).join('.'),
+            //</debug>
             handler, route;
 
         if (url[0] === '!') {
@@ -274,7 +277,7 @@ Ext.define('Ext.route.Router', {
                     msg: 'Route found with "!" ("' + url +
                          '"). Should use new hashbang functionality instead. ' +
                         'Please see the router guide for more: https://docs.sencha.com/extjs/' +
-                        Ext.getVersion().version + '/guides/application_architecture/router.html'
+                        version + '/guides/application_architecture/router.html'
                 });
             }
             //</debug>

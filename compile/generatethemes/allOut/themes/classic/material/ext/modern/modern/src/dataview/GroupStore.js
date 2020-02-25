@@ -138,7 +138,7 @@ Ext.define('Ext.dataview.GroupStore', {
             me.list.store = me;
         }
 
-        if (oldSource && oldSource.getAutoDestroy()) {
+        if (oldSource && !oldSource.destroyed && oldSource.getAutoDestroy()) {
             oldSource.destroy();
         }
 

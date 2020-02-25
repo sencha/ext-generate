@@ -225,7 +225,7 @@ Ext.define('Ext.data.virtual.Store', {
         me.grouper = grouper;
 
         if (!me.isConfiguring) {
-            me.reload();
+            me.reloadRanges();
             me.fireGroupChange(grouper);
         }
     },
@@ -269,35 +269,23 @@ Ext.define('Ext.data.virtual.Store', {
     },
 
     load: function(options) {
-        if (typeof options === 'function') {
-            options = {
-                callback: options
-            };
+        options = options || {};
+        // Load is a strange method here, since typically we want the view to control
+        // how our data is to be loaded. However, the list won't automatically load the range
+        // unless the store is autoLoad: true or has already loaded. We also want to be
+        // able to support autoLoad: true. As such, the easiest thing we can do here is to
+        // just jump out of the normal locking procedeure and just go and get the first page
+        // since this is typically a one-off operation.
+        // eslint-disable-next-line vars-on-top
+        var page = options.page || 1,
+            p = this.pageMap.getPage(page - 1, true);
+
+        if (!p.isLoading()) {
+            p.load({
+                callback: options.callback,
+                scope: options.scope
+            });
         }
-
-        /* eslint-disable-next-line vars-on-top */
-        var me = this,
-            page = (options && options.page) || 1,
-            pageSize = me.getPageSize(),
-            operation = me.createOperation('read', Ext.apply({
-                start: (page - 1) * pageSize,
-                limit: pageSize,
-                page: page,
-
-                filters: me.getFilters().items,
-                sorters: me.getSorters().items,
-                grouper: me.getGrouper()
-            }, options));
-
-        if (me.fireEvent('beforeload', me, operation) !== false) {
-            me.onBeforeLoad(operation);
-            operation.execute();
-        }
-        else {
-            operation.setCompleted();
-        }
-
-        return operation;
     },
 
     reload: function(options) {
@@ -322,7 +310,19 @@ Ext.define('Ext.data.virtual.Store', {
         me.pageMap.clear();
         me.getGroups().clear();
 
-        return me.load(options);
+        return me.loadInternal(options);
+    },
+
+    reloadRanges: function() {
+        var activeRanges = this.activeRanges,
+            i;
+
+        this.pageMap.clear();
+        this.getGroups().clear();
+
+        for (i = activeRanges.length; i-- > 0;) {
+            activeRanges[i].reload();
+        }
     },
 
     // TODO load?
@@ -393,7 +393,7 @@ Ext.define('Ext.data.virtual.Store', {
         }
 
         if (fire) {
-            me.reload();
+            me.reloadRanges();
             me.fireEvent('sort', me, sorters);
         }
     },
@@ -538,11 +538,45 @@ Ext.define('Ext.data.virtual.Store', {
             me.fireEvent('load', me, rsRecords, wasSuccessful, op);
         },
 
-        loadVirtualPage: function(page, callback, scope) {
+        loadInternal: function(options) {
+            if (typeof options === 'function') {
+                options = {
+                    callback: options
+                };
+            }
+
+            /* eslint-disable-next-line vars-on-top */
+            var me = this,
+                page = (options && options.page) || 1,
+                pageSize = me.getPageSize(),
+                operation = me.createOperation('read', Ext.apply({
+                    start: (page - 1) * pageSize,
+                    limit: pageSize,
+                    page: page,
+
+                    filters: me.getFilters().items,
+                    sorters: me.getSorters().items,
+                    grouper: me.getGrouper()
+                }, options));
+
+            if (me.fireEvent('beforeload', me, operation) !== false) {
+                me.onBeforeLoad(operation);
+                operation.execute();
+            }
+            else {
+                operation.setCompleted();
+            }
+
+            return operation;
+        },
+
+        loadVirtualPage: function(page, callback, scope, loadOptions) {
+            // loadOptions will only be provided in the case where a user
+            // has called directly, so this will be pretty rare.
             var me = this,
                 pageMapGeneration = me.pageMap.generation;
 
-            return me.load({
+            return me.loadInternal(Ext.apply({
                 page: page.number + 1, // store loads are 1 based
                 internalCallback: function(op) {
                     var resultSet = op.getResultSet(),
@@ -565,7 +599,7 @@ Ext.define('Ext.data.virtual.Store', {
                         me.fireEvent('load', me, rsRecords, op.wasSuccessful(), op);
                     }
                 }
-            });
+            }, loadOptions));
         },
 
         lockGroups: function(grouper, page) {

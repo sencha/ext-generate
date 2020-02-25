@@ -264,7 +264,8 @@ Ext.define('Ext.chart.series.Series', {
 
         /**
          * @cfg {Object} style Custom style configuration for the sprite used in the series.
-         * It overrides the style that is provided by the current theme.
+         * It overrides the style that is provided by the current theme. See
+         * {@link Ext.chart.theme.series.Series}
          */
         style: {},
 

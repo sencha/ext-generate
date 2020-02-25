@@ -8486,7 +8486,8 @@ Ext.define('Ext.calendar.view.Weeks', {
                 scope: me,
                 touchstart: 'onTouchStart',
                 touchmove: 'onTouchMove',
-                touchend: 'onTouchEnd'
+                touchend: 'onTouchEnd',
+                longpress: 'onLongPress'
             });
         }
     },
@@ -9133,6 +9134,38 @@ Ext.define('Ext.calendar.view.Weeks', {
          * @private
          */
         hideOverflowPopup: Ext.privateFn,
+        maybeShowAddForm: function(start, end) {
+            var me = this,
+                D = Ext.Date,
+                event;
+            if (me.getAddOnSelect()) {
+                if (me.hasEditableCalendars() && me.getAddForm()) {
+                    event = me.createModel({
+                        allDay: true,
+                        startDate: D.localToUtc(start),
+                        endDate: D.add(D.localToUtc(end), D.DAY, 1)
+                    });
+                    me.showAddForm(event, {
+                        scope: me,
+                        onSave: me.clearSelected,
+                        onCancel: me.clearSelected
+                    });
+                }
+            }
+        },
+        onLongPress: function(e) {
+            var me = this,
+                cell = me.getCellFromEvent(e),
+                date;
+            if (!cell) {
+                return;
+            }
+            date = me.getDateFromCell(cell);
+            me.fireEvent('select', me, {
+                date: date
+            });
+            me.maybeShowAddForm(date, date);
+        },
         /**
          * Handle click on the "show more" overflow element.
          * @param {Ext.event.Event} e The DOM event.
@@ -9162,9 +9195,8 @@ Ext.define('Ext.calendar.view.Weeks', {
          */
         onTouchEnd: function() {
             var me = this,
-                D = Ext.Date,
                 cells = me.cells,
-                start, end, temp, event;
+                start, end, temp;
             if (me.isSelecting) {
                 start = me.selectedStartIndex;
                 end = me.selectedEndIndex;
@@ -9185,22 +9217,7 @@ Ext.define('Ext.calendar.view.Weeks', {
                         range: new Ext.calendar.date.Range(start, end)
                     });
                 }
-                if (me.getAddOnSelect()) {
-                    if (me.hasEditableCalendars() && me.getAddForm()) {
-                        event = me.createModel({
-                            allDay: true,
-                            startDate: D.localToUtc(start),
-                            endDate: D.add(D.localToUtc(end), D.DAY, 1)
-                        });
-                        me.showAddForm(event, {
-                            scope: me,
-                            onSave: me.clearSelected,
-                            onCancel: me.clearSelected
-                        });
-                    } else {
-                        me.clearSelected();
-                    }
-                }
+                me.maybeShowAddForm(start, end);
                 me.isSelecting = false;
             }
         },

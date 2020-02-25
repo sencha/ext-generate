@@ -28,8 +28,16 @@ function() {
         }, config));
     }
 
-    function createGrid(gridCfg, selModelCfg, storeCfg) {
-        selModel = new Ext.selection.RowModel(selModelCfg || {});
+    function createGrid(gridCfg, selModelCfg, storeCfg, passAsObject) {
+        if (typeof selModelCfg === 'string') {
+            selModel = selModelCfg;
+        }
+        else if (!passAsObject) {
+            selModel = new Ext.selection.RowModel(selModelCfg || {});
+        }
+        else {
+            selModel = (selModelCfg || {});
+        }
 
         grid = new Ext.grid.Panel(Ext.apply({
             store: (gridCfg && gridCfg.store) || createStore(storeCfg),
@@ -152,6 +160,24 @@ function() {
         // Row 1 not selected
         expect(grid.view.all.item(1).hasCls(itemSelectedCls)).toBe(false);
     });
+
+    it('should have allowDeselect:false by default', function() {
+        createGrid({}, 'rowmodel');
+
+        expect(grid.getSelectionModel().allowDeselect).toBeFalsy();
+    });
+
+    for (var i = 0; i <= 1; i++) {
+        it('should take allowDeselect from the gridPanel over the selModel (' + (i === 0 ? 'instance' : 'object') + ')', function() {
+            createGrid({
+                allowDeselect: false
+            }, {
+                allowDeselect: true
+            }, undefined, i);
+
+            expect(grid.getSelectionModel().allowDeselect).toBeFalsy();
+        });
+    }
 
     it('SINGLE select mode should select on RIGHT/LEFT wrap to different row', function() {
         createGrid({}, {

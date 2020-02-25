@@ -15,8 +15,7 @@ $slicer-map-size: 0 !default;
         $slice: add-slice($cls, $op);
     }
 
-    @return 'images/magnify.png';
-    //@return $url; mjg
+    @return $url;
 }
 
 @function add-slice($cls, $op) {

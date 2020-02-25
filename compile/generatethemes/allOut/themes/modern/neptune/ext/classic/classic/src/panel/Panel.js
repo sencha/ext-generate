@@ -1837,6 +1837,13 @@ Ext.define('Ext.panel.Panel', {
             me.beginCollapse();
         }
 
+        // https://sencha.jira.com/browse/EXTJS-26862
+        // Set the focus to the collapse tool to ensure any currently
+        // focused components do not remain on screen after collapse
+        if (me.containsFocus && me.collapseTool) {
+            me.collapseTool.focus();
+        }
+
         me.getInherited().collapsed = true;
         me.fireHierarchyEvent('collapse');
 

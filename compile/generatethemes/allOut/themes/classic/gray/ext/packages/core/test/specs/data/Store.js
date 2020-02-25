@@ -9004,4 +9004,24 @@ topSuite("Ext.data.Store", [
             expect(filterchangeSpy.callCount).toBe(1);
         });
     });
+
+    describe('applyState', function() {
+        it('should not trigger a load if not remoteSort or remoteFilter', function() {
+            createStore({
+                autoLoad: true,
+                remoteSort: false,
+                remoteFilter: false
+            }, true);
+            var count = store.loadCount;
+
+            store.applyState({
+                sorters: ['name'],
+                filters: [{
+                    property: 'name',
+                    value: 'Tommy'
+                }]
+            });
+            expect(store.loadCount).toBe(count);
+        });
+    });
 });

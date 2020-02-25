@@ -416,7 +416,9 @@ Ext.define('Ext.data.ProxyStore', {
         // If autoLoad is true, it might have loaded synchronously from a memory proxy,
         // so needs to reload.
         // If it is already loaded, we definitely need to reload to apply the state.
-        if (me.getAutoLoad() || me.isLoaded()) {
+        // If we're not remote sorting or filtering, there is no point in loading.
+        if ((me.getAutoLoad() || me.isLoaded()) &&
+            (me.getRemoteSort() || me.getRemoteFilter())) {
             me.load();
         }
     },

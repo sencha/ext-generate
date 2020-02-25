@@ -467,6 +467,8 @@ Ext.define('Ext.panel.Date', {
         }
     },
 
+    sidePaneOffset: 2,
+
     initialize: function() {
         var me = this,
             value = me.getValue();
@@ -713,7 +715,7 @@ Ext.define('Ext.panel.Date', {
         var me = this;
 
         me.getLayout().setVisibleChildren(count);
-        me.initPanes(0);
+        me.initPanes();
         me.singlePane = count === 1;
         me.toggleCls(Ext.baseCSSPrefix + 'single', me.singlePane);
     },
@@ -865,9 +867,9 @@ Ext.define('Ext.panel.Date', {
         return ret;
     },
 
-    initPanes: function(offset) {
+    initPanes: function() {
         var me = this,
-            count = me.getPanes() + 2,
+            count = me.getPanes() + this.sidePaneOffset,
             panes = [],
             oldPanes, index, center, i;
 
@@ -875,7 +877,7 @@ Ext.define('Ext.panel.Date', {
         center = !index ? index : index % 2 ? Math.floor(index / 2) + 1 : Math.floor(index / 2);
 
         for (i = 0; i < count; i++) {
-            panes.push(me.getPaneTemplate((i + offset) - center));
+            panes.push(me.getPaneTemplate(i - center));
         }
 
         oldPanes = me.getInnerItems();
@@ -950,6 +952,12 @@ Ext.define('Ext.panel.Date', {
         return true;
     },
 
+    setValueWithoutAnim: function(value) {
+        this.preventAnim = true;
+        this.setValue(value);
+        this.preventAnim = false;
+    },
+
     navigateTo: function(date, animate) {
         var me = this,
             layout = me.getLayout(),
@@ -1013,17 +1021,12 @@ Ext.define('Ext.panel.Date', {
 
     onMonthToolClick: function(tool) {
         var me = this,
-            panes = me.getInnerItems(),
             D = Ext.Date,
             increment = tool.increment,
             date = D.add(me.getFocusableDate(), D.MONTH, increment),
             hasFocus = me.hasFocus,
-            index, pane, month;
-
-        index = me.getCenterIndex();
-        pane = panes[index];
-
-        month = D.add(pane.getMonth(), D.MONTH, increment);
+            pane = pane = this.getLayout().getFrontItem(),
+            month = D.add(pane.getMonth(), D.MONTH, increment);
 
         if (!me.canSwitchTo(month, increment)) {
             return;
@@ -1465,13 +1468,6 @@ Ext.define('Ext.panel.Date', {
             }, config);
         },
 
-        getCenterIndex: function() {
-            var count = this.getPanes(),
-                index = count - 1;
-
-            return !index ? index : index % 2 ? Math.floor(index / 2) + 1 : Math.floor(index / 2);
-        },
-
         getPaneTemplate: function(offset) {
             var me = this;
 
@@ -1600,7 +1596,7 @@ Ext.define('Ext.panel.Date', {
             }
 
             // eslint-disable-next-line vars-on-top
-            var panes = this.getPanes(),
+            var panes = this.getInnerItems(),
                 len = panes.length,
                 i;
 
@@ -1616,6 +1612,9 @@ Ext.define('Ext.panel.Date', {
 
             if (prev && prev.getTime() === date.getTime()) {
                 anim = false;
+            }
+            else {
+                anim = this.preventAnim ? false : anim;
             }
 
             me.setTitleText(Ext.Date.format(date, me.getHeaderFormat()), date, prev, anim);

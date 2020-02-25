@@ -19,7 +19,7 @@ topSuite('Ext.grid.filters.menu.Base', [
                     data = rows;
                 }
             }
- else if (rows !== 0) {
+            else if (rows !== 0) {
                 rows = 20;
             }
 
@@ -138,7 +138,6 @@ topSuite('Ext.grid.filters.menu.Base', [
         // Force any flex sizes to be published internally
         function refreshColSizes() {
             var cols = grid.query('column');
-
             Ext.event.publisher.ElementSize.instance.syncRefresh(cols);
         }
 

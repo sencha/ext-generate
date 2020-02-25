@@ -1349,7 +1349,7 @@ Ext.define('Ext.dataview.Abstract', {
             // If useComponents is set, an item will be a component.
             // Use a widget's focusEl by preference in case it implements an inner
             // element as focusable. If not, List#createItem uses the encapsulating el.
-            if (focusPosition.isWidget) {
+            if (focusPosition && focusPosition.isWidget) {
                 focusPosition = focusPosition.getFocusEl() || focusPosition.el;
             }
 
@@ -2274,6 +2274,11 @@ Ext.define('Ext.dataview.Abstract', {
                 plan.promise = Ext.Deferred.getCachedRejected();
             }
             else {
+                if (this.dataRange.isVirtualRange && !record && (recIndex || recIndex === 0)) {
+                    // Virtual range where we don't support the record, so try and load it.
+                    plan.async = true;
+                }
+
                 // These will be pop()ed and dispatched so they are in LIFO order
                 // here:
                 plan.steps.push(
@@ -2321,9 +2326,17 @@ Ext.define('Ext.dataview.Abstract', {
                 cleanup = function() {
                     delete dataRange.goto;
 
-                    if (args) {
-                        dataRange.goto(args[0], args[1]);
-                    }
+                    return args
+                        ? dataRange.goto(args[0], args[1]).then(function() {
+                            plan.record = me.store.getAt(plan.recordIndex);
+                            // After this point, if we don't have the record, there's not
+                            // really much else we can do.
+
+                            if (!plan.record) {
+                                throw new Error('Unable to get record');
+                            }
+                        })
+                        : Ext.Promise.resolve();
                 },
                 args, promise;
 
@@ -2347,9 +2360,9 @@ Ext.define('Ext.dataview.Abstract', {
                 // This method is called to add the range unlock at the proper point
                 // in the promise chain.
                 promise = promise.then(function(v) {
-                    cleanup();
-
-                    return v;
+                    return cleanup().then(function() {
+                        return v;
+                    });
                 }, function(ex) {
                     cleanup();
                     throw ex;
@@ -2365,7 +2378,7 @@ Ext.define('Ext.dataview.Abstract', {
         ensureVisibleScroll: function(plan) {
             var item = plan.item || (plan.item = this.itemFromRecord(plan.recIndex));
 
-            return this.getScrollable().ensureVisbile(item.el, {
+            return this.getScrollable().ensureVisible(item.el, {
                 animation: plan.animation
             });
         },

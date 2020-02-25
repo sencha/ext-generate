@@ -573,7 +573,6 @@ topSuite("Ext.grid.rowedit.Plugin", [
     describe('triggerEvent', function() {
         describe('doubletap', function() {
             beforeEach(function() {
-                console.clear();
                 makeGrid();
             });
 

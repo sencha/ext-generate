@@ -1574,14 +1574,21 @@ Ext.define('Ext.pivot.Grid', {
      */
     onHeaderClick: function(ct, column, e) {
         var me = this,
-            sortState = (column.sortState ? (column.sortState === 'ASC' ? 'DESC' : 'ASC') : 'ASC');
+            sortState = (column.sortState ? (column.sortState === 'ASC' ? 'DESC' : 'ASC') : 'ASC'),
+            topAxisColumn;
 
         if (e) {
             e.stopEvent();
         }
 
         if (!column.xexpandable) {
-            if (!me.enableColumnSort) {
+            topAxisColumn = me.getTopAxisItem(column);
+
+            // Check if the grid is not sortable or if we have sortable set to
+            // false on the selected column
+            if ((!me.enableColumnSort || !me.sortableColumns) ||
+                (topAxisColumn && topAxisColumn.dimension &&
+                !topAxisColumn.dimension.getSortable())) {
                 return;
             }
 

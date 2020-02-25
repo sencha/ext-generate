@@ -16,7 +16,7 @@ topSuite('Ext.grid.filters.Plugin', [
                 return ret;
             }
         }),
-        store, grid, plugin, provider, colMap;
+        store, grid, plugin, provider, colMap, oldProvider;
 
     function getData() {
         return [
@@ -74,8 +74,11 @@ topSuite('Ext.grid.filters.Plugin', [
     }
 
     function tearDown() {
-        Ext.state.Provider.register(null);
-        store = grid = plugin = Ext.destroy(grid);
+        if (provider) {
+            provider.destroy();
+        }
+        Ext.state.Provider.register(oldProvider || new Ext.state.Provider());
+        provider = store = grid = plugin = Ext.destroy(grid);
     }
 
     function expectState(expected) {
@@ -116,8 +119,8 @@ topSuite('Ext.grid.filters.Plugin', [
 
     beforeEach(function() {
         MockAjaxManager.addMethods();
+        oldProvider = Ext.state.Provider.get();
         provider = new Ext.state.Provider();
-
         Ext.state.Provider.register(provider);
     });
 

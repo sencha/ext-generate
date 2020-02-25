@@ -2024,6 +2024,11 @@ Ext.define('Ext.data.Model', {
 
             item = role.getAssociatedItem(me);
 
+            // If the current associated item is null, move to the next item
+            if (!item) {
+                continue;
+            }
+
             if (item.isStore) {
                 items = item.getData().items; // get the records for the store
                 length = items.length;

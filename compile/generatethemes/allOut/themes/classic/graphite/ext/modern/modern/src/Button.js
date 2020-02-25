@@ -86,11 +86,11 @@
  * - **decline** - shaded using the {@link Global_CSS#$alert-color $alert-color}
  * - **confirm** - shaded using the {@link Global_CSS#$confirm-color $confirm-color}
  *
- * You can also append `-round` to each of the last three UI's to give it a round shape:
+ * You can also append ` round` to each of the last three UI's to give it a round shape:
  *
- * - **action-round**
- * - **decline-round**
- * - **confirm-round**
+ * - **action round**
+ * - **decline round**
+ * - **confirm round**
  *
  * And setting them is very simple:
  *
@@ -118,7 +118,7 @@
  *         { ui: 'normal', text: 'normal' },
  *         { ui: 'round', text: 'round' },
  *         { ui: 'action', text: 'action' },
- *         { ui: 'decline', text: 'decline' },
+ *         { ui: 'decline', text: 'decline round' },
  *         { ui: 'confirm', text: 'confirm' }
  *     ]
  * });

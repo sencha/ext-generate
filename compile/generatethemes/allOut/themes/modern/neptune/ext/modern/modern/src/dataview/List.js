@@ -1937,7 +1937,7 @@ Ext.define('Ext.dataview.List', {
             }
         },
 
-        onRangeAvailable: function() {
+        onRangeAvailable: function(range, first, last) {
             // This method is called by virtual stores when records become
             // available (or possibly reload).
             this.syncRows();
@@ -1974,11 +1974,24 @@ Ext.define('Ext.dataview.List', {
             this.adjustScrollDockHeight(item.scrollDock, height);
         },
 
-        onStoreGroupChange: function() {
-            if (this.initialized) {
-                this.refreshGrouping();
-                this.syncRows();
+        onStoreGroupChange: function(store) {
+            var me = this,
+                was;
+
+            if (!me.initialized) {
+                return;
             }
+
+            if (!store.isGroupStore) {
+                was = store.getAutoDestroy();
+                // Ensure we don't clobber the store when unbinding it.
+                store.setAutoDestroy(false);
+                this.setStore(store);
+                store.setAutoDestroy(was);
+            }
+
+            me.refreshGrouping();
+            me.syncRows();
         },
 
         onStoreTotalCountChange: function() {
@@ -4508,16 +4521,15 @@ Ext.define('Ext.dataview.List', {
                 firstTime = ! me.heightSyncs++,
                 renderInfo = me.renderInfo,
                 oldIndexBottom = renderInfo && renderInfo.indexBottom,
-                storeCount = me.store.getCount(),
+                storeCount = me.store && me.store.getCount(),
                 // When a maxHeight is configured, we use that to drive the number
                 // of rows to render. We set the height of our innerCt (which is
                 // position:relative) to provide a height to the list (see syncRows).
                 visibleHeight = me.getMaxHeight() || me.getVisibleHeight(),
                 // row,
-                partners,
-                indexTop, rowCount, i, len, p, active;
+                partners, indexTop, rowCount, i, len, p, active;
 
-            if (!me.isActivePartner()) {
+            if (!me.isActivePartner() || (!rowCount && !me.store)) {
                 return;
             }
 
@@ -4904,7 +4916,8 @@ Ext.define('Ext.dataview.List', {
             var me = this,
                 store = me.store,
                 renderInfo = me.renderInfo,
-                bottom = top + me.dataItems.length;
+                bottom = top + me.dataItems.length,
+                total;
 
             // TODO (EXTJS-27397) looks wrong
             // Return at initial render if autoLoad is `false` or `undefined`
@@ -4921,6 +4934,11 @@ Ext.define('Ext.dataview.List', {
 
             if (top === bottom && store.isVirtualStore) {
                 bottom = top + store.getPageSize();
+                total = store.getTotalCount();
+
+                if (total !== null) {
+                    bottom = Math.min(total, bottom);
+                }
             }
 
             me.dataRange.goto(top, bottom);

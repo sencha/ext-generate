@@ -63,7 +63,11 @@ Ext.env.OS = function(userAgent, platform, browserScope) {
     // This is added as a workaround for Chrome iPad emulation mode
     // it will report the platform of the machine (MacIntel, Win32, etc) instead
     // of an emulated platform
-    if (userAgent.match(/ipad/i)) {
+    // iOS versions 12 and lower will include 'iPad' in the user agent string, iPadOS 13+ will
+    // not report 'iPad' but 'Mac Intel' so we have to check the touch points.
+    if (userAgent.match(/ipad/i) || (!userAgent.match(/iphone/i) && userAgent.match(/Mac/) &&
+        navigator.maxTouchPoints > 2)) {
+        name = 'iOS';
         platform = 'iPad';
     }
 
@@ -267,6 +271,13 @@ else {
     else {
         deviceType = 'Phone';
     }
+}
+
+// With iPadOS the operating system name is returned as 'MacOS' so let's check if we are
+// using a tablet and if so set it to 'iOS' instead.
+if (deviceType === 'Tablet' && osName === 'MacOS') {
+    Ext.isiOS = true;
+    Ext.isiPadOS = true;
 }
 
 /**

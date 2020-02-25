@@ -654,7 +654,7 @@ Ext.define('Ext.grid.locked.Grid', {
                     // logic assumes that anything after the current item has
                     // scrollers visible.
                     hide = false;
-                    found = !region.hasHiddenContent();
+                    found = me.isRegionVisible(region);
                 }
 
                 grid.setHideScrollbar(hide);

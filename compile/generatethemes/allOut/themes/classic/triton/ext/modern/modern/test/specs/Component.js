@@ -3,7 +3,8 @@
 
 topSuite("Ext.Component",
     ['Ext.Container', 'Ext.app.ViewModel', 'Ext.layout.HBox',
-     'Ext.layout.VBox', 'Ext.Mask', 'Ext.MessageBox'],
+     'Ext.layout.VBox', 'Ext.Mask', 'Ext.MessageBox',
+     'Ext.panel.Collapsible', 'Ext.panel.Collapser', 'Ext.Panel'],
 function() {
     var component;
 
@@ -2526,8 +2527,7 @@ function() {
             extend: 'Ext.Component',
             fn1: Ext.emptyFn,
             fn2: Ext.emptyFn
-        }),
-ct;
+        }), ct;
 
         function makeCls(hidden, preventRender) {
             component = new Cls({
@@ -2683,100 +2683,208 @@ ct;
             });
 
             describe("nested", function() {
-                describe("showing container", function() {
-                    describe("when component is hidden", function() {
-                        it("should not fire", function() {
-                            makeCls(true, true);
-                            ct = new Ext.Container({
-                                renderTo: Ext.getBody(),
-                                hidden: true,
-                                items: [component]
+                describe("show", function() {
+                    describe("showing container", function() {
+                        describe("when component is hidden", function() {
+                            it("should not fire", function() {
+                                makeCls(true, true);
+                                ct = new Ext.Container({
+                                    renderTo: Ext.getBody(),
+                                    hidden: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
+
+                                component.whenVisible('fn1');
+                                ct.show();
+
+                                expect(component.fn1).not.toHaveBeenCalled();
                             });
-                            spyOn(component, 'fn1');
+                        });
 
-                            component.whenVisible('fn1');
-                            ct.show();
+                        describe("when component is visible", function() {
+                            it("should fire", function() {
+                                makeCls(false, true);
+                                ct = new Ext.Container({
+                                    renderTo: Ext.getBody(),
+                                    hidden: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
 
-                            expect(component.fn1).not.toHaveBeenCalled();
+                                component.whenVisible('fn1');
+                                ct.show();
+
+                                expect(component.fn1.callCount).toBe(1);
+                            });
                         });
                     });
 
-                    describe("when component is visible", function() {
-                        it("should fire", function() {
-                            makeCls(false, true);
-                            ct = new Ext.Container({
-                                renderTo: Ext.getBody(),
-                                hidden: true,
-                                items: [component]
+                    describe("showing component", function() {
+                        describe("when container is hidden", function() {
+                            it("should not fire", function() {
+                                makeCls(true, true);
+                                ct = new Ext.Container({
+                                    renderTo: Ext.getBody(),
+                                    hidden: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
+
+                                component.whenVisible('fn1');
+                                component.show();
+
+                                expect(component.fn1).not.toHaveBeenCalled();
                             });
-                            spyOn(component, 'fn1');
+                        });
 
-                            component.whenVisible('fn1');
-                            ct.show();
+                        describe("when container is visible", function() {
+                            it("should fire", function() {
+                                makeCls(true, true);
+                                ct = new Ext.Container({
+                                    renderTo: Ext.getBody(),
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
 
-                            expect(component.fn1.callCount).toBe(1);
+                                component.whenVisible('fn1');
+                                component.show();
+
+                                expect(component.fn1.callCount).toBe(1);
+                            });
                         });
                     });
                 });
 
-                describe("showing component", function() {
-                    describe("when container is hidden", function() {
-                        it("should not fire", function() {
-                            makeCls(true, true);
-                            ct = new Ext.Container({
-                                renderTo: Ext.getBody(),
-                                hidden: true,
-                                items: [component]
+                describe("expand", function() {
+                    describe("expand container", function() {
+                        describe("when component is hidden", function() {
+                            it("should not fire", function() {
+                                makeCls(true, true);
+                                ct = new Ext.Panel({
+                                    renderTo: Ext.getBody(),
+                                    collapsed: true,
+                                    collapsible: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
+
+                                component.whenVisible('fn1');
+                                ct.expand(false);
+
+                                expect(component.fn1).not.toHaveBeenCalled();
                             });
-                            spyOn(component, 'fn1');
+                        });
 
-                            component.whenVisible('fn1');
-                            component.show();
+                        describe("when component is visible", function() {
+                            it("should fire", function() {
+                                makeCls(false, true);
+                                ct = new Ext.Panel({
+                                    renderTo: Ext.getBody(),
+                                    collapsed: true,
+                                    collapsible: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
 
-                            expect(component.fn1).not.toHaveBeenCalled();
+                                component.whenVisible('fn1');
+                                ct.expand(false);
+
+                                expect(component.fn1.callCount).toBe(1);
+                            });
                         });
                     });
 
-                    describe("when container is visible", function() {
-                        it("should fire", function() {
-                            makeCls(true, true);
-                            ct = new Ext.Container({
-                                renderTo: Ext.getBody(),
-                                items: [component]
+                    describe("showing component", function() {
+                        describe("when container is collapsed", function() {
+                            it("should not fire", function() {
+                                makeCls(true, true);
+                                ct = new Ext.Panel({
+                                    renderTo: Ext.getBody(),
+                                    collapsed: true,
+                                    collapsible: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
+
+                                component.whenVisible('fn1');
+                                component.show();
+
+                                expect(component.fn1).not.toHaveBeenCalled();
                             });
-                            spyOn(component, 'fn1');
+                        });
 
-                            component.whenVisible('fn1');
-                            component.show();
+                        describe("when container is expanded", function() {
+                            it("should fire", function() {
+                                makeCls(true, true);
+                                ct = new Ext.Container({
+                                    renderTo: Ext.getBody(),
+                                    collapsible: true,
+                                    items: [component]
+                                });
+                                spyOn(component, 'fn1');
 
-                            expect(component.fn1.callCount).toBe(1);
+                                component.whenVisible('fn1');
+                                component.show();
+
+                                expect(component.fn1.callCount).toBe(1);
+                            });
                         });
                     });
                 });
             });
 
-            describe("when a component in another hierarchy is shown", function() {
-                it("should not fire", function() {
-                    makeCls(false, true);
-                    ct = new Ext.Container({
-                        renderTo: Ext.getBody(),
-                        hidden: true,
-                        items: [component]
+            describe("other hierarchies", function() {
+                describe("when a component in another hierarchy is shown", function() {
+                    it("should not fire", function() {
+                        makeCls(false, true);
+                        ct = new Ext.Container({
+                            renderTo: Ext.getBody(),
+                            hidden: true,
+                            items: [component]
+                        });
+                        spyOn(component, 'fn1');
+
+                        component.whenVisible('fn1');
+
+                        var other = new Ext.Component({
+                            renderTo: Ext.getBody(),
+                            hidden: true
+                        });
+
+                        other.show();
+                        expect(component.fn1).not.toHaveBeenCalled();
+                        other.destroy();
+                        ct.show();
+                        expect(component.fn1.callCount).toBe(1);
                     });
-                    spyOn(component, 'fn1');
+                });
 
-                    component.whenVisible('fn1');
+                describe("when a component in another hierarchy is expanded", function() {
+                    it("should not fire", function() {
+                        makeCls(false, true);
+                        ct = new Ext.Panel({
+                            renderTo: Ext.getBody(),
+                            collapsible: true,
+                            collapsed: true,
+                            items: [component]
+                        });
+                        spyOn(component, 'fn1');
 
-                    var other = new Ext.Component({
-                        renderTo: Ext.getBody(),
-                        hidden: true
+                        component.whenVisible('fn1');
+
+                        var other = new Ext.Panel({
+                            renderTo: Ext.getBody(),
+                            collapsible: true,
+                            collapsed: true
+                        });
+
+                        other.expand(false);
+                        expect(component.fn1).not.toHaveBeenCalled();
+                        other.destroy();
+                        ct.expand(false);
+                        expect(component.fn1.callCount).toBe(1);
                     });
-
-                    other.show();
-                    expect(component.fn1).not.toHaveBeenCalled();
-                    other.destroy();
-                    ct.show();
-                    expect(component.fn1.callCount).toBe(1);
                 });
             });
         });

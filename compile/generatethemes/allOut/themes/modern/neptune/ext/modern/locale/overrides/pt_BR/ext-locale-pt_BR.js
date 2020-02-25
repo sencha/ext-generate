@@ -87,7 +87,7 @@ Ext.define("Ext.locale.pt_BR.grid.locked.Grid", {
                 menuLabel: 'Desbloqueado'
             },
             right: {
-                menuLabel: 'Bloqueado (Certo)'
+                menuLabel: 'Bloqueado (Direita)'
             }
         }
     }

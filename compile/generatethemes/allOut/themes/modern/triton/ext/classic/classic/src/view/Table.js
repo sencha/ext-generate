@@ -758,17 +758,10 @@ Ext.define('Ext.view.Table', {
         }
 
         if (selModel) {
-
             if (selModel.isSelectionModel) {
-
-                // If the grid had allowDeselect configured use that value, otherwise look to the
-                // grid's selection model/mode
                 selModel.allowDeselect = allowDeselect !== undefined
                     ? allowDeselect
-                    : selModel.allowDeselect !== undefined
-                        ? selModel.allowDeselect
-                        : selModel.selectionMode !== 'SINGLE';
-
+                    : selModel.allowDeselect;
                 selModel.locked = disableSelection;
             }
             else {
@@ -777,12 +770,14 @@ Ext.define('Ext.view.Table', {
                         type: selModel
                     };
                 }
-                // Copy obsolete selType property to type property now that selection models
-                // are Factoryable
-                // TODO: Remove selType config after deprecation period
                 else {
-                    selModel.type = grid.selType || selModel.selType || selModel.type ||
-                                    defaultType;
+                    // Copy obsolete selType property to type property now that selection models
+                    // are Factoryable
+                    // TODO: Remove selType config after deprecation period
+                    selModel.type = grid.selType ||
+                        selModel.selType ||
+                        selModel.type ||
+                        defaultType;
                 }
 
                 if (!selModel.mode) {
@@ -794,10 +789,8 @@ Ext.define('Ext.view.Table', {
                     }
                 }
 
-                selModel = Ext.Factory.selection(Ext.apply({
-                    allowDeselect: allowDeselect !== undefined
-                        ? allowDeselect
-                        : selModel.selectionMode !== 'SINGLE',
+                selModel = Ext.Factory.selection(Ext.applyIf({
+                    allowDeselect: allowDeselect,
                     locked: disableSelection
                 }, selModel));
             }
@@ -3956,12 +3949,13 @@ Ext.define('Ext.view.Table', {
             activeElement = Ext.fly(Ext.Element.getActiveElement()),
             focusCell = focusPosition && focusPosition.view === me &&
                         Ext.fly(focusPosition.getCell(true)),
-            refocusRow, refocusCol, record;
+            refocusRow, refocusCol, oldRecord, newRecord;
 
         // The navModel may return a position that is in a locked partner, so check that
         // the focusPosition's cell contains the focus before going forward.
         // The skipSaveFocusState is set by Actionables which actively control
         // focus destination. See CellEditing#activateCell.
+
         if (!me.skipSaveFocusState && focusCell && focusCell.contains(activeElement)) {
             // Separate this from the instance that the nav model is using.
             focusPosition = focusPosition.clone();
@@ -3975,6 +3969,7 @@ Ext.define('Ext.view.Table', {
             // this happens when the grid is refreshed while one of the actionables is being
             // deactivated (e.g. Calling  view refresh inside CellEditor 'edit' event listener).
             if (actionableMode && focusCell.dom !== activeElement.dom) {
+                oldRecord = focusPosition.record;
                 me.suspendActionableMode();
             }
             // Clear position, otherwise the setPosition on the other side
@@ -3990,7 +3985,7 @@ Ext.define('Ext.view.Table', {
             activeElement.resumeFocusEvents();
 
             // if the store is expanding or collapsing, we should never scroll the view.
-            if (store.isExpandingOrCollapsing) {
+            if (!actionableMode && store.isExpandingOrCollapsing) {
                 return Ext.emptyFn;
             }
 
@@ -4018,21 +4013,34 @@ Ext.define('Ext.view.Table', {
                         me.getVisibleColumnManager().getColumns().length - 1
                     );
 
-                    record = focusPosition.record;
+                    oldRecord = focusPosition.record;
 
                     focusPosition = new Ext.grid.CellContext(me).setPosition(
-                        record && store.contains(record) && !record.isCollapsedPlaceholder
-                            ? record
+                        oldRecord && store.contains(oldRecord) && !oldRecord.isCollapsedPlaceholder
+                            ? oldRecord
                             : refocusRow,
                         refocusCol
                     );
 
+                    newRecord = focusPosition.record;
+
                     // Maybe there are no cells. eg: all groups collapsed.
                     if (focusPosition.getCell(true)) {
-                        if (actionableMode) {
+                        if (
+                            actionableMode &&
+                            oldRecord &&
+                            newRecord &&
+                            oldRecord.getId() === newRecord.getId()
+                        ) {
                             me.resumeActionableMode(focusPosition);
                         }
                         else {
+                            // if we were editing a record that is no longer present
+                            // but actionableMode is still active, we should cancel it here
+                            if (actionableMode) {
+                                me.setActionableMode(false);
+                            }
+
                             // Pass "preventNavigation" as true
                             // so that that does not cause selection.
                             navModel.setPosition(focusPosition, null, null, null, true);

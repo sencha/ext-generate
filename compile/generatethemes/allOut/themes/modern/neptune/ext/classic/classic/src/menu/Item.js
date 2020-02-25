@@ -89,6 +89,13 @@ Ext.define('Ext.menu.Item', {
     disabledCls: Ext.baseCSSPrefix + 'menu-item-disabled',
 
     /**
+     * @cfg {String} emptyText
+     * The text to display when the the {@link #text} is empty.
+     * @since 7.2.0
+     */
+    emptyText: '\u00a0',
+
+    /**
      * @cfg {String} [href='#']
      * The href attribute to use for the underlying anchor link.
      */
@@ -674,7 +681,7 @@ Ext.define('Ext.menu.Item', {
             isCheckItem: isCheckItem,
             rightIcon: rightIcon,
             plain: me.plain,
-            text: me.text,
+            text: me.getDisplayText(),
             arrowCls: me.arrowCls,
             baseIconCls: me.baseIconCls,
             textCls: me.textCls,
@@ -845,7 +852,7 @@ Ext.define('Ext.menu.Item', {
         me.text = text;
 
         if (me.rendered) {
-            el.setHtml(text || '');
+            el.setHtml(me.getDisplayText());
             me.updateLayout();
         }
 
@@ -911,6 +918,10 @@ Ext.define('Ext.menu.Item', {
 
     getFocusClsEl: function() {
         return this.el;
+    },
+
+    getDisplayText: function() {
+        return this.text || this.emptyText;
     },
 
     privates: {

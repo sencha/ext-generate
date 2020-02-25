@@ -310,16 +310,27 @@ Ext.define('Ext.grid.plugin.CellEditing', {
      * @return {Boolean} `true` if this cell is actionable (editable)
      * @protected
      */
-    activateCell: function(position, skipBeforeCheck, doFocus) {
+    activateCell: function(position, skipBeforeCheck, doFocus, isResuming) {
         var me = this,
             record = position.record,
             column = position.column,
             prevEditor = me.getActiveEditor(),
             view = me.view,
-            isResuming = me.restartEvent != null,
-            context, contextGeneration, cell, editor, p, editValue, abortEdit;
+            context, contextGeneration, cell, editor, p, editValue, oldRecord, abortEdit;
+
+        if (!isResuming && me.restartEvent != null) {
+            isResuming = true;
+        }
 
         if (isResuming) {
+            oldRecord = me.suspendedEditor && me.suspendedEditor.context.record;
+
+            if (oldRecord && record && oldRecord.getId() !== record.getId()) {
+                isResuming = false;
+                me.suspendedEditor.cancelEdit(true);
+                me.suspendedEditor = me.cachedEditorValue = null;
+            }
+
             me.restartEvent = Ext.destroy(me.restartEvent);
         }
 
@@ -432,7 +443,9 @@ Ext.define('Ext.grid.plugin.CellEditing', {
             // Request that the editor start.
             // Ensure that the focusing defaults to false.
             // It may veto, and return with the editing flag false.
-            editor.startEdit(cell, context.value, (doFocus && !isResuming) || false, isResuming);
+            editor.startEdit(
+                cell, context.value, (doFocus && !Ext.isScrolling) || false, isResuming
+            );
 
             // Set contextual information if we began editing (can be vetoed by events)
             if (editor.editing) {
@@ -441,11 +454,6 @@ Ext.define('Ext.grid.plugin.CellEditing', {
                 me.setActiveColumn(context.column);
                 me.editing = true;
                 me.scroll = position.view.el.getScroll();
-
-                if (isResuming) {
-                    editor.setValue(me.cachedEditorValue);
-                    me.cachedEditorValue = null;
-                }
             }
 
             // Return true if the cell is actionable according to us
@@ -475,7 +483,16 @@ Ext.define('Ext.grid.plugin.CellEditing', {
             // cycle (scroll while editing), we should retain the editor's info before caching
             // also only run if we don't have a suspendedEditor to make sure we don't add two 
             // listeners on locked grids.
-            if (context.view.renderingRows && !me.suspendedEditor) {
+            if (!context.view.renderingRows) {
+                if (me.suspendedEditor && !me.restartEvent) {
+                    me.suspendedEditor.cancelEdit(true);
+                    me.suspendedEditor = me.cachedEditorValue = null;
+                }
+
+                return;
+            }
+
+            if (!me.suspendedEditor) {
                 if (editor.editing) {
                     me.suspendedEditor = editor;
                     me.cachedEditorValue = editor.getValue();
@@ -521,6 +538,7 @@ Ext.define('Ext.grid.plugin.CellEditing', {
 
         if (editor && editor.editing) {
             me.suspendedEditor = editor;
+            me.cachedEditorValue = editor.field && editor.field.getValue();
             me.suspendEvents();
             editor.suspendEvents();
             editor.cancelEdit(true);
@@ -544,7 +562,13 @@ Ext.define('Ext.grid.plugin.CellEditing', {
         if (editor) {
             me.suspendEvents();
             editor.suspendEvents();
-            result = me.activateCell(position, true, true);
+
+            if (editor.field && me.cachedEditorValue != null) {
+                editor.field.setValue(me.cachedEditorValue);
+                me.cachedEditorValue = null;
+            }
+
+            result = me.activateCell(position, true, true, true);
             editor.resumeEvents();
             me.resumeEvents();
             me.suspendedEditor = null;
@@ -706,15 +730,18 @@ Ext.define('Ext.grid.plugin.CellEditing', {
     onEditComplete: function(ed, value, startValue) {
         var me = this,
             context = ed.context,
-            view, record;
+            view, record, valueModifed;
 
         view = context.view;
         record = context.record;
         context.value = value;
 
+        // Determine if the new value is different than the original value
+        valueModifed = !record.isEqual(value, startValue);
+
         // Only update the record if the new value is different than the
         // startValue. When the view refreshes its el will gain focus
-        if (!record.isEqual(value, startValue)) {
+        if (valueModifed) {
             view.skipSaveFocusState = true;
             record.set(context.column.dataIndex, value);
             view.skipSaveFocusState = false;

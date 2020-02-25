@@ -46,7 +46,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         }
     },
 
-    drawLabel: function(text, dataX, dataStartY, dataY, labelId) {
+    drawLabel: function(text, dataX, dataStartY, dataY, labelId, sClipRect) {
         var me = this,
             attr = me.attr,
             label = me.getMarker('labels'),
@@ -61,7 +61,8 @@ Ext.define('Ext.chart.series.sprite.Bar', {
                              !labelOrientation,
             calloutLine = labelTpl.getCalloutLine(),
             labelY, halfText, labelBBox, calloutLineLength,
-            changes, hasPendingChanges, params;
+            changes, hasPendingChanges, params, paddingOffset,
+            calloutInfo;
 
         // The coordinates below (data point converted to surface coordinates)
         // are just for the renderer to give it a notion of where the label will be positioned.
@@ -147,8 +148,11 @@ Ext.define('Ext.chart.series.sprite.Bar', {
                 (isVerticalText ? labelBBox.width : labelBBox.height) / 2 + labelOverflowPadding;
         }
 
+        paddingOffset = labelOverflowPadding * 2;
+
         if (dataStartY > dataY) {
             halfText = -halfText;
+            paddingOffset = -paddingOffset;
         }
 
         if (isVerticalText) {
@@ -158,20 +162,19 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         }
         else {
             labelY = (labelDisplay === 'insideStart')
-                ? dataStartY + labelOverflowPadding * 2
-                : dataY - labelOverflowPadding * 2;
+                ? dataStartY + paddingOffset
+                : dataY - paddingOffset;
         }
 
         labelCfg.x = surfaceMatrix.x(dataX, labelY);
         labelCfg.y = surfaceMatrix.y(dataX, labelY);
 
-        labelY = (labelDisplay === 'insideStart') ? dataStartY : dataY;
-        labelCfg.calloutStartX = surfaceMatrix.x(dataX, labelY);
-        labelCfg.calloutStartY = surfaceMatrix.y(dataX, labelY);
+        calloutInfo = this.getCalloutYPos(labelDisplay, dataStartY, dataY, halfText, sClipRect);
+        labelCfg.calloutStartX = surfaceMatrix.x(dataX, calloutInfo.start);
+        labelCfg.calloutStartY = surfaceMatrix.y(dataX, calloutInfo.start);
 
-        labelY = (labelDisplay === 'insideStart') ? dataStartY - halfText : dataY + halfText;
-        labelCfg.calloutPlaceX = surfaceMatrix.x(dataX, labelY);
-        labelCfg.calloutPlaceY = surfaceMatrix.y(dataX, labelY);
+        labelCfg.calloutPlaceX = surfaceMatrix.x(dataX, calloutInfo.place);
+        labelCfg.calloutPlaceY = surfaceMatrix.y(dataX, calloutInfo.place);
 
         labelCfg.calloutColor = (calloutLine && calloutLine.color) || me.attr.fillStyle;
 
@@ -184,22 +187,44 @@ Ext.define('Ext.chart.series.sprite.Bar', {
             labelCfg.calloutColor = 'none';
         }
 
-        if (dataStartY > dataY) {
-            halfText = -halfText;
-        }
-
-        if (Math.abs(dataY - dataStartY) <= halfText * 2 || labelDisplay === 'outside') {
-            labelCfg.callout = 1;
-        }
-        else {
-            labelCfg.callout = 0;
-        }
+        // Cast to a number
+        labelCfg.callout = +(Math.abs(dataY - dataStartY) <= Math.abs(halfText * 2) ||
+            labelDisplay === 'outside');
 
         if (hasPendingChanges) {
             Ext.apply(labelCfg, changes);
         }
 
         me.putMarker('labels', labelCfg, labelId);
+    },
+
+    // shared object to prevent allocating a new one all the time
+    callOutObj: {
+        start: 0,
+        place: 0
+    },
+
+    getCalloutYPos: function(display, startY, y, halfText, rect) {
+        var me = this,
+            o = me.callOutObj,
+            inside = display === 'insideStart',
+            start = inside ? startY : y,
+            place = inside ? startY - halfText : y + halfText,
+            textSize = halfText * 2,
+            placeText = place + textSize;
+
+        if (!me.fromSelf && !inside && (placeText <= rect[1] || placeText >= rect[3])) {
+            // On the unlikely chance this occurs, prevent recursive calls
+            me.fromSelf = true;
+            o = me.getCalloutYPos('insideStart', startY, y, halfText, rect);
+            delete me.fromSelf;
+        }
+        else {
+            o.start = start;
+            o.place = place;
+        }
+
+        return o;
     },
 
     drawBar: function(ctx, surface, rect, left, top, right, bottom, index) {
@@ -223,7 +248,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
         me.putMarker('items', itemCfg, index, !renderer);
     },
 
-    renderClipped: function(surface, ctx, dataClipRect) {
+    renderClipped: function(surface, ctx, dataClipRect, surfaceClipRect) {
         if (this.cleanRedraw) {
             return;
         }
@@ -277,7 +302,7 @@ Ext.define('Ext.chart.series.sprite.Bar', {
 
             // We want 0 values to be passed to the renderer
             if (isDrawLabels && dataText[i] != null) {
-                me.drawLabel(dataText[i], center, bottom, top, i);
+                me.drawLabel(dataText[i], center, bottom, top, i, surfaceClipRect);
             }
 
             me.putMarker('markers', {

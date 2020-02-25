@@ -302,6 +302,54 @@ topSuite("Ext.data.schema.HasOne", [false, 'Ext.data.ArrayStore'], function() {
                 user.drop();
                 expect(key.dropped).toBe(true);
             });
+
+            it("should not throw error when child record is null", function() {
+
+                var child, parent, cfg, parentData;
+
+                cfg = {
+                    extend: 'Ext.data.Model',
+                    fields: [{
+                        name: 'childName',
+                        type: 'string'
+                    }]
+                };
+
+                child = Ext.define('spec.Child', cfg);
+
+                cfg = {
+                    extend: 'Ext.data.Model',
+                    fields: [{
+                        name: 'parentName',
+                        type: 'string'
+                    }],
+                    hasOne: [{
+                        model: 'Child',
+                        associationKey: 'child',
+                        role: 'child',
+                        getterName: 'getChildRecord'
+                    }]
+                };
+
+                parent = Ext.define('spec.Parent', cfg);
+
+                parentData = parent.loadData({
+                    parentName: 'Test',
+                    child: null
+                });
+
+                expect(function() {
+                    parentData.getData({
+                        associated: {
+                            child: true
+                        }
+                    });
+                }).not.toThrow();
+
+                Ext.undefine('spec.Child');
+                Ext.undefine('spec.Parent');
+                child = parent = parentData = null;
+            });
         });
     });
 

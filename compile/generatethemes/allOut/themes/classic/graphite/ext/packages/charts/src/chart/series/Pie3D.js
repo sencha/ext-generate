@@ -49,6 +49,12 @@ Ext.define('Ext.chart.series.Pie3D', {
     alias: 'series.pie3d',
     is3D: true,
 
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Pie3D}
+     */
+
     config: {
         rect: [0, 0, 0, 0],
         thickness: 35,

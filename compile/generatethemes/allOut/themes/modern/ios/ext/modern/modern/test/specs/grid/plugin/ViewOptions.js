@@ -191,4 +191,40 @@ function() {
             });
         });
     });
+
+    describe('visibility', function() {
+        it('should not allow all columns to be hidden', function() {
+            makeGrid();
+
+            var columns = grid.getColumns(),
+                sheet = plugin.getSheet(),
+                visibleCount = 0,
+                visibleIcons, i, j;
+
+            plugin.showViewOptions();
+
+            waitsFor(function() {
+                return !sheet.activeAnimation;
+            });
+
+            runs(function() {
+                visibleIcons = document.querySelectorAll(plugin.getVisibleIndicatorSelector());
+
+                // Click on each column to hide it
+                for (i = 0; i < visibleIcons.length; i++) {
+                    jasmine.fireMouseEvent(visibleIcons[i], 'click');
+                }
+                
+                // Check the visibility of all the columns
+                for (j = 0; j < columns.length; j++) {
+                    if (columns[j].isVisible()) {
+                        visibleCount++;
+                    }
+                }
+
+                // There should be 1 visible column
+                expect(visibleCount).toBe(1); 
+            });
+        });
+    });
 });

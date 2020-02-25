@@ -148,9 +148,17 @@ Ext.define('Ext.grid.feature.GroupStore', {
         }
 
         if (store.getCount()) {
-            // Upon first process of a loaded store, clear the "always" collapse" flag
-            collapseAll = feature.startCollapsed;
-            feature.startCollapsed = false;
+            // When loading or paging, our two counts (store.loadCount and feature.storeLoadCount)
+            // will not match so we apply the startCollapsed setting and use to what was set in the
+            // initial config. After loading/paging our two counts will match so when we change data
+            // on the page (and process the store again) we do not expand or collapse any of the
+            // groups and things look/work as expected.
+            if (store.getId() !== feature.previousStoreId ||
+                feature.storeLoadCount !== store.loadCount) {
+                feature.storeLoadCount = store.loadCount;
+                feature.previousStoreId = store.getId();
+                collapseAll = feature.startCollapsed;
+            }
 
             records = me.getGroupedRecords(store, collapseAll);
 

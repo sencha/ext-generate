@@ -614,6 +614,11 @@ topSuite("Ext.data.field.Field", [
             expect(field.isDateField).toBe(true);
         });
 
+        it("should create an array field", function() {
+            factory('array');
+            expect(field.isArrayField).toBe(true);
+        });
+
         describe("integer", function() {
             it("should use the int alias", function() {
                 factory('int');

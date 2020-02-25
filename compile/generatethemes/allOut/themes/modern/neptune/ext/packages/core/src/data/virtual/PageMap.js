@@ -268,11 +268,15 @@ Ext.define('Ext.data.virtual.PageMap', {
 
         loadNext: function() {
             var me = this,
-                concurrency = me.getConcurrentLoading(),
                 loading = me.loading,
                 loadQueues = me.loadQueues,
-                page;
+                concurrency, page;
 
+            if (me.destroyed) {
+                return;
+            }
+
+            concurrency = me.getConcurrentLoading();
             me.queueTimer = null;
 
             // Keep pulling from the queue(s) as long as we have more concurrency

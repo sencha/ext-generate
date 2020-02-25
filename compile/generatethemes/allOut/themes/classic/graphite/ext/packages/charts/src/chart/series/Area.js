@@ -72,6 +72,12 @@ Ext.define('Ext.chart.series.Area', {
      */
     seriesType: 'areaSeries',
 
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Area}
+     */
+
     isArea: true,
 
     requires: ['Ext.chart.series.sprite.Area'],

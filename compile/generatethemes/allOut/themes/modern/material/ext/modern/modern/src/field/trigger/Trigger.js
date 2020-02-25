@@ -102,30 +102,33 @@ Ext.define('Ext.field.trigger.Trigger', {
         var me = this,
             handler = !me.getDisabled() && me.getHandler(),
             field = me.getField(),
+            disabled = !field || me.getDisabled() || field.getDisabled(),
             focusEl;
 
-        if (field) {
-            if (e.pointerType !== 'mouse') {
-                // Do not allow the default focusing behaviour to follow on *after* the
-                // hander has run and this event finishes.
-                e.preventDefault();
+        if (disabled) {
+            return;
+        }
 
-                if (me.getFocusOnTap()) {
-                    focusEl = field.getFocusTrap ? field.getFocusTrap() : field.getFocusEl();
+        if (e.pointerType !== 'mouse') {
+            // Do not allow the default focusing behaviour to follow on *after* the
+            // hander has run and this event finishes.
+            e.preventDefault();
 
-                    if (focusEl.dom !== document.activeElement) {
-                        if (me.isExpandTrigger) {
-                            field.focusingFromExpandTrigger = true;
-                        }
+            if (me.getFocusOnTap()) {
+                focusEl = field.getFocusTrap ? field.getFocusTrap() : field.getFocusEl();
 
-                        field.focus();
+                if (focusEl.dom !== document.activeElement) {
+                    if (me.isExpandTrigger) {
+                        field.focusingFromExpandTrigger = true;
                     }
+
+                    field.focus();
                 }
             }
+        }
 
-            if (handler) {
-                Ext.callback(handler, me.getScope(), [field, me, e], null, field);
-            }
+        if (handler) {
+            Ext.callback(handler, me.getScope(), [field, me, e], null, field);
         }
     },
 
@@ -135,8 +138,8 @@ Ext.define('Ext.field.trigger.Trigger', {
         if (e.pointerType === 'mouse') {
             field = this.getFocusOnTap() && this.getField();
 
-            // Focus the field on mousedown. Touch events do it on tap.
-            if (field) {
+            // Focus the field on mousedown unless it's disabled. Touch events do it on tap.
+            if (field && !field.getDisabled()) {
                 field.focus();
             }
 

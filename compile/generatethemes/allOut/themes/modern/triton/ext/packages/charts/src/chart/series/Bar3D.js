@@ -88,6 +88,12 @@ Ext.define('Ext.chart.series.Bar3D', {
     seriesType: 'bar3dSeries',
     is3D: true,
 
+    /**
+     * @cfg {Object} style Custom style configuration for the sprite used in the series.
+     * It overrides the style that is provided by the current theme. See
+     * {@link Ext.chart.theme.series.Bar3D}
+     */
+
     config: {
         itemInstancing: {
             type: 'bar3d',

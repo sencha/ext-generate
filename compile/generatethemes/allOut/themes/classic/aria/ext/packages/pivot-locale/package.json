@@ -2,7 +2,7 @@
   "name": "pivot-locale",
   "namespace": "Pivot.locale",
   "format": "1",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "creator": "Sencha",
   "summary": "Sencha Pivot locale",
   "detailedDescription": "Localization for the pivot package",
@@ -11,10 +11,10 @@
     {
       "name": "Sencha",
       "uuid": "1d6b0d9c-3333-4e65-885f-5b07a1fc3198",
-      "created": "2020-01-10T19:53:40Z",
+      "created": "2020-02-20T00:10:33Z",
       "algorithm": "SHA1withRSA",
-      "nonce": "WM9+kUA+/jQ\u003d",
-      "signature": "r8hqQWrCfKGPlkL3Xgaes7lXYAkG1x85MpblN9weW6+gtJBm2rdSmMk4t1e414SDtzNlaptayu+/7hsv8Yjp0c43F3uNNHiNraxWNwW5y9wPyAv0sEk2Q7tKZCma/6Cxaka3GMmmiW1k8y8NBcywTu4AR0OxxoMXr5dcFBVfxX2XJlQyrMTRpzon0lPCYzex6qOesMD0b5pxBuCVzOCVWwm+EJNhCbqCvjssw20h1l++qevqNojRRQoW7PQazJhqG8dgfrE4Zdg5FPXNyMNK+K9arZeQsYXlG6tyGoZepqwR/agNnRT89wpbJJbNjINfygB6h/f4TnDhA1XVxgpJrg\u003d\u003d"
+      "nonce": "t1d4sVIdqgU\u003d",
+      "signature": "dvjfHdSdjt8DZAb/HIXae1ZPqTNpPcSFBxkhLwkaZKU61LF/H/rYpg6gW/iFBdCEzyThzF0EDpCyZ4tsyIqT5p/h2FFuEyk04ZhbLmOrVQVlqwW0gFypBWQp73B+lPd3PJZiqtLDfKTTAx2K7BsBlryyL9FXZASLQRAyKO8s3ak0FxLFElTojNc2gHkx7S2Eo8iCYtP0+++4jw9IGn4UIBSh8gUDdM3RZ/i0AzyHgtrqhdADPTd2QWKsmce2s1IF+zqOPigRQAk/YzWkOtlOLfG9R6aiNa9GsOLcfXzdXuG+254KAhV++3+IGxUD+1i6diICWXo8Jr5m7/qdYHuqaw\u003d\u003d"
     }
   ],
   "builds": {

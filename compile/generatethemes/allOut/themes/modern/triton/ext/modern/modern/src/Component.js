@@ -3060,15 +3060,33 @@ Ext.define('Ext.Component', {
         },
 
         handleGlobalShow: function(c) {
+            this.maybeRunWhenVisible(c);
+        },
+
+        handleGlobalExpand: function(c) {
+            this.maybeRunWhenVisible(c);
+        },
+
+        maybeRunWhenVisible: function(c) {
             var me = this;
 
-            if (me.isVisible(true) && (c === me || me.isDescendantOf(c))) {
+            if ((c === me || me.isDescendantOf(c)) && me.canLayoutChildren()) {
                 me.runWhenVisible();
             }
         },
 
-        hasHiddenContent: function() {
-            return this.getHidden();
+        canLayoutChildren: function() {
+            var current = this;
+
+            while (current) {
+                if (!current.isVisible() || current.hasHiddenContent()) {
+                    return false;
+                }
+
+                current = current.getRefOwner();
+            }
+
+            return true;
         },
 
         runWhenVisible: function() {
@@ -3098,18 +3116,17 @@ Ext.define('Ext.Component', {
          */
         whenVisible: function(fn, args) {
             var me = this,
-                listener, pending, visible;
+                listener = me.visibleListener,
+                pending = me.pendingVisible,
+                visible = me.canLayoutChildren();
 
             args = args || Ext.emptyArray;
-
-            listener = me.visibleListener;
-            pending = me.pendingVisible;
-            visible = me.isVisible(true);
 
             if (!visible && !listener) {
                 me.visibleListener = Ext.on({
                     scope: me,
                     show: 'handleGlobalShow',
+                    expand: 'handleGlobalExpand',
                     destroyable: true
                 });
             }

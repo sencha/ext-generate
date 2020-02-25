@@ -1317,6 +1317,12 @@ Ext.define('Ext.grid.column.Column', {
             stateSorters = storeState && storeState.sorters,
             len, i, savedSorter, mySorterId;
 
+        // Bail out if stateful isn't being reflected on this column. Columns with
+        // stateful undefined *do* reflect state, so we're testing false explicitly.
+        if (me.getStateful() === false) {
+            return;
+        }
+
         // If we have been configured with a sorter, then there SHOULD be a sorter config
         // in the storeState with a corresponding ID from which we must restore our sorter's state.
         // (The only state we can restore is direction).
@@ -1367,6 +1373,12 @@ Ext.define('Ext.grid.column.Column', {
             state = {
                 id: me.getStateId()
             };
+
+        // Bail out if stateful isn't being reflected on this column. Columns with
+        // stateful undefined *do* reflect state, so we're testing false explicitly.
+        if (me.getStateful() === false) {
+            return;
+        }
 
         me.savePropsToState(['hidden', 'sortable', 'locked', 'flex', 'width'], state);
 

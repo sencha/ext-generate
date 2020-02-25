@@ -270,24 +270,37 @@ Ext.define("Ext.draw.SegmentTree", {
                 maxY: maxY,
                 close: close
             },
-            i;
+            minValue = Infinity,
+            maxValue = -Infinity,
+            i, v;
 
         for (i = 0; i < length; i++) {
+            v = dataX[i];
             startIdx[i] = i;
             endIdx[i] = i;
             minIdx[i] = i;
             maxIdx[i] = i;
             open[i] = dataOpen[i];
-            minX[i] = dataX[i];
+            minX[i] = v;
             minY[i] = dataLow[i];
-            maxX[i] = dataX[i];
+            maxX[i] = v;
             maxY[i] = dataHigh[i];
             close[i] = dataClose[i];
+
+            if (v < minValue) {
+                minValue = v;
+            }
+
+            if (v > maxValue) {
+                maxValue = v;
+            }
         }
 
         result.map = {
             original: [0, length]
         };
+
+        result.range = Math.abs(maxValue - minValue);
 
         if (length) {
             this[this.getStrategy()](result, length, dataX, dataOpen, dataHigh, dataLow, dataClose);
@@ -296,29 +309,21 @@ Ext.define("Ext.draw.SegmentTree", {
         return result;
     },
 
-    /**
-     * @private
-     * @param {Object} items
-     * @param {Number} start
-     * @param {Number} end
-     * @param {Number} key
-     * @return {*}
-     */
-    binarySearchMin: function(items, start, end, key) {
+    binarySearch: function(items, start, end, key, isMin) {
         var dx = this.dataX,
             mid, val;
 
-        if (key <= dx[items.startIdx[0]]) {
+        if (key <= dx[items[0]]) {
             return start;
         }
 
-        if (key >= dx[items.startIdx[end - 1]]) {
+        if (key >= dx[items[end - 1]]) {
             return end - 1;
         }
 
         while (start + 1 < end) {
             mid = (start + end) >> 1;
-            val = dx[items.startIdx[mid]];
+            val = dx[items[mid]];
 
             if (val === key) {
                 return mid;
@@ -331,45 +336,7 @@ Ext.define("Ext.draw.SegmentTree", {
             }
         }
 
-        return start;
-    },
-
-    /**
-     * @private
-     * @param {Object} items
-     * @param {Number} start
-     * @param {Number} end
-     * @param {Number} key
-     * @return {*}
-     */
-    binarySearchMax: function(items, start, end, key) {
-        var dx = this.dataX,
-            mid, val;
-
-        if (key <= dx[items.endIdx[0]]) {
-            return start;
-        }
-
-        if (key >= dx[items.endIdx[end - 1]]) {
-            return end - 1;
-        }
-
-        while (start + 1 < end) {
-            mid = (start + end) >> 1;
-            val = dx[items.endIdx[mid]];
-
-            if (val === key) {
-                return mid;
-            }
-            else if (val < key) {
-                start = mid;
-            }
-            else {
-                end = mid;
-            }
-        }
-
-        return end;
+        return isMin ? start : end;
     },
 
     constructor: function(config) {
@@ -419,14 +386,20 @@ Ext.define("Ext.draw.SegmentTree", {
 
         // eslint-disable-next-line vars-on-top
         var minStep = Infinity,
-            range = this.dataX[this.dataX.length - 1] - this.dataX[0],
-            cacheMap = this.cache.map,
+            cache = this.cache,
+            range = cache.range,
+            cacheMap = cache.map,
             result = cacheMap.original,
             name, positions, ln, step, minIdx, maxIdx;
 
         for (name in cacheMap) {
             positions = cacheMap[name];
             ln = positions[1] - positions[0] - 1;
+
+            if (ln === 0) {
+                continue;
+            }
+
             step = range / ln;
 
             if (estStep <= step && step < minStep) {
@@ -435,12 +408,13 @@ Ext.define("Ext.draw.SegmentTree", {
             }
         }
 
-        minIdx = Math.max(this.binarySearchMin(this.cache, result[0], result[1], min), result[0]);
-        maxIdx = Math.min(this.binarySearchMax(this.cache, result[0], result[1], max) + 1,
+        minIdx = Math.max(this.binarySearch(cache.startIdx, result[0], result[1], min, true),
+                          result[0]);
+        maxIdx = Math.min(this.binarySearch(cache.endIdx, result[0], result[1], max, false) + 1,
                           result[1]);
 
         return {
-            data: this.cache,
+            data: cache,
             start: minIdx,
             end: maxIdx
         };

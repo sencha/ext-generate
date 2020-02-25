@@ -1136,6 +1136,9 @@ Ext.define('Ext.grid.locking.Lockable', {
                 if (me.layout.type === 'border') {
                     locked.region = locked.initialConfig.region;
                 }
+                else {
+                    locked.flex = locked.initialConfig.flex;
+                }
 
                 // The locked grid shrinkwraps the total column width while the normal grid
                 // flexes in what remains UNLESS it has been set to forceFit

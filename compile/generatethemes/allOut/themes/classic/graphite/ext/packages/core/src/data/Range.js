@@ -10,7 +10,10 @@
  * @since 6.5.0
  */
 Ext.define('Ext.data.Range', {
-    requires: ['Ext.util.DelayedTask'],
+    requires: [
+        'Ext.util.DelayedTask',
+        'Ext.Deferred'
+    ],
 
     isDataRange: true,
 
@@ -72,6 +75,16 @@ Ext.define('Ext.data.Range', {
      */
     store: null,
 
+    /**
+     * @cfg {Number} waitTimeout
+     * A timeout to wait for promises to complete returned from `goto`. `null` for
+     * the timeout to be infinite.
+     */
+    waitTimeout: 10000,
+
+    // private
+    activeWait: null,
+
     constructor: function(config) {
         var me = this,
             activeRanges, store;
@@ -90,9 +103,10 @@ Ext.define('Ext.data.Range', {
 
         if ('begin' in config) {
             me.begin = me.end = 0; // Applied on us above, so clear it
-
-            /* eslint-disable-next-line dot-notation */
-            me.goto(config.begin, config.end);
+            me.goto(config.begin, config.end).catch(function() {
+                // Do nothing, since this was passed as a config, we can't
+                // reasonably return a failure here
+            });
         }
     },
 
@@ -107,17 +121,35 @@ Ext.define('Ext.data.Range', {
             Ext.Array.remove(activeRanges, me);
         }
 
+        me.cancelActiveWait();
+
         me.callParent();
     },
 
+    /**
+     * Go to a particular point in the range.
+     * @param {Number} begin The start index, inclusive.
+     * @param {Number} end The end index, exclusive.
+     * @return Ext.Promise The promise. Resolves with `this` when the range is resolved
+     * successfully. Resolves with `null` if the range times out, or a new range is requested
+     * before the current one completes.
+     */
     goto: function(begin, end) {
         var me = this,
             buffer = me.buffer,
-            task = me.task;
+            task = me.task,
+            promise;
 
         me.begin = begin;
         me.end = end;
         me.length = end - begin;
+
+        me.cancelActiveWait();
+
+        me.activeWait = me.setupWait(begin, end);
+        // Need to assign this here. In a synchronous range, doGoto will resolve immediately.
+        promise = me.activeWait.promise;
+        me.resolveWaitIfSatisfied();
 
         if (buffer > 0) {
             if (!task) {
@@ -129,16 +161,55 @@ Ext.define('Ext.data.Range', {
         else {
             me.doGoto();
         }
+
+        return promise;
     },
 
     privates: {
         lastBegin: 0,
         lastEnd: 0,
 
+        cancelActiveWait: function() {
+            this.resolveWait(null);
+        },
+
         doGoto: Ext.privateFn,
 
         refresh: function() {
             this.records = this.store.getData().items;
+        },
+
+        resolveWait: function(value) {
+            var wait = this.activeWait;
+
+            if (wait) {
+                wait.deferred.resolve(value);
+                this.activeWait = null;
+            }
+
+            return value;
+        },
+
+        resolveWaitIfSatisfied: function() {
+            this.resolveWait(this);
+        },
+
+        setupWait: function(begin, end) {
+            var me = this,
+                timeout = me.waitTimeout,
+                deferred = new Ext.Deferred(),
+                promise = deferred.promise;
+
+            if (timeout) {
+                promise = Ext.Deferred.timeout(promise, timeout).catch(function() {
+                    return me.resolveWait(null);
+                });
+            }
+
+            return {
+                deferred: deferred,
+                promise: promise
+            };
         }
     }
 });

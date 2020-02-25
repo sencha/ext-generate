@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-font-awesome",
     "SenchaExtName": "@sencha/ext-font-awesome",
     "SenchaExtReactName": "@sencha/ext-react-font-awesome",
-    "version": "7.1.0.46",
+    "version": "7.2.0.56",
     "sencha": {
         "name": "font-awesome",
         "namespace": "Ext",

@@ -407,12 +407,12 @@ Ext.define('Ext.field.Date', {
         }
 
         //<debug>
-        if (!Ext.isDate(minDate)) {
+        if (minDate !== null && !Ext.isDate(minDate)) {
             Ext.raise("Date object or string in dateFormat required");
         }
         //</debug>
 
-        return Ext.Date.clearTime(minDate, true);
+        return minDate ? Ext.Date.clearTime(minDate, true) : null;
     },
 
     applyMaxDate: function(maxDate) {
@@ -421,12 +421,12 @@ Ext.define('Ext.field.Date', {
         }
 
         //<debug>
-        if (!Ext.isDate(maxDate)) {
+        if (maxDate !== null && !Ext.isDate(maxDate)) {
             Ext.raise("Date object or string in dateFormat required");
         }
         //</debug>
 
-        return Ext.Date.clearTime(maxDate, true);
+        return maxDate ? Ext.Date.clearTime(maxDate, true) : null;
     },
 
     /**
@@ -506,7 +506,7 @@ Ext.define('Ext.field.Date', {
             value = value || new Date();
 
             // Ensure the carousel is at the correct position wth no animation.
-            picker.navigateTo(value, false);
+            picker.setValueWithoutAnim(value);
 
             if (fromKeyboard) {
                 picker.focusDate(value);

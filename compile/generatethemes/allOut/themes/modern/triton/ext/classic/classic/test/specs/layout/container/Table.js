@@ -1,4 +1,4 @@
-topSuite("Ext.layout.container.Table", 'Ext.Panel', function() {
+topSuite("Ext.layout.container.Table", ['Ext.Panel', 'Ext.app.ViewModel'], function() {
 
     describe("fixed/auto sizing", function() {
 
@@ -29,5 +29,71 @@ topSuite("Ext.layout.container.Table", 'Ext.Panel', function() {
             expect(ct.down('#item').getWidth()).toBeLessThan(105);
             ct.destroy();
        });
+    });
+
+    describe('binding', function() {
+        var panel;
+
+        afterEach(function() {
+            panel.destroy();
+        });
+
+        it('should display a component when binding indicates it should be visible and config has hidden:true', function() {
+            panel = new Ext.panel.Panel({
+                renderTo: Ext.getBody(),
+                width: 300,
+                height: 150,
+                layout: {
+                    type: 'table'
+                },
+                viewModel: {
+                    data: {
+                        field1: false
+                    }
+                },
+                items: [{
+                    html: 'Cell A content',
+                    itemId: 'cell',
+                    hidden: true,
+                    bind: {
+                        hidden: '{field1}'
+                    }
+                }]
+            });
+
+            waitAWhile();
+            runs(function() {
+                expect(panel.down('#cell').isVisible()).toBe(true);
+            });
+        });
+
+        it('should hide a component when binding indicates it should be hidden and config has hidden:false', function() {
+            panel = new Ext.panel.Panel({
+                renderTo: Ext.getBody(),
+                width: 300,
+                height: 150,
+                layout: {
+                    type: 'table'
+                },
+                viewModel: {
+                    data: {
+                        field1: true
+                    }
+                },
+                items: [{
+                    html: 'Cell A content',
+                    itemId: 'cell',
+                    hidden: false,
+                    bind: {
+                        hidden: '{field1}'
+                    }
+                }]
+            });
+
+            waitAWhile();
+            runs(function() {
+                expect(panel.down('#cell').isVisible()).toBe(false);
+            });
+        });
     });
 });

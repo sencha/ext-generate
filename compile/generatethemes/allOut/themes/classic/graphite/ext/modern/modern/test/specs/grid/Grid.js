@@ -3680,11 +3680,9 @@ topSuite("Ext.grid.Grid", [
                     Ext.testHelper.tap(Ext.Msg.down('#ok').getFocusEl());
                 });
 
-                    // Cleanup for modal
-                    runs(function() {
-                        Ext.Msg.hide();
-                        Ext.Msg.hideModalMask();
-                    });
+                waitsFor(function() {
+                    return Ext.Msg.isHidden();
+                });
 
                 // Automatic focus reversion must send focus back into the grid
                 waitsForSpy(focusEnterSpy);

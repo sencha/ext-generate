@@ -399,10 +399,11 @@ Ext.define('Ext.Editor', {
 
             // temporarily suspend events on field to prevent the "change" event from firing
             // when resetOriginalValue() and setValue() are called
-            field.suspendEvents();
-            field.setValue(value);
-            field.resetOriginalValue();
-            field.resumeEvents();
+            if (!isResuming) {
+                field.suspendEvents();
+                field.setValue(value);
+                field.resumeEvents();
+            }
 
             if (doFocus !== false) {
                 // Set a delay parameter to true to prevent the cursor from jumping 

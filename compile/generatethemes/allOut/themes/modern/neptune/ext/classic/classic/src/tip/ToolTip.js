@@ -294,6 +294,13 @@ Ext.define('Ext.tip.ToolTip', {
      */
     defaultAlign: 'bl-tl',
 
+    /**
+     * @cfg {Boolean} checkNestedDelegates
+     * `true` to check for nested delegates when using the `delegate` option.
+     * Having this be `false` may allow for a small performance improvement.
+     */
+    checkNestedDelegates: false,
+
     ariaRole: 'tooltip',
 
     alwaysOnTop: true,
@@ -527,8 +534,9 @@ Ext.define('Ext.tip.ToolTip', {
         }
 
         if (delegate) {
-            // Moving inside a delegate
-            if (currentTarget.contains(e.target)) {
+            // Moving inside a delegate, if we know we won't have nested delegates
+            // we can jump out if we contain the event target already.
+            if (!this.checkNestedDelegates && currentTarget.contains(e.target)) {
                 return;
             }
 
