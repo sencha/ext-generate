@@ -549,10 +549,21 @@ export default class WebComponentsBaseComponent extends HTMLElement {
                   propertyVal = JSON.parse(newVal);
                 } catch (e) {}
               }
-              //console.log(propertyVal)
-              //console.log(this.A.ext.xtype + ' ' + method)
-              //console.log(propertyVal)
-              this.A.ext[method](propertyVal);
+
+              if ((this.A.ext.xtype == 'calendar-day'  ||
+                  this.A.ext.xtype  == 'calendar-week' ||
+                  this.A.ext.xtype  == 'calendar-month')
+                && method == 'setValue') {
+                //console.log('here')
+                //console.log(propertyVal)
+                //console.log(this.A.ext.xtype + ' ' + method)
+                //console.log(propertyVal)
+                this.A.ext[method](new Date(propertyVal));
+              }
+              else {
+                this.A.ext[method](propertyVal);
+              }
+
             }
           }
           else {

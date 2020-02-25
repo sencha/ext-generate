@@ -1,58 +1,110 @@
 const fs = require("fs-extra");
 const chalk = require('chalk');
+global["rimraf"] = require("rimraf");
 
-const outBase = './build'
 var options = [
-//  {parms: getGenerateAppArray('classic', 'aria4'), path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'aria', path: outBase + '/themes'},
-  //{type: 'generate', toolkit: 'classic', theme: 'classic-sandbox', path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'crisp', path: outBase + '/themes'},
-  //{type: 'generate', toolkit: 'classic', theme: 'crisp-touch', path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'graphite', path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'gray', path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'material', path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'neptune', path: outBase + '/themes'},
-  //{type: 'generate', toolkit: 'classic', theme: 'neptune-touch', path: outBase + '/themes'},
-  {type: 'generate', toolkit: 'classic', theme: 'triton', path: outBase + '/themes'},
+  { toolkit: 'modern', theme: 'ios' },
+  { toolkit: 'modern', theme: 'material' },
+  { toolkit: 'modern', theme: 'neptune' },
+  { toolkit: 'modern', theme: 'triton' },
+  { toolkit: 'classic', theme: 'aria' },
+  { toolkit: 'classic', theme: 'crisp' },
+  { toolkit: 'classic', theme: 'graphite' },
+  { toolkit: 'classic', theme: 'gray' },
+  { toolkit: 'classic', theme: 'material' },
+  { toolkit: 'classic', theme: 'neptune' },
+  { toolkit: 'classic', theme: 'triton' },
+
+  //{ toolkit: 'classic', theme: 'classic-sandbox' },
+  //{ toolkit: 'classic', theme: 'crisp-touch' },
+  //{ toolkit: 'classic', theme: 'neptune-touch' },
 ]
 
-var optionsTest = [
-    {type: 'generate', toolkit: 'classic', theme: 'aria', path: outBase + '/themes'},
-  ]
+go(options)
 
-runSenchaCmd(options)
-
-async function runSenchaCmd(options) {
+async function go(options) {
   var vars = {child: null};
+
+  console.log(`processing ${options.length} themes...`)
+  console.log(`cwd: ${process.cwd()}`)
+
   processErrors(vars);
   for (var i = 0; i < options.length; i++) {
-    switch(options[i].type) {
-      case 'generate':
-        console.log(`${chalk.green("[RUN]")}`)
-        options[i].parms =  getGenerateAppArray(options[i].toolkit, options[i].theme);
-        await _executeAsync(options[i].parms, options[i].path, vars);
-        var themeFolder = `${options[i].path}/${options[i].theme}`;
-        modifyAppJson(themeFolder)
-        await _executeAsync(['app','build','production'], `${themeFolder}`, vars);
-        var from = `${themeFolder}/build/production/${options[i].theme}/resources`
-        var to = `${outBase}/ext-runtime-${options[i].toolkit}/${options[i].theme}`
-        console.log('from: ' + from)
-        console.log('to:' + to)
-        fs.copySync(from,to)
-        write(`${chalk.green("[END]")}\n\n`)
-        break;
+      var themeBaseFolder = `./allOut/themes/${options[i].toolkit}`;
+      var themeFolder = `${themeBaseFolder}/${options[i].theme}`;
+
+      console.log(`\n${chalk.green("Step 1:")} delete theme: ${themeFolder}`)
+      rimraf.sync(`${themeFolder}`);
+
+      var senchaGenerateApp =  getSenchaGenerateApp(options[i].toolkit, options[i].theme);
+      console.log(`${chalk.green("Step 2:")} sencha generate app: ${senchaGenerateApp}`)
+      console.log(`cwd: ${themeBaseFolder}`)
+      await _executeAsync(senchaGenerateApp, themeBaseFolder, vars);
+
+      console.log(`${chalk.green("Step 3:")} modify app.json`)
+      modifyAppJson(themeFolder)
+
+      console.log(`${chalk.green("Step 4:")} modify app.js`)
+      modifyAppJs(themeFolder)
+
+      console.log(`${chalk.green("Step 5:")} sencha app build production`)
+      await _executeAsync(['app','build','production'], `${themeFolder}`, vars);
+
+      var from = `${themeFolder}/build/production/${options[i].theme}/resources`
+      var to = `./allOut/ext-runtime-${options[i].toolkit}/${options[i].theme}`
+      console.log(`${chalk.green("Step 6:")} copy from: ${from} to: ${to}`)
+      fs.copySync(from,to)
+
+      var from2 = `./calendar/`
+      var to2 = `./allOut/ext-runtime-${options[i].toolkit}/${options[i].theme}/calendar/`
+      console.log(`${chalk.green("Step 7:")} copy from: ${from2} to: ${to2}`)
+      fs.copySync(from2,to2)
+
+  }
+}
+
+function getSenchaGenerateApp(toolkit, appName) {
+  var appPath = `./${appName}`
+  var toolkitParm = `-${toolkit}`
+  var themeParm = `theme-${appName}`
+  return ['-sdk', '/Volumes/BOOTCAMP/aaExt/ext-7.1.0.46', 'generate', 'app', '-theme', themeParm, toolkitParm, appName, appPath]
+}
+
+function modifyAppJson(themeFolder) {
+  var appJsonFileName = `${themeFolder}/app.json`
+  var appJsonData = fs.readFileSync(appJsonFileName, 'utf8');
+  var appJsonDataWithoutComments = appJsonData.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'');
+  const appJsonDataJson = JSON.parse(appJsonDataWithoutComments);
+  if (appJsonDataJson.requires.length == 1) {
+    if (appJsonDataJson.requires[0] == "font-awesome") {
+      appJsonDataJson.requires.push("font-ext");
+      appJsonDataJson.requires.push("ux");
+      appJsonDataJson.requires.push("d3");
+      appJsonDataJson.requires.push("pivot-d3");
+      appJsonDataJson.requires.push("exporter");
+      appJsonDataJson.requires.push("pivot");
+      appJsonDataJson.requires.push("calendar");
+      appJsonDataJson.requires.push("charts");
+      const appJsonNewString = JSON.stringify(appJsonDataJson, null, 2);
+      fs.writeFileSync(appJsonFileName, appJsonNewString);
     }
   }
 }
 
+function modifyAppJs(themeFolder) {
+  fs.copySync(`${themeFolder}/app.js`,`${themeFolder}/app.back.js`);
+  var appJsData = fs.readFileSync(`${themeFolder}/app.js`, 'utf8');
+  b = `    ,'Ext.*'\n`
+  var position = appJsData.indexOf('],');
+  var appJsDataNew = appJsData.substring(0, position) + b + appJsData.substring(position);
+  fs.writeFileSync(`${themeFolder}/app.js`, appJsDataNew);
+}
+
 async function _executeAsync (parms, outputPath, vars) {
-
   const crossSpawn = require('cross-spawn-with-kill')
-
-  console.log(`sencha ${parms}`)
-  console.log(`path: ${outputPath}`)
   let sencha; try { sencha = require('@sencha/cmd') } catch (e) { sencha = 'sencha' }
   var opts = { cwd: outputPath, silent: true, stdio: 'pipe', encoding: 'utf-8'}
+
   await new Promise((resolve, reject) => {
     vars.child = crossSpawn(sencha, parms, opts)
     vars.child.on('close', (code, signal) => {
@@ -80,40 +132,6 @@ async function _executeAsync (parms, outputPath, vars) {
   })
 }
 
-function getGenerateAppArray(toolkit, appName) {
-  var appPath = `./${appName}`
-  var toolkitParm = `-${toolkit}`
-  var themeParm = `theme-${appName}`
-  return ['-sdk', '/Volumes/BOOTCAMP/aaExt/ext-7.1.0.46', 'generate', 'app', '-theme', themeParm, toolkitParm, appName, appPath]
-}
-
-//function modifyAppJson(path, theme) {
-//  var appJsonFileName = `${path}/${theme}/app.json`
-function modifyAppJson(themeFolder) {
-  var appJsonFileName = `${themeFolder}/app.json`
-  var appJsonData = fs.readFileSync(appJsonFileName, 'utf8');
-  var appJsonDataWithoutComments = appJsonData.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,'');
-  const appJsonDataJson = JSON.parse(appJsonDataWithoutComments);
-  if (appJsonDataJson.requires.length == 1) {
-    if (appJsonDataJson.requires[0] == "font-awesome") {
-      console.log("editing 'requires' of app.json")
-      appJsonDataJson.requires.push("font-ext");
-      appJsonDataJson.requires.push("ux");
-      appJsonDataJson.requires.push("d3");
-      appJsonDataJson.requires.push("pivot-d3");
-      appJsonDataJson.requires.push("exporter");
-      appJsonDataJson.requires.push("pivot");
-      appJsonDataJson.requires.push("calendar");
-      appJsonDataJson.requires.push("charts");
-      const appJsonNewString = JSON.stringify(appJsonDataJson, null, 2);
-      fs.writeFileSync(appJsonFileName, appJsonNewString);
-    }
-  }
-}
-
-
-
-
 function processErrors(vars) {
   var v = [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`]
   v.forEach(eventType => {
@@ -138,47 +156,3 @@ function write(str) {
   process.stdout.cursorTo(0);
   process.stdout.write(`${str}`)
 }
-
-// function logv(verbose, str) {
-//   if (verbose == true) {
-//     console.log(str)
-//   }
-// }
-
-
-// var parms = ['app','build','production'];
-// var paths = [
-//   '../themes/classic/aria',
-//   '../themes/classic/classic-sandbox'
-// ]
-
-//var parms = ['help']
-//var parms = ['app','watch','--web-server',false,'development']
-
-// var options = [
-//   {
-//     parms: ['app','build','production'],
-//     path: '../themes/classic/aria'
-//   },
-//   {
-//     parms: ['-sdk', '/Volumes/BOOTCAMP/aaExt/ext-7.1.0.46', 'generate', 'app', '-classic', 'triton3', './triton3'],
-//     path: '../themes/classic'
-//   },
-// ]
-// runDifferentSenchaCmd(options)
-
-// var parms = ['-sdk', '/Volumes/BOOTCAMP/aaExt/ext-7.1.0.46', 'generate', 'app', '-classic', 'triton2', './triton2']
-// var paths = [
-//   '../themes/classic'
-// ]
-// runSameSenchaCmd(parms, paths)
-
-// async function runSameSenchaCmd(parms, paths) {
-//   logv(true, `sencha ${parms}`)
-//   logv(true, `paths: ${paths}\n`)
-//   var vars = {child: null}
-//   processErrors(vars)
-//   for (var i = 0; i < paths.length; i++) {
-//     await _executeAsync(parms, paths[i], vars)
-//   }
-// }

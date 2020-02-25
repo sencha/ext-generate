@@ -1,0 +1,60 @@
+{
+  "name": "exporter",
+  "namespace": "Ext",
+  "format": "1",
+  "version": "7.1.0",
+  "creator": "Sencha",
+  "summary": "Exports data to various formats like: Excel xml, Excel xlsx, csv, tsv, html etc",
+  "detailedDescription": "Utilities and plugins to export data in various formats and download them client-side",
+  "type": "code",
+  "requires": [
+    "core"
+  ],
+  "signatures": [
+    {
+      "name": "Sencha",
+      "uuid": "1d6b0d9c-3333-4e65-885f-5b07a1fc3198",
+      "created": "2020-01-10T19:55:53Z",
+      "algorithm": "SHA1withRSA",
+      "nonce": "Vff8gGdlt/I\u003d",
+      "signature": "BZnASlp2riF71TDTzTH8qjAl26e6TbaOyl1kekQ4oG5bZ1ROO8xLdKDeYpGe/ZhvG0p0kaTGaOFaxfhWCckI6+r+dD8naKaFCkEPn40O+4oOHhdG8nP5RfXSVfxCc3FqqvZVmkVsR9yHRB8u+OQwUQf0W/wCsHpNdjyEq60xrMWAjrtubcewbInW6cbD1abs8pnNZ9Ebd1NTZ8OKCHtmiIBAYVTp6xH+/3u3/e5QbdxEoXxgy9yL/unwH7UU1IQcNwRyslmAFK7BQrKfv5gks5YUF7tVeAt0nqZPapUvUPE1rSj3oYHh0oNFoHbIgpjAH3e2ATFv/Bi7KgY4IJVWTQ\u003d\u003d"
+    }
+  ],
+  "builds": {
+    "classic": {
+      "toolkit": "classic",
+      "theme": "theme-classic"
+    },
+    "modern": {
+      "toolkit": "modern",
+      "theme": "theme-neptune"
+    }
+  },
+  "framework": "ext",
+  "output": {
+    "base": "${package.dir}/build/${build.id}"
+  },
+  "sass": {
+    "namespace": "Ext",
+    "etc": [
+      "${package.dir}/sass/etc/all.scss",
+      "${package.dir}/${toolkit.name}/sass/etc/all.scss"
+    ],
+    "var": [
+      "${package.dir}/sass/var",
+      "${package.dir}/${toolkit.name}/sass/var"
+    ],
+    "src": [
+      "${package.dir}/sass/src",
+      "${package.dir}/${toolkit.name}/sass/src"
+    ]
+  },
+  "classpath": [
+    "${package.dir}/src",
+    "${package.dir}/${toolkit.name}/src"
+  ],
+  "overrides": [
+    "${package.dir}/overrides",
+    "${package.dir}/${toolkit.name}/overrides"
+  ]
+}
