@@ -15,9 +15,9 @@ var options = [
   { toolkit: 'classic', theme: 'neptune' },
   { toolkit: 'classic', theme: 'triton' },
 
-  //{ toolkit: 'classic', theme: 'classic-sandbox' },
-  //{ toolkit: 'classic', theme: 'crisp-touch' },
-  //{ toolkit: 'classic', theme: 'neptune-touch' },
+  // { toolkit: 'classic', theme: 'classic-sandbox' },
+  // { toolkit: 'classic', theme: 'crisp-touch' },
+  // { toolkit: 'classic', theme: 'neptune-touch' },
 ]
 
 go(options)
