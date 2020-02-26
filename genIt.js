@@ -648,9 +648,9 @@ function shouldProcessIt(o) {
     if (o.name == 'Ext.Base') {
         processIt = true
     }
-    if (o.name == 'Ext.grid.column.Column') {
-      processIt = false
-  }
+    // if (o.name == 'Ext.grid.column.Column') {
+    //   processIt = false
+    // }
     return processIt
   }
 
