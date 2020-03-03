@@ -1,0 +1,22 @@
+{
+ "title": "&lt;ExtPivotd3container&gt;&lt;/ExtPivotd3container&gt;",
+ "docProperties": [
+  {
+   "name": "configurator",
+   "text": "\nConfiguration object for the pivot Configurator plugin.\n"
+  },
+  {
+   "name": "drawing",
+   "text": "\nConfiguration object for the item that will be added to this container\n"
+  },
+  {
+   "name": "matrix",
+   "text": "\nThis is the pivot matrix used by the pivot D3 container. All axis and aggregate\ndimensions should be defined here.\n\nNeeded by this pivot container so that the configurator plugin can call getMatrix.\n\nThis matrix is also used by the {@link #cfg!drawing #drawing}.\n"
+  }
+ ],
+ "docEvents": [],
+ "eventString": "",
+ "propertyString": "\n  <div class=\"name\" onclick=\"toggleIt('cfg','configurator')\">configurator</div>\n  <pre id=\"configurator\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotd3container } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotd3container configurator=''&gt;&lt;/ExtPivotd3container&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','drawing')\">drawing</div>\n  <pre id=\"drawing\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotd3container } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotd3container drawing=''&gt;&lt;/ExtPivotd3container&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','matrix')\">matrix</div>\n  <pre id=\"matrix\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotd3container } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotd3container matrix=''&gt;&lt;/ExtPivotd3container&gt;\n      )\n    }\n  }\n  </pre>\n  ",
+ "first": "",
+ "text": "his container can host D3 components that need a pivot configurator\nplugin.\n"
+}

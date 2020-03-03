@@ -1,0 +1,122 @@
+.header-image  {
+  xbackground: url(/wp-content/uploads/2019/06/Sencha-An_Idera_Inc_Company.svg) 0px 30px/154px 60px no-repeat !important;
+  background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxI…U1LjkzLDAsNTUuOTMsMFoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgMC4wMSkiLz48L3N2Zz4=) 0px 30px/154px 60px no-repeat !important;
+  /* width: 165px; */
+}
+
+
+
+.footer {
+  height:40px;
+  border: 1px red solid;
+}
+
+.propertyheader {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.propertydetail {
+  font-size: 18px;
+  white-space:pre-wrap;
+}
+
+.heading {
+  font-size: 28px;
+  background: white;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 24px;
+  background: white;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding:0 10px 10px 5px;
+  cursor: pointer;
+}
+
+.first {
+  font-size: 18px;
+  background: white;
+  padding:0 10px 10px 5px;
+  xwhite-space:pre-wrap;
+}
+
+.text {
+
+  font-size: 18px;
+  border-top: lightgrey 1px solid;
+  background: white;
+  white-space:pre-line;
+  xpadding:10px 0 10px 5px;
+
+}
+
+.more {
+  font-size: 14px;
+  background: lightgray;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.tab {
+  font-family: monospace;
+  font-size: 18px;
+}
+
+
+
+.xname {
+  font-family: monospace;
+  font-size: 18px;
+  background: white;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.contexttop {
+  font-size: 24px;
+  background: green;
+  padding:10px 0 0 5px;
+  cursor: pointer;
+}
+
+.context {
+  font-size: 24px;
+  background: white;
+  padding:10px 0 0 5px;
+  cursor: pointer;
+}
+
+.code {
+  font-family: monospace;
+  font-size: 16px;
+  background: lightgray;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+

@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-classic-theme-crisp",
     "SenchaExtName": "@sencha/ext-classic-theme-crisp",
     "SenchaExtReactName": "@sencha/ext-react-classic-theme-crisp",
-    "version": "7.2.0.56",
+    "version": "7.2.0.57",
     "sencha": {
         "name": "theme-crisp",
         "namespace": "Ext",

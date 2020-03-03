@@ -1,0 +1,72 @@
+{
+ "title": "&lt;ExtColorselector&gt;&lt;/ExtColorselector&gt;",
+ "docProperties": [
+  {
+   "name": "alphaDecimalFormat",
+   "text": "The format used by {@link Ext.util.Format#method!number Ext.util.Format#number} to format the alpha channel's\nvalue.\n"
+  },
+  {
+   "name": "cancelButtonText",
+   "text": "Text value for \"Cancel\" button;\nthese are relied upon by the {@link Ext.ux.colorpick.Button} and the\n{@link Ext.ux.colorpick.Field}.\n"
+  },
+  {
+   "name": "color",
+   "text": "This config property is used internally by the UI to maintain the full color.\nChanges to this config are automatically reflected in `{@link #cfg!value value}` and vise-versa.\nSetting `{@link #cfg!value value}` can, however, cause the alpha to be dropped if the new value\ndoes not contain an alpha component.\n"
+  },
+  {
+   "name": "fieldPad",
+   "text": "padding between the sliders and HEX/R/G/B fields.\n"
+  },
+  {
+   "name": "fieldWidth",
+   "text": "Width of the text fields on the container (excluding HEX);\nsince the width of the slider containers is the same as the text field under it\n(it's the same vbox column), changing this value will also affect the spacing between\nthe sliders.\n"
+  },
+  {
+   "name": "format",
+   "text": "The color format to for the `{@link #cfg!value value}` config. The `{@link #cfg!value value}` can be set using any\nsupported format or named color, but the stored value will always be in this\nformat.\n\nSupported formats are:\n\n- hex6 - For example \"ffaa00\" (Note: does not preserve transparency).\n- hex8 - For eaxmple \"ffaa00ff\" - the last 2 digits represent transparency\n- #hex6 - For example \"#ffaa00\" (same as \"hex6\" but with a leading \"#\").\n- #hex8 - For example \"#ffaa00ff\" (same as \"hex8\" but with a leading \"#\").\n- HEX6 - Same as \"hex6\" but upper case.\n- HEX8 - Same as \"hex8\" but upper case.\n- #HEX6 - Same as \"#hex6\" but upper case.\n- #HEX8 - Same as \"#hex8\" but upper case.\n"
+  },
+  {
+   "name": "okButtonText",
+   "text": "Text value for \"Ok\" button;\nthese are relied upon by the {@link Ext.ux.colorpick.Button} and the\n{@link Ext.ux.colorpick.Field}.\n"
+  },
+  {
+   "name": "showOkCancelButtons",
+   "text": "Whether Ok and Cancel buttons (in upper right, below the selected color preview) should\nbe shown;\nthese are relied upon by the {@link Ext.ux.colorpick.Button} and the\n{@link Ext.ux.colorpick.Field}.\n"
+  },
+  {
+   "name": "showPreviousColor",
+   "text": "Whether \"previous color\" region (in upper right, below the selected color preview) should\nbe shown;\nthese are relied upon by the {@link Ext.ux.colorpick.Button} and the\n{@link Ext.ux.colorpick.Field}.\n"
+  },
+  {
+   "name": "value",
+   "text": "The initial color to highlight; see {@link #cfg!format #format} for supported formats.\n"
+  }
+ ],
+ "docEvents": [
+  {
+   "name": "cancel",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "change",
+   "parameters": [
+    "sender",
+    "color",
+    "previousColor"
+   ]
+  },
+  {
+   "name": "ok",
+   "parameters": [
+    "sender",
+    "color"
+   ]
+  }
+ ],
+ "eventString": "\n<div class=\"name\" onclick=\"toggleIt('event','Cancel')\">onCancel = ({sender})=> {);</div>\n<pre id=\"Cancel\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtColorselector } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onCancel = ({sender}) => {\n    console.log('Cancel')\n  };\n\n  render() {\n    return (\n      &lt;ExtColorselector onCancel={this.onCancel}&gt;&lt;/ExtColorselector&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Change')\">onChange = ({sender, color, previousColor})=> {);</div>\n<pre id=\"Change\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtColorselector } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onChange = ({sender, color, previousColor}) => {\n    console.log('Change')\n  };\n\n  render() {\n    return (\n      &lt;ExtColorselector onChange={this.onChange}&gt;&lt;/ExtColorselector&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Ok')\">onOk = ({sender, color})=> {);</div>\n<pre id=\"Ok\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtColorselector } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onOk = ({sender, color}) => {\n    console.log('Ok')\n  };\n\n  render() {\n    return (\n      &lt;ExtColorselector onOk={this.onOk}&gt;&lt;/ExtColorselector&gt;\n    )\n  }\n}\n</pre>\n",
+ "propertyString": "\n  <div class=\"name\" onclick=\"toggleIt('cfg','alphaDecimalFormat')\">alphaDecimalFormat</div>\n  <pre id=\"alphaDecimalFormat\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector alphaDecimalFormat=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','cancelButtonText')\">cancelButtonText</div>\n  <pre id=\"cancelButtonText\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector cancelButtonText=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','color')\">color</div>\n  <pre id=\"color\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector color=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','fieldPad')\">fieldPad</div>\n  <pre id=\"fieldPad\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector fieldPad=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','fieldWidth')\">fieldWidth</div>\n  <pre id=\"fieldWidth\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector fieldWidth=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','format')\">format</div>\n  <pre id=\"format\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector format=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','okButtonText')\">okButtonText</div>\n  <pre id=\"okButtonText\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector okButtonText=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','showOkCancelButtons')\">showOkCancelButtons</div>\n  <pre id=\"showOkCancelButtons\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector showOkCancelButtons=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','showPreviousColor')\">showPreviousColor</div>\n  <pre id=\"showPreviousColor\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector showPreviousColor=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','value')\">value</div>\n  <pre id=\"value\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtColorselector } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtColorselector value=''&gt;&lt;/ExtColorselector&gt;\n      )\n    }\n  }\n  </pre>\n  ",
+ "first": "Sencha Pro Services presents xtype \"colorselector\".\nAPI has been kept as close to the regular colorpicker as possible. The Selector can be\nrendered to any container.",
+ "text": "The defaul selected color is configurable via <a href=\"javascript:sendToContext('cfg','value');\">value</a> config\nand The Format is configurable via <a href=\"javascript:sendToContext('cfg','format');\">format</a>. Usually used in\nforms via {@link Ext.ux.colorpick.Button} or {@link Ext.ux.colorpick.Field}.\n\nTypically you will need to listen for the change event to be notified when the user\nchooses a color. Alternatively, you can bind to the \"value\" config\n\n    @example\n    Ext.create('Ext.ux.colorpick.Selector', {\n        value     : '993300',  // initial selected color\n        format   : 'hex6', // by default it's hex6\n        renderTo  : Ext.getBody(),\n\n        listeners: {\n            change: function (colorselector, color) {\n                console.log('New color: ' + color);\n            }\n        }\n    });\n"
+}

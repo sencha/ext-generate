@@ -1,0 +1,1222 @@
+{
+ "title": "&lt;ExtPivotconfigform&gt;&lt;/ExtPivotconfigform&gt;",
+ "docProperties": [
+  {
+   "name": "activeChildTabIndex",
+   "text": "DOM tabIndex attribute to set on the\nactive Focusable child of this container when using the \"Roaming tabindex\"\ntechnique.\n"
+  },
+  {
+   "name": "activeItem",
+   "text": "The item from the {@link #cfg!items #cfg-items}\ncollection that will be active first. This is usually only meaningful in a\n{@link Ext.layout.Card}, where only one item can be active at a time. If\npassed a string, it will be assumed to be a {@link Ext.ComponentQuery} selector. A number\nwill reference an index or a {@link Ext.Component} instance may be passed as\nwell. An object config will be created as a new component.\n"
+  },
+  {
+   "name": "alignSelf",
+   "text": "Specifies the self alignment of this widget in a box layout\n"
+  },
+  {
+   "name": "allowFocusingDisabledChildren",
+   "text": "Set this to `true`\nto enable focusing disabled child items via keyboard.\n"
+  },
+  {
+   "name": "alwaysOnTop",
+   "text": "A flag indicating that this component should\nbe above its floated siblings.\n\nThis may be a positive number to prioritize the ordering of multiple visible always on\ntop components.\n\nThis may be set to a *negative* number to prioritize a component to the *bottom* of the\nz-index stack.\n"
+  },
+  {
+   "name": "anchor",
+   "text": "Configure `true` to show an anchor element pointing to the target component\nwhen this Panel is floating and {@link #method!showBy shown by} another component.\n"
+  },
+  {
+   "name": "anchorPosition",
+   "text": "Set the anchor position.\n"
+  },
+  {
+   "name": "api",
+   "text": "If specified, load and submit (see `formpanel`) actions will be loaded and\nsubmitted via Ext Direct. Methods which have been imported by\n{@link Ext.direct.Manager} can be specified here to load and submit forms.\n\nAPI methods may also be specified as strings and will be parsed into the actual\nfunctions when the first submit or load has occurred.\n\nFor example, instead of the following:\n\n     api: {\n         load: App.ss.MyProfile.load,\n         submit: App.ss.MyProfile.submit\n     }\n\nYou can use strings:\n\n     api: {\n         load: 'App.ss.MyProfile.load',\n         submit: 'App.ss.MyProfile.submit'\n     }\n\nYou can also use a prefix instead of fully qualified function names:\n\n     api: {\n         prefix: 'App.ss.MyProfile',\n         load: 'load',\n         submit: 'submit'\n     }\n\nLoad actions can use {@link #cfg!paramOrder #paramOrder} or {@link #cfg!paramsAsHash #paramsAsHash} to customize\nhow the {@link #method!load} is invoked.\n\nFor `formpanel`, submit actions will always use a standard form submit. The\n`formHandler` configuration (see Ext.direct.RemotingProvider#action) must be\nset on the associated server-side method which has been imported by\n{@link Ext.direct.Manager}.\n"
+  },
+  {
+   "name": "ariaAttributes",
+   "text": "An object containing ARIA attributes to be set\non this Component's ARIA element. Use this to set the attributes that cannot be\ndetermined by the Component's state, such as `aria-live`, `aria-flowto`, etc.\n\n**Note** that this config is only meaningful at the Component rendering time,\nand setting it after that will do nothing.\n"
+  },
+  {
+   "name": "ariaDescribedBy",
+   "text": "DOM selector for a child element that is to be used\nas description for this Component, set in `aria-describedby` attribute.\nThe selector works the same way as {@link #cfg!ariaLabelledBy #ariaLabelledBy}.\n"
+  },
+  {
+   "name": "ariaLabel",
+   "text": "ARIA label for this Component. It is best to use\n{@link #cfg!ariaLabelledBy #ariaLabelledBy} option instead, because screen readers prefer\n`aria-labelledby` attribute to `aria-label`. {@link #cfg!ariaLabel #ariaLabel} and\n{@link #cfg!ariaLabelledBy #ariaLabelledBy} config options are mutually exclusive.\n"
+  },
+  {
+   "name": "ariaLabelledBy",
+   "text": "DOM selector for a child element that is to be used\nas label for this Component, set in `aria-labelledby` attribute.\nIf the selector is by `{@link #cfg!id #id}`, the label element can be any existing element,\nnot necessarily a child of the main Component element.\n\n{@link #cfg!ariaLabelledBy #ariaLabelledBy} and {@link #cfg!ariaLabel #ariaLabel} config options are\nmutually exclusive, and `{@link #cfg!ariaLabelledBy ariaLabelledBy}` has the higher precedence.\n"
+  },
+  {
+   "name": "autoDestroy",
+   "text": "If `true`, child items will be destroyed as soon as they are\n{@link #method!remove removed} from this container.\n"
+  },
+  {
+   "name": "autoSize",
+   "text": "May be set to `false` for improved layout performance if auto-sizing is not required.\n\nSome versions of Safari, both desktop and mobile, have very slow performance\nif the application has deeply nested containers due to the following WebKit\nbug: https://bugs.webkit.org/show_bug.cgi?id=150445\n\nApplications that experience performance issues in the affected versions of\nSafari may need to turn off autoSizing globally for all `{@link Ext.Container}` instances\nby placing the following override in the application's \"overrides\" directory:\n\n    Ext.define('MyApp.overrides.Container', {\n        override: 'Ext.Container',\n        config: {\n            autoSize: false\n        }\n    });\n\nOnce auto-sizing support has turned off by default, it can be selectively\nturned back on only on those container instances that explicitly need auto-sizing\nbehavior by setting `{@link #cfg!autoSize autoSize}` to `true`.\n\nThis option can also be used to allow items to be sized in percentage\nunits as a workaround for the following browser bug:\nhttps://bugs.webkit.org/show_bug.cgi?id=137730\n\nTo illustrate, the following example should render a 200px by 200px green box\n(the container) with a yellow box inside of it (the child item).  The child\nitem's height and width are both set to `'50%'` so the child should render\nexactly 100px by 100px in size.\n\n    @example\n    Ext.create({\n        xtype: 'container',\n        renderTo: Ext.getBody(),\n        height: 200,\n        width: 200,\n        style: 'background: green',\n        items: [{\n            xtype: 'component',\n            style: 'background: yellow',\n            height: '50%',\n            width: '50%'\n        }]\n    });\n\nAll browsers except for Safari render the previous example correctly, but\nSafari does not assign a height to the component.  To make percentage-sized\nitems work in Safari, simply set `{@link #cfg!autoSize autoSize}` to `false` on the container.\n\nSince the underlying implementation works by absolutely positioning the container's\nbody element, this option can only be used when the container is not\n\"shrink wrapping\" the content in either direction.  When `{@link #cfg!autoSize autoSize}` is\nset to `false`, shrink wrapped dimension(s) will collapse to 0.\n"
+  },
+  {
+   "name": "axisLock",
+   "text": "If `true`, then, when {@link #method!showBy #showBy} or {@link #method!alignTo #alignTo} fallback on\nconstraint violation only takes place along the major align axis.\n\nThat is, if alignment `\"l-r\"` is being used, and `axisLock: true` is used,\nthen if constraints fail, only fallback to `\"r-l\"` is considered.\n"
+  },
+  {
+   "name": "baseParams",
+   "text": "Optional set of params to be sent.\n\nFor `formpanel` this only applies when `standardSubmit` is set to `false`.\n"
+  },
+  {
+   "name": "bbar",
+   "text": "Convenience config. Short for 'Bottom Bar'.\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        bbar: [{\n            xtype: 'button',\n            text : 'Button 1'\n        }]\n    });\n```\n\nis equivalent to\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        items: [{\n            xtype: 'toolbar',\n            docked: 'bottom',\n            items: [{\n                xtype: 'button',\n                text: 'Button 1'\n            }]\n        }]\n    });\n```\n"
+  },
+  {
+   "name": "bind",
+   "text": "Setting this config option adds or removes data bindings for other configs.\nFor example, to bind the `title` config:\n\n     var panel = Ext.create({\n         xtype: 'panel',\n         bind: {\n             title: 'Hello {user.name}'\n         }\n     });\n\nTo dynamically add bindings:\n\n     panel.setBind({\n         title: 'Greetings {user.name}!'\n     });\n\nTo remove bindings:\n\n     panel.setBind({\n         title: null\n     });\n\nThe bind expressions are presented to `{@link Ext.app.ViewModel#method!bind Ext.app.ViewModel#bind}`. The\n`ViewModel` instance is determined by `{@link #method!lookupViewModel lookupViewModel}`.\n\n**Note:** If  bind is passed as a string, it will use the\n{@link Ext.Component#property!defaultBindProperty Ext.Component#property-defaultBindProperty} for the binding.\n"
+  },
+  {
+   "name": "bodyBorder",
+   "text": "Controls the border style of the panel body using the following values:\n\n- `true` to enable the border around the panel body (as defined by the theme)\nNote that even when enabled, the bodyBorder is only visible when there are\ndocked items around the edges of the panel.  Where the bodyBorder touches the\npanel's outer border it is automatically collapsed into a single border.\n\n- `false` to disable the body border\n\n- `null` - use the value of {@link #cfg!border border} as the value for\n`{@link #cfg!bodyBorder bodyBorder}`\n"
+  },
+  {
+   "name": "bodyCls",
+   "text": "The CSS class to add to this container's body element.\n"
+  },
+  {
+   "name": "bodyPadding",
+   "text": "A shortcut for setting a padding style on the body element. The value can\neither be a number to be applied to all sides, or a normal CSS string\ndescribing padding.\n\n    bodyPadding: 5 // 5px padding on all sides\n\n    bodyPadding: '10 20' // 10px top and bottom padding - 20px side padding\n\n*See the {@link Ext.dom.Element#static-method!unitizeBox unitizeBox} method\nfor more information on what string values are valid*\n"
+  },
+  {
+   "name": "bodyStyle",
+   "text": "Custom CSS styles to be applied to the panel's body element, which can be\nsupplied as a valid CSS style string or an object containing style property\nname/value pairs.\n\nFor example, these two formats are interpreted to be equivalent:\n\n    bodyStyle: 'background:#ffc; padding:10px;'\n\n    bodyStyle: {\n        background: '#ffc',\n        padding: '10px'\n    }\n"
+  },
+  {
+   "name": "border",
+   "text": "Enables or disables bordering on this component.\nThe following values are accepted:\n\n- `null` or `true (default): Do nothing and allow the border to be specified\nby the theme.\n- `false`: suppress the default border provided by the theme.\n\nPlease note that enabling bordering via this config will not add a `border-color`\nor `border-style` CSS property to the component; you provide the `border-color`\nand `border-style` via CSS rule or {@link #cfg!style #style} configuration\n(if not already provide by the theme).\n\n## Using {@link #cfg!style #style}:\n\n    Ext.Viewport.add({\n        centered: true,\n        width: 100,\n        height: 100,\n\n        style: 'border: 1px solid blue;'\n        // ...\n    });\n\n## Using CSS:\n\n    Ext.Viewport.add({\n        centered: true,\n        width: 100,\n        height: 100,\n\n        cls: 'my-component'\n        // ...\n    });\n\nAnd your CSS file:\n\n    .my-component {\n        border: 1px solid red;\n    }\n"
+  },
+  {
+   "name": "bottom",
+   "text": "The absolute bottom position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "bubbleDirty",
+   "text": "Set to `false` to disable dirty states affecting ancestor containers such as\n`fieldpanel` or `formpanel`. The dirty state of such containers is based on the\npresence of dirty descendants. In some cases, however, it may be desired to\nhide the dirty state of one of these containers from its ancestor containers.\n"
+  },
+  {
+   "name": "buttonAlign",
+   "text": "The alignment of any buttons added to this panel. Valid values are 'right',\n'left' and 'center'\n"
+  },
+  {
+   "name": "buttons",
+   "text": " The buttons for this panel to be displayed in the `{@link #cfg!buttonToolbar buttonToolbar}` as a keyed\n object (or array) of button configuration objects.\n\n```javascript\n @example({ framework: 'extjs' })\n     Ext.create({\n         xtype: 'panel',\n         html: 'hello world',\n         padding: 20,\n         buttons: {\n            ok: {text: 'OK', handler: 'onOK'}\n         }\n     });\n ```\n\n For buttons that are defined in `{@link #cfg!standardButtons standardButtons}` (such as `'ok'`), there is a\n more convenient short-hand for this config:\n\n ```javascript\n @example({ framework: 'extjs' })\n     Ext.create({\n         fullscreen: true,\n         xtype: 'panel',\n         html: 'hello world',\n         padding: 20,\n         buttons: {\n            ok: 'onOK',\n            cancel: 'onCancel'\n         }\n     });\n ```\n\n The {@link #cfg!minButtonWidth #minButtonWidth} is used as the default\n {@link Ext.Button#cfg!minWidth minWidth} for the buttons in the buttons toolbar.\n"
+  },
+  {
+   "name": "buttonToolbar",
+   "text": "Configure the toolbar that holds the `{@link #cfg!buttons buttons}` inside.\n"
+  },
+  {
+   "name": "cardSwitchAnimation",
+   "text": "Animation to be used during transitions of cards.\n"
+  },
+  {
+   "name": "centered",
+   "text": "Configure this as `true` to have this Component centered within its Container.\nSetting this value to `true` will make this Component become 'positioned', which means\nit will no longer participate in the layout of the Container that it resides in.\n"
+  },
+  {
+   "name": "closable",
+   "text": "True to display the 'close' tool button and allow the user to close the panel\nor false to hide the button and disallow closing the window.\n\nBy default, when close is requested by clicking the close button in the\nheader, the {@link #method!close #method-close} method will be called. This will\n_{@link Ext.Component#method!destroy destroy}_ the Panel and its content\nmeaning that it may not be reused.\n\nTo make closing a Panel _hide_ the Panel so that it may be reused, set\n{@link #cfg!closeAction #closeAction} to 'hide'.\n"
+  },
+  {
+   "name": "closeAction",
+   "text": "The action to take when the close header tool is clicked:\n\n- **`'{@link #method!destroy #method-destroy}'`** :\n\n  {@link #method!remove remove} the window from the DOM and\n  {@link Ext.Component#method!destroy destroy} it and all descendant Components.\n  The window will **not** be available to be redisplayed via the\n  {@link #method!show #method-show} method.\n\n- **`'{@link #method!hide #method-hide}'`** :\n\n  {@link #method!hide #method-hide} the window by setting visibility to hidden and applying\n  negative offsets. The window will be available to be redisplayed via the\n  {@link #method!show #method-show} method.\n\n**Note:** This behavior has changed! setting *does* affect the {@link #method!close #method-close}\nmethod which will invoke the appropriate closeAction.\n"
+  },
+  {
+   "name": "closeToolText",
+   "text": "Text to be announced by screen readers when the **close**\n{@link Ext.Tool} is focused.  Will also be set as the close tool's\n{@link Ext.Tool#cfg!tooltip tooltip} text.\n\n**Note:** Applicable when the panel is {@link #cfg!closable #closable}: true\n"
+  },
+  {
+   "name": "cls",
+   "text": "The CSS class to add to this widget's element, in\naddition to the {@link #property!baseCls #baseCls}. In many cases, this property will be specified\nby the derived widget class. See {@link #cfg!userCls #userCls} for adding additional CSS\nclasses to widget instances (such as items in a {@link Ext.Container}).\n"
+  },
+  {
+   "name": "collapsed",
+   "text": "`true` to start collapsed.\n"
+  },
+  {
+   "name": "collapsible",
+   "text": "A configuration for a {@link Ext.panel.Collapser}.\n\nTrue to make the panel collapsible and have an expand/collapse toggle Tool added\ninto the header tool button area.\n\nYou can also set `{@link #cfg!top top}`/`{@link #cfg!right right}`/`{@link #cfg!bottom bottom}`/`{@link #cfg!left left}` to directly specify the collapse\ndirection.\n\n**IMPORTANT**: To use this config, the application must require the following\nclass:\n\n     requires: [\n         'Ext.panel.Collapser'\n     ]\n"
+  },
+  {
+   "name": "constrainAlign",
+   "text": "A specification of the constraint to apply when {@link #method!showBy #showBy} or {@link #method!alignTo #alignTo}\nis called to align a {@link #cfg!floated #floated} or positioned component.\n\nDefaults to the parent container for *positioned* components (components\nwhich have their {@link #cfg!top}, {@link #cfg!right}, {@link #cfg!bottom} or\n{@link #cfg!left} set to move them out of their container's layout flow).\n\nDefaults to the viewport for {@link #cfg!floated #floated} components.\n\nMay be a {@link Ext.ComponentQuery} selector to find an ancestor\ncomponent to constrain within.\n\nMay be `false` to specify that constraining is not applied.\n\nYou may also specify an element, or a {@link Ext.util.Region}\n"
+  },
+  {
+   "name": "contentEl",
+   "text": "The configured element will automatically be added as the content of this\ncomponent. When you pass a string, we expect it to be an element id. If the\ncontent element is hidden, we will automatically show it.\n"
+  },
+  {
+   "name": "control",
+   "text": "Enables you to easily control Components inside this Container by\nlistening to their events and taking some action. For example, if we had a container with\na nested Disable button, and we wanted to hide the Container when the Disable button is\ntapped, we could do this:\n\n    @example\n    Ext.create({\n        xtype: 'container',\n        control: {\n           'button[text=Disable]': {\n               tap: 'hideMe'\n           }\n        },\n\n        hideMe: function() {\n            this.hide();\n        }\n    });\n\nWe used a {@link Ext.ComponentQuery} selector to listen to the {@link Ext.Button#event!tap tap}\nevent on any {@link Ext.Button} anywhere inside the Container that has the\n{@link Ext.Button#cfg!text text} 'Disable'. Whenever a Component matching that selector\nfires the `tap` event our `hideMe` function is called. `hideMe` is called with scope:\n`this` (e.g. `this` is the Container instance).\n"
+  },
+  {
+   "name": "controller",
+   "text": "A string alias, a configuration object or an instance of a `ViewController` for\nthis container. Sample usage:\n\n    Ext.define('MyApp.UserController', {\n        alias: 'controller.user'\n    });\n\n    Ext.define('UserContainer', {\n        extend: 'Ext.container.container',\n        controller: 'user'\n    });\n    // Or\n    Ext.define('UserContainer', {\n        extend: 'Ext.container.container',\n        controller: {\n            type: 'user',\n            someConfig: true\n        }\n    });\n\n    // Can also instance at runtime\n    var ctrl = new MyApp.UserController();\n    var view = new UserContainer({\n        controller: ctrl\n    });\n"
+  },
+  {
+   "name": "data",
+   "text": "The initial set of data to apply to the `{@link #cfg!tpl #tpl}` to\nupdate the content area of the Component.\n\n**Note:** Data will be appended to any existing data.\n"
+  },
+  {
+   "name": "defaultFocus",
+   "text": "\nSpecifies a child Component to receive focus when this Container's {@link #method!focus #method-focus}\nmethod is called. Should be a valid {@link Ext.ComponentQuery} selector.\n"
+  },
+  {
+   "name": "defaultListenerScope",
+   "text": "If `true`, this component will be the default scope (this pointer) for events\nspecified with string names so that the scope can be dynamically resolved. The\ncomponent will automatically become the defaultListenerScope if a\n{@link #cfg!controller #controller} is specified.\n\nSee the introductory docs for {@link Ext.Container Ext.container.Container} for some sample\nusages.\n\n**NOTE**: This value can only be reliably set at construction time. Setting it\nafter that time may not correctly rewire all of the potentially effected\nlisteners.\n"
+  },
+  {
+   "name": "defaults",
+   "text": "A set of default configurations to apply to all child Components\nin this Container. It's often useful to specify defaults when creating more than one\nitems with similar configurations. For example here we can specify that each child is a\npanel and avoid repeating the xtype declaration for each one:\n\n    @example\n    Ext.create({\n        xtype: 'container',\n        defaults: {\n            xtype: 'panel'\n        },\n        items: [\n            {\n                html: 'Panel 1'\n            },\n            {\n                html: 'Panel 2'\n            }\n        ]\n    });\n"
+  },
+  {
+   "name": "defaultToolWeights",
+   "text": "The default `weight` for tools in the `header`.\n"
+  },
+  {
+   "name": "defaultType",
+   "text": "The default {@link Ext.Component} of child Components to create in this Container\nwhen a child item is specified as a raw configuration object, rather than as an\ninstantiated Component.\n"
+  },
+  {
+   "name": "dirty",
+   "text": "This config property describes the modified state of this component. In most\ncases this config's value is maintained by the component and should be considered\nreadonly. The class implementor should be the only one to call the setter.\n\nFor containers, this config will be updated on a short delay in some cases.\n"
+  },
+  {
+   "name": "disabled",
+   "text": "Whether or not this component is disabled\n"
+  },
+  {
+   "name": "displayed",
+   "text": "Set to `true` to call `show` and `false` to call `hide`. Unlike the `{@link #cfg!hidden hidden}`\nconfig, changing this config will potentially involve animations to show or\nhide the component.\n"
+  },
+  {
+   "name": "docked",
+   "text": "The dock position of this component in its container. Can be `{@link #cfg!left left}`, `{@link #cfg!top top}`, `{@link #cfg!right right}` or\n`{@link #cfg!bottom bottom}`.\n\n__Notes__\n\nYou must use a HTML5 doctype for {@link #cfg!docked #docked} `{@link #cfg!bottom bottom}` to work. To do this, simply\nadd the following code to the HTML file:\n\n    <!doctype html>\n\nSo your index.html file should look a little like this:\n\n    <!doctype html>\n    <html>\n        <head>\n            <title>MY application title</title>\n            ...\n"
+  },
+  {
+   "name": "draggable",
+   "text": "Set to `true` to allow this component to be dragged. This can also be the config\nobject for the `{@link Ext.drag.Source}` that will manage the drag.\n"
+  },
+  {
+   "name": "enableSubmissionForm",
+   "text": "The submission form is generated but never added to the dom. It is a submittable\nversion of your form panel, allowing for fields that are not simple textfields\nto be properly submitted to servers. It will also send values that are easier\nto parse with server side code.\n\nIf this is false we will attempt to subject the raw form inside the form panel.\n"
+  },
+  {
+   "name": "enctype",
+   "text": "The enctype attribute for the form, specifies how the form should be encoded\nwhen submitting.\n"
+  },
+  {},
+  {},
+  {},
+  {
+   "name": "fieldDefaults",
+   "text": "The properties in this object are used as default config values for field instance.\n"
+  },
+  {
+   "name": "fieldSeparators",
+   "text": "Set to `true` to show separators between the fields in this form.  Typically\nused together with {@link #cfg!inputBorders #inputBorders} to create iOS-like forms\n\nDefaults to `true` in the iOS theme\n"
+  },
+  {
+   "name": "flex",
+   "text": "The flex of this item *if* this item item is inside a {@link Ext.layout.HBox}\nor {@link Ext.layout.VBox} layout.\n\nYou can also update the flex of a component dynamically using\nthe {@link Ext.layout.FlexBox#setItemFlex} method.\n\nWhen supplied as a string or number this option supports the same syntax\nas CSS [flex](https://developer.mozilla.org/en-US/docs/Web/CSS/flex).\nFor example:\n\n    flex: '1 2 auto'\n\nsets `flex-grow` property to `0`, `flex-shrink` to `2` and `flex-basis` to\n`'auto'`.\n\nThe default `flex-shrink` value for box layout items is set to `0` in the\nstylesheet, which is different from the browser's default `flex-shrink` value\nof `1`.  This accommodates the majority use case for applications since where\nnon-flexed components are typically not expected to shrink smaller than their\ndefault size.\n\nFor convenience when only a single number is supplied it is used as the value\nfor both `flex-grow` and `flex-shrink`, for example `flex: 3` is the same as\n`flex: '3 3'`\n\nAn object form is also accepted:\n\n    flex: {\n        grow: 1,\n        shrink: 2,\n        basis: 'auto'\n    }\n\nWhen the object form is supplied `shrink` always defaults to `0` regardless\nof the value of `grow`.\n\nAlthough `'auto'` is the default value for flex-basis, flex-basis defaults to 0%\nwhen flex is supplied as a single numeric or string value (e.g. `flex: 1`). If\nthis behavior is not desired either explicitly set flex-basis to `'auto'` or use\nthe object form to set only grow and/or shrink:\n\n    flex: {\n        grow: 2\n    }\n"
+  },
+  {
+   "name": "floated",
+   "text": "A Component may be floated above all other components in the application. This means that\nthe component is absolutely positioned, and will move to the front and occlude other\nsibling floated component if clicked.\n\nA Floated component may have floated descendants. It will bring these decendants to the\nfront with it when brought to the front of its sibling floated components.\n\nBy default, descendant floated components are all positioned using the viewport\ncoordinate system. To make a floating component a positioning parent for descendants,\nand have the ancestors positioned relatively, configure the parent floated component\nwith `{@link #cfg!relative #cfg-relative}: true`.\n"
+  },
+  {
+   "name": "focusableContainer",
+   "text": "Enable or disable navigation\nwith arrow keys for this FocusableContainer. This option may be useful\nwith nested FocusableContainers, when only the root container should\nhandle keyboard events.\n"
+  },
+  {
+   "name": "focusCls",
+   "text": "CSS class that will be added to focused\ncomponent's {@link #property!focusClsEl #focusClsEl}, and removed when component blurs.\n"
+  },
+  {
+   "name": "fullscreen",
+   "text": "Force the component to take up 100% width and height available, by adding it\nto {@link Ext.Viewport}.\n"
+  },
+  {
+   "name": "header",
+   "text": "Pass as `false` to prevent a header from being created.\n\nYou may also assign a header with a config object (optionally containing an\n`{@link #cfg!xtype xtype}`) to custom-configure your panel's header.\n\nSee {@link Ext.panel.Header} for all the options that may be specified here.\n"
+  },
+  {
+   "name": "headerPosition",
+   "text": "The position of the header. Ignored if no {@link #cfg!header #cfg-header} is created.\n"
+  },
+  {
+   "name": "height",
+   "text": "The height of this Component; must be a valid CSS length value, e.g: `300`, `100px`,\n`30%`, etc. By default, if this is not explicitly set, this Component's element will\nsimply have its own natural size. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "hidden",
+   "text": "Whether or not this Component is hidden (its CSS `display` property is set to `none`).\n\nDefaults to `true` for {@link #cfg!floated #floated} Components.\n"
+  },
+  {
+   "name": "hideAnimation",
+   "text": "Animation effect to apply when the Component is being hidden.  Typically you want to use\nan outbound animation type such as 'fadeOut' or 'slideOut'. For more animations, check\nthe {@link Ext.fx.Animation#cfg!type Ext.fx.Animation#type} config.\n"
+  },
+  {
+   "name": "hideMode",
+   "text": "A String which specifies how this component's DOM element will be hidden. The\naccepted values are any of these:\n\n- `'clip'` : Hide using {@link Ext.dom.Element#static-property!CLIP clip}.\n- `'display'` : Hide using {@link Ext.dom.Element#static-property!DISPLAY display}.\n- `'offsets'` : Hide using positioning {@link Ext.dom.Element#static-property!OFFSETS offsets}.\n- `'opacity'` : Hide using {@link Ext.dom.Element#static-property!OPACITY opacity}.\n- `'visibility'` : Hide using {@link Ext.dom.Element#static-property!VISIBILITY visibility}.\n\nHiding using ``display`` results in having no dimensions as well as resetting\nscroll positions to 0.\n\nThe other modes overcome this but may have different trade-offs in certain\ncircumstances.\n"
+  },
+  {
+   "name": "hideOnMaskTap",
+   "text": "When using a {@link #cfg!modal} Component, setting this to `true` will hide\nthe modal mask and the Container when the mask is tapped on.\n"
+  },
+  {
+   "name": "html",
+   "text": "Optional HTML content to render inside this Component, or a reference to an\nexisting element on the page.\n"
+  },
+  {
+   "name": "icon",
+   "text": "Path to an image to use as an icon.\n\nFor instructions on how you can use icon fonts including those distributed in\nthe SDK see {@link #cfg!iconCls #iconCls}.\n"
+  },
+  {
+   "name": "iconAlign",
+   "text": "The side of the title to render the icon.\n"
+  },
+  {
+   "name": "iconCls",
+   "text": "One or more space separated CSS classes to be applied to the icon element.\nThe CSS rule(s) applied should specify a background image to be used as the\nicon.\n\nAn example of specifying a custom icon class would be something like:\n\n    // specify the property in the config for the class:\n    iconCls: 'my-home-icon'\n\n    // css rule specifying the background image to be used as the icon image:\n    .my-home-icon {\n        background-image: url(../images/my-home-icon.gif) !important;\n    }\n\nIn addition to specifying your own classes, you can use the font icons\nprovided in the SDK using the following syntax:\n\n    // using Font Awesome\n    iconCls: 'x-fa fa-home'\n\n    // using Pictos\n    iconCls: 'pictos pictos-home'\n\nDepending on the theme you're using, you may need include the font icon\npackages in your application in order to use the icons included in the\nSDK.  For more information see:\n\n - [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/cheatsheet/)\n - [Pictos icons](../guides/core_concepts/font_ext.html)\n - [Theming Guide](../guides/core_concepts/theming.html)\n"
+  },
+  {
+   "name": "id",
+   "text": "The **unique id of this component instance.**\n\nIt should not be necessary to use this configuration except for singleton objects in\nyour application. Components created with an id may be accessed globally\nusing {@link Ext#method!getCmp Ext.getCmp}.\n\nInstead of using assigned ids, use the {@link #cfg!itemId #itemId} config,\nand {@link Ext.ComponentQuery} which provides selector-based searching\nfor Sencha Components analogous to DOM querying. The {@link Ext.Container} class\ncontains {@link Ext.Container#method!down shortcut methods} to query its descendant Components\nby selector.\n\nNote that this id will also be used as the element id for the containing HTML element\nthat is rendered to the page for this component. This allows you to write id-based CSS\nrules to style the specific instance of this component uniquely, and also to select\nsub-elements using this component's id as the parent.\n\n**Note**: to avoid complications imposed by a unique id also see `{@link #cfg!itemId #itemId}`.\n\nDefaults to an auto-assigned id.\n"
+  },
+  {
+   "name": "inactiveChildTabIndex",
+   "text": "DOM tabIndex attribute to set on\ninactive Focusable children of this container when using the \"Roaming tabindex\"\ntechnique. This value rarely needs to be changed from its default.\n"
+  },
+  {
+   "name": "innerCls",
+   "text": "A string to add to the immediate parent element of the inner items of this\ncontainer. That is, items that are not `{@link #cfg!docked docked}`, `{@link #property!positioned positioned}` or `{@link #cfg!floated floated}`. In\nsome containers, `{@link #property!positioned positioned}` items may be in this same element.\n"
+  },
+  {
+   "name": "inputBorders",
+   "text": "\n`false` to suppress borders on the input elements of fields in this form.\nTypically used together with {@link #cfg!fieldSeparators #fieldSeparators} to create iOS-like forms.\n\nDefaults to `false` in the iOS theme\n"
+  },
+  {
+   "name": "instanceCls",
+   "text": "\nAn extra CSS class or classes to augment the {@link #property!classCls #classCls} on an individual instance\n"
+  },
+  {
+   "name": "itemId",
+   "text": "An itemId can be used as an alternative way to get a reference to a component when no\nobject reference is available. Instead of using an `{@link #cfg!id #id}` with {@link Ext#method!getCmp Ext#getCmp},\nuse `{@link #cfg!itemId itemId}` with {@link Ext.Container#method!getComponent Ext.Container#getComponent} which will retrieve `{@link #cfg!itemId itemId}`'s or\n{@link #cfg!id #id}'s. Since `{@link #cfg!itemId itemId}`'s are an index to the container's internal MixedCollection,\nthe `{@link #cfg!itemId itemId}` is scoped locally to the container - avoiding potential conflicts with\n{@link Ext.ComponentManager} which requires a **unique** `{@link #cfg!id #id}`.\n\nAlso see {@link #cfg!id #id}, {@link Ext.Container#method!query Ext.Container#query}, {@link Ext.Container#method!down Ext.Container#down} and\n{@link Ext.Container#method!child Ext.Container#child}.\n"
+  },
+  {
+   "name": "items",
+   "text": "The child items to add to this Container. This is usually an\narray of Component configurations or instances, for example:\n\n    @example\n    Ext.create({\n        xtype: 'container',\n        items: [{\n            xtype: 'panel',\n            html: 'This is an item'\n        }]\n    });\n\nThis may also be specified as an object, the property names of which are `{@link #cfg!itemId itemId}`s, and\nthe property values are child Component config objects, for example:\n\n    @example\n    Ext.create({\n        xtype: 'tabpanel',\n        items: {\n            panel1: {\n                xtype: 'panel',\n                title: 'First panel'\n            },\n            panel2: {\n                xtype: 'panel',\n                title: 'Second panel'\n            }\n        }\n    });\n"
+  },
+  {
+   "name": "jsonSubmit",
+   "text": "If set to true, the field values are sent as JSON in the request body.\nAll of the field values, plus any additional params configured via\n{@link #cfg!baseParams #baseParams} and/or the `options` to {@link #submit},\nwill be included in the values POSTed in the body of the request.\n"
+  },
+  {
+   "name": "keyMap",
+   "text": "An object containing handlers for keyboard events. The property names of this\nobject are the key name and any modifiers. The values of the properties are the\ndescriptors of how to handle each event.\n\nThe handler descriptor can be simply the handler function(either the\nliteral function or the method name), or it can be an object with these\nproperties:\n\n - `handler`: The function or its name to call to handle the event.\n - `scope`: The this pointer context (can be \"this\" or \"controller\").\n - `event`: An optional override of the key event to which to listen.\n\n**Important:** Calls to `setKeyMap` do not replace the entire `{@link #cfg!keyMap keyMap}` but\ninstead update the provided mappings. That is, unless `null` is passed as the\nvalue of the `{@link #cfg!keyMap keyMap}` which will clear the `{@link #cfg!keyMap keyMap}` of all entries.\n"
+  },
+  {
+   "name": "keyMapEnabled",
+   "text": "Enables or disables processing keys in the `{@link #cfg!keyMap keyMap}`. This value starts as\n`null` and if it is `null` when `{@link #method!initKeyMap initKeyMap}` is called, it will automatically\nbe set to `true`. Since `{@link #method!initKeyMap initKeyMap}` is called by `{@link Ext.Component}` at the\nproper time, this is not something application code normally handles.\n"
+  },
+  {
+   "name": "keyMapTarget",
+   "text": "The name of the member that should be used to listen for keydown/keypress events.\nThis is intended to be controlled at the class level not per instance.\n"
+  },
+  {
+   "name": "layout",
+   "text": "Configuration for this Container's layout. Example:\n\n    @example\n    Ext.create({\n        xtype: 'container',\n        layout: {\n            type: 'hbox',\n            align: 'middle'\n        },\n        items: [{\n            xtype: 'panel',\n            flex: 1,\n            bodyStyle: {\n                background: \"#000\",\n                color:\"#fff\"\n            }\n        }, {\n           xtype: 'panel',\n           flex: 2,\n           bodyStyle: {\n               background: \"#f00\",\n               color:\"#fff\"\n           }\n        }]\n    });\n"
+  },
+  {
+   "name": "lbar",
+   "text": "Convenience config. Short for 'Left Bar' (left-docked, vertical toolbar).\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        lbar: [{\n            xtype: 'button',\n            text : 'Button 1'\n        }]\n    });\n```\n\nis equivalent to\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        items: [{\n            xtype: 'toolbar',\n            docked: 'left',\n            items: [{\n                xtype: 'button',\n                text: 'Button 1'\n            }]\n        }]\n    });\n```\n"
+  },
+  {
+   "name": "left",
+   "text": "The absolute left position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "listeners",
+   "text": "\nA config object containing one or more event handlers to be added to this object during\ninitialization. This should be a valid listeners config object as specified in the\n{@link Ext.util.Observable#method!addListener addListener} example for attaching\nmultiple handlers at once.\n\n**DOM events from Ext JS {@link Ext.Component}**\n\nWhile _some_ Ext JS Component classes export selected DOM events (e.g. \"click\",\n\"mouseover\" etc), this is usually only done when extra value can be added. For example\nthe {@link Ext.view.View DataView}'s **`{@link Ext.view.View#itemclick itemclick}`**\nevent passing the node clicked on. To access DOM events directly from a child element\nof a Component, we need to specify the `{@link #property!element element}` option to identify the Component\nproperty to add a DOM listener to:\n\n    new Ext.panel.Panel({\n        width: 400,\n        height: 200,\n        dockedItems: [{\n            xtype: 'toolbar'\n        }],\n        listeners: {\n            click: {\n                element: 'el', //bind to the underlying el property on the panel\n                fn: function(){ console.log('click el'); }\n            },\n            dblclick: {\n                element: 'body', //bind to the underlying body property on the panel\n                fn: function(){ console.log('dblclick body'); }\n            }\n        }\n    });\n"
+  },
+  {
+   "name": "manageBorders",
+   "text": "`true` to enable border management of docked items.  When enabled, borders of docked\nitems will collapse where they meet to avoid duplicated borders.\n"
+  },
+  {
+   "name": "margin",
+   "text": "The margin to use on this Component. Can be specified as a number (in which\ncase all edges get the same margin) or a CSS string like '5 10 10 10'\n"
+  },
+  {
+   "name": "masked",
+   "text": "A configuration to allow you to mask this container.\n\nIf the value is a string, it will be used as the message config for an\n{@link Ext.LoadMask}.\n\nFor more precise control over the mask, you can optionally pass an object block with\nand xtype of `loadmask`, and an optional `message` value to display a loading mask.\nPlease refer to the {@link Ext.LoadMask} component to see other configurations.\n\n    @example\n    Ext.create({\n        xtype: 'container',\n        fullscreen: true,\n        html: 'Hello World',\n        masked: {\n            xtype: 'loadmask',\n            message: 'My Message'\n        }\n    });\n\nAlternatively, you can just call the setter at any time with `true`/`false` to show/hide\nthe mask:\n\n    setMasked(true); //show the mask\n    setMasked(false); //hides the mask\n\nThere are also two convenient methods, {@link #method!mask #method-mask} and {@link #method!unmask #unmask}, to allow\nyou to mask and unmask this container at any time.\n\nRemember, the {@link Ext.Viewport} is always a container, so if you want to mask your\nwhole application at anytime, can call:\n\n    Ext.Viewport.setMasked({\n        xtype: 'loadmask',\n        message: 'Hello'\n    });\n"
+  },
+  {
+   "name": "maxHeight",
+   "text": "The maximum height of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size. Note that this config will not apply if the\nComponent is 'positioned' (absolutely positioned or centered)\n"
+  },
+  {
+   "name": "maxWidth",
+   "text": "The maximum width of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size. Note that this config will not apply if the\nComponent is 'positioned' (absolutely positioned or centered)\n"
+  },
+  {
+   "name": "method",
+   "text": "The method which this form will be submitted. `post` or `get`.\n"
+  },
+  {
+   "name": "minButtonWidth",
+   "text": "Minimum width of all {@link #cfg!buttonToolbar buttonToolbar} buttons in\npixels. If set, this will be used as the default value for the\n{@link Ext.Button#cfg!minWidth Ext.Button#minWidth} config of each {@link Ext.Button} added to\nthe `buttonToolbar via the {@link #cfg!buttons buttons} toolbar.\n\nIt will be ignored for buttons that have a `minWidth` configured some other\nway, e.g. in their own config object or via the\n{@link Ext.Container#cfg!defaults defaults} of their parent container.\n"
+  },
+  {
+   "name": "minHeight",
+   "text": "The minimum height of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "minWidth",
+   "text": "The minimum width of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "modal",
+   "text": "`true` to make this Component modal. This will create a mask underneath the\nComponent that covers its parent and does not allow the user to interact with\nany other Components until this Component is dismissed.\n"
+  },
+  {
+   "name": "modelValidation",
+   "text": "This config enables binding to your `{@link Ext.data.Model#cfg!validators Ext.data.Model#validators}`. This\nis only processed by form fields (e.g., `Ext.field.*`) at present, however, this\nsetting is inherited and so can be set on a parent container.\n\nWhen set to `true` by a component (or by an ancestor container), the `validators`\nof for any {@Ext.data.Model record} fields will be used wherever the `value` is\nbound to such data fields.\n\nWhile this config can be set arbitrarily high in the component hierarchy, doing\nso can create a lot overhead if most of your form fields do not actually rely on\n`validators` in your data model.\n\nUsing this setting for a form that is bound to an `{@link Ext.data.Model}` might look\nlike this:\n\n     {\n         xtype: 'panel',\n         modelValidation: true,\n         items: [{\n             xtype: 'textfield',\n             bind: '{theUser.firstName}'\n         },{\n             xtype: 'textfield',\n             bind: '{theUser.lastName}'\n         },{\n             xtype: 'textfield',\n             bind: '{theUser.phoneNumber}'\n         },{\n             xtype: 'textfield',\n             bind: '{theUser.email}'\n         }]\n     }\n"
+  },
+  {
+   "name": "multipartDetection",
+   "text": "If this is enabled the form will automatically detect the need to use\n'multipart/form-data' during submission.\n"
+  },
+  {
+   "name": "name",
+   "text": "Name for the widget to be used with {@link Ext.Container#method!lookupName Ext.Container#lookupName}\net al.\n"
+  },
+  {
+   "name": "nameable",
+   "text": "Set to `true` for this component's `{@link #cfg!name name}` property to be tracked by its containing\n`{@link #cfg!nameHolder nameHolder}`.\nForms can be assigned names to be used in parent forms.\n"
+  },
+  {
+   "name": "nameHolder",
+   "text": "When `true` child components are tracked by their `{@link #cfg!name name}` property and can be\nretrieved using the `{@link #method!lookupName lookupName}` method.\n"
+  },
+  {
+   "name": "padding",
+   "text": "The padding to use on this Component. Can be specified as a number (in which\ncase all edges get the same padding) or a CSS string like '5 10 10 10'\n"
+  },
+  {
+   "name": "paramOrder",
+   "text": "A list of params to be executed server side. Only used for the\n{@link #cfg!api} config.\n\nSpecify the params in the order in which they must be executed on the\nserver-side as either (1) a String[], or (2) a String of params delimited by\neither whitespace, comma, or pipe.\n\nFor example, any of the following would be acceptable:\n\n    paramOrder: ['param1','param2','param3']\n    paramOrder: 'param1 param2 param3'\n    paramOrder: 'param1,param2,param3'\n    paramOrder: 'param1|param2|param'\n"
+  },
+  {
+   "name": "paramsAsHash",
+   "text": "If true, parameters will be sent as a single hash collection of named arguments.\nProviding a {@link #cfg!paramOrder #paramOrder} nullifies this configuration.\n\nOnly used for the {@link #cfg!api} config.\n"
+  },
+  {
+   "name": "plugins",
+   "text": "This config describes one or more plugin config objects used to create plugin\ninstances for this component.\n\nPlugins are a way to bundle and reuse custom functionality. Plugins should extend\n`{@link Ext.plugin.Abstract}` but technically the only requirement for a valid plugin\nis that it contain an `init` method that accepts a reference to its owner. Once\na plugin is created, the owner will call the `init` method, passing a reference\nto itself. Each plugin can then call methods or respond to events on its owner\nas needed to provide its functionality.\n\nThis config's value can take several different forms.\n\nThe value can be a single string with the plugin's {@link Ext.enums.Plugin alias}:\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: 'listpaging'\n     });\n\nIn the above examples, the string \"listpaging\" is the type alias for\n`{@link Ext.dataview.plugin.ListPaging}`. The full alias includes the \"plugin.\" prefix\n(i.e., 'plugin.listpaging').\n\nThe preferred form for multiple plugins or to configure plugins is the\nkeyed-object form (new in version 6.5):\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: {\n             pullrefresh: true,\n             listpaging: {\n                 autoPaging: true,\n                 weight: 10\n             }\n         }\n     });\n\nThe object keys are the `id`'s as well as the default type alias. This form\nallows the value of the `{@link #cfg!plugins plugins}` to be merged from base class to derived class\nand finally with the instance configuration. This allows classes to define a\nset of plugins that derived classes or instantiators can further configure or\ndisable. This merge behavior is a feature of the\n{@link Ext.Class#cfg!config}.\n\nThe `{@link #cfg!plugins plugins}` config can also be an array of plugin aliases (arrays are not\nmerged so this form does not respect plugins defined by the class author):\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: ['listpaging', 'pullrefresh']\n     });\n\nAn array can also contain elements that are config objects with a `type`\nproperty holding the type alias:\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: ['pullrefresh', {\n             type: 'listpaging',\n             autoPaging: true\n         }]\n     });\n"
+  },
+  {
+   "name": "publishes",
+   "text": "One or more names of config properties that this component should publish\nto its ViewModel. Generally speaking, only properties defined in a class config\nblock (including ancestor config blocks and mixins) are eligible for publishing\nto the viewModel. Some components override this and publish their most useful\nconfigs by default.\n\n**Note:** We'll discuss publishing properties **not** found in the config block below.\n\nValues determined to be invalid by component (often form fields and model validations)\nwill not be published to the ViewModel.\n\nThis config uses the `{@link #cfg!reference #cfg-reference}` to determine the name of the data\nobject to place in the `ViewModel`. If `{@link #cfg!reference reference}` is not set then this config\nis ignored.\n\nBy using this config and `{@link #cfg!reference #cfg-reference}` you can bind configs between\ncomponents. For example:\n\n     ...\n         items: [{\n             xtype: 'textfield',\n             reference: 'somefield',  // component's name in the ViewModel\n             publishes: 'value' // value is not published by default\n         },{\n             ...\n         },{\n             xtype: 'displayfield',\n             bind: 'You have entered \"{somefield.value}\"'\n         }]\n     ...\n\nClasses must provide this config as an Object:\n\n     Ext.define('App.foo.Bar', {\n         publishes: {\n             foo: true,\n             bar: true\n         }\n     });\n\nThis is required for the config system to properly merge values from derived\nclasses.\n\nFor instances this value can be specified as a value as show above or an array\nor object as follows:\n\n     {\n         xtype: 'textfield',\n         reference: 'somefield',\n         publishes: [\n             'value',\n             'rawValue',\n             'dirty'\n         ]\n     }\n\n     // This achieves the same result as the above array form.\n     {\n         xtype: 'textfield',\n         reference: 'somefield',\n         publishes: {\n             value: true,\n             rawValue: true,\n             dirty: true\n         }\n     }\n\nIn some cases, users may want to publish a property to the viewModel that is not found\nin a class  config block. In these situations, you may utilize {@link #method!publishState #publishState}\nif the property has a  setter method. Let's use\n{@link Ext.form.Labelable#setFieldLabel setFieldLabel} as an example:\n\n      setFieldLabel: function(fieldLabel) {\n          this.callParent(arguments);\n          this.publishState('fieldLabel', fieldLabel);\n      }\n\nWith the above chunk of code, fieldLabel may now be published to the viewModel.\n"
+  },
+  {
+   "name": "rbar",
+   "text": "Convenience config. Short for 'Right Bar' (right-docked, vertical toolbar).\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        rbar: [{\n            xtype: 'button',\n            text : 'Button 1'\n        }]\n    });\n```\n\nis equivalent to\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        items: [{\n            xtype: 'toolbar',\n            docked: 'right',\n            items: [{\n                xtype: 'button',\n                text: 'Button 1'\n            }]\n        }]\n    });\n```\n"
+  },
+  {
+   "name": "record",
+   "text": "A model instance which updates the Component's html based on it's tpl. Similar\nto the data configuration, but tied to to a record to make allow dynamic\nupdates.  This must be a model instance and not a configuration of one.\n"
+  },
+  {
+   "name": "reference",
+   "text": "Specifies a name for this component inside its component hierarchy. This name\nmust be unique within its {@link Ext.Container#cfg!referenceHolder view}\nor its {@link Ext.app.ViewController}. See the documentation in\n{@link Ext.Container Ext.container.Container} for more information about references.\n\n**Note**: Valid identifiers start with a letter or underscore and are followed\nby zero or more additional letters, underscores or digits. References are case\nsensitive.\n"
+  },
+  {
+   "name": "referenceHolder",
+   "text": "If `true`, this container will be marked as being a point in the hierarchy where\nreferences to items with a specified `reference` config will be held. The container\nwill automatically become a referenceHolder if a {@link #cfg!controller #controller} is specified.\n\nSee the introductory docs for {@link Ext.Container Ext.container.Container} for more information\nabout references & reference holders.\n"
+  },
+  {
+   "name": "relative",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nConfigure this as `true` if you require descendant floated components to be positioned\nrelative to this component's coordinate space, not the viewport's coordinate space.\n\n*Note:* The coordinate space is this Component's encapsulating element's area. Not that\nof the inner element in which static child items are rendered by the layout.\n"
+  },
+  {
+   "name": "renderTo",
+   "text": "Optional element to render this Component to.\nNot required if this component is an {@link Ext.Container#cfg!items item} of a Container\nof a Container.\n"
+  },
+  {
+   "name": "resetFocusPosition",
+   "text": "When `true`, FocusableContainer\nwill reset last focused position whenever focus leaves the container.\nSubsequent tabbing into the container will always focus the first eligible\nchild item.\n\nWhen `false`, subsequent tabbing into the container will focus the child\nitem that was last focused before.\n"
+  },
+  {
+   "name": "resizable",
+   "text": "A configuration for a {@link Ext.panel.Resizer}.\n\n**IMPORTANT**: To use this config, the application must require the following\nclass:\n\n     requires: [\n         'Ext.panel.Resizer'\n     ]\n"
+  },
+  {
+   "name": "right",
+   "text": "The absolute right position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "ripple",
+   "text": "Set to truthy, Color or Object value for the ripple.\n"
+  },
+  {
+   "name": "scrollable",
+   "text": "Configuration options to make this Component scrollable. Acceptable values are:\n\n- `true` to enable auto scrolling.\n- `false` (or `null`) to disable scrolling - this is the default.\n- `{@link #cfg!x x}` or `horizontal` to enable horizontal scrolling only\n- `{@link #cfg!y y}` or `vertical` to enable vertical scrolling only\n\nAlso accepts a configuration object for a `{@link Ext.scroll.Scroller}` if\nif advanced configuration is needed.\n\nThe getter for this config returns the {@link Ext.scroll.Scroller}\ninstance.  You can use the Scroller API to read or manipulate the scroll position:\n\n    // scrolls the component to 5 on the x axis and 10 on the y axis\n    component.getScrollable().scrollTo(5, 10);\n"
+  },
+  {
+   "name": "session",
+   "text": "If provided this creates a new `Session` instance for this component. If this\nis a `Container`, this will then be inherited by all child components.\n\nTo create a new session you can specify `true`:\n\n     Ext.create({\n         xtype: 'viewport',\n         session: true,\n\n         items: [{\n             ...\n         }]\n     });\n\nAlternatively, a config object can be provided:\n\n     Ext.create({\n         xtype: 'viewport',\n         session: {\n             ...\n         },\n\n         items: [{\n             ...\n         }]\n     });\n"
+  },
+  {
+   "name": "shadow",
+   "text": "Configure as `true` for the component to have a drop shadow. 'false' will suppress any\ndefault shadow. By default the theme will determine the presence of a shadow.\n"
+  },
+  {
+   "name": "shareableName",
+   "text": "Set to `true` to allow this component's `{@link #cfg!name name}` to be shared by other items in the\nsame `{@link #cfg!nameHolder nameHolder}`. Such items will be returned in an array from `{@link #method!lookupName lookupName}`.\nForms can be assigned the same name as other forms in their parent form. This\nmeans that if a form is assigned a `{@link #cfg!name name}` it will be returned as an array from\n`{@link #method!lookupName lookupName}` in its parent form.\n"
+  },
+  {
+   "name": "shim",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nConfigure as `true` for the component to use an `<iframe>` as an underlay to ensure\ncertain non-standard browser plugins are occluded by this component.\n"
+  },
+  {
+   "name": "showAnimation",
+   "text": "Animation effect to apply when the Component is being shown.  Typically you want to use\nan inbound animation type such as 'fadeIn' or 'slideIn'. For more animations, check the\n{@link Ext.fx.Animation#cfg!type Ext.fx.Animation#type} config.\n"
+  },
+  {
+   "name": "standardButtons",
+   "text": "This object contains config objects for the standard `buttons` (such as `OK`\nand `Cancel`). This object is keyed by the `itemId` for the button and\ncontains the `text` and a default `weight` for\n{@link Ext.Container#cfg!weighted} containers to use. These default\nweights vary by OS to provide the user with a button order that is consistent\nfor their platform. In particular, Windows and Linux (or rather all platforms\nother then Mac OS and iOS) present the `OK` button followed by `Cancel` while\nMac OS and iOS present them in reverse order of 'Cancel` followed by `OK`.\n\nThe standard buttons, in weight order, are as follows:\n\n - `ok`\n - `abort`\n - `retry`\n - `ignore`\n - `yes`\n - `no`\n - `cancel`\n - `apply`\n - `save`\n - `submit`\n - `help`\n - `close`\n\nOn Mac OS and iOS this order is reversed with the exception of `help` which\nis the first button. The buttons are assigned weights from `10` to `200`.\n"
+  },
+  {
+   "name": "standardSubmit",
+   "text": "Whether or not we want to perform a standard form submit.\n"
+  },
+  {
+   "name": "stateful",
+   "text": "\nThis config specifies the config properties that will be persisted using the\n{@link Ext.state.Provider}. If this config is set to `true`, the\nconfigs specified by `{@link #cfg!statefulDefaults statefulDefaults}` will be assumed.\n\n     stateful: true\n\nOtherwise, this config can be an array of strings of the properties to save:\n\n     stateful: [\n         'width',\n         'height',\n         'collapsed'\n     ]\n\nThe above is equivalent to:\n\n     stateful: {\n         width: true,\n         height: true,\n         collapsed: true\n     }\n\n**Note:** To be truly stateful, an `id` or `{@link #cfg!stateId stateId}` must also be assigned.\n\nA stateful object will save its state when any of these config properties change\nvalue.\n"
+  },
+  {
+   "name": "statefulDefaults",
+   "text": "The default set of {@link #cfg!stateful} properties. The form of this config\nis the same as {@link #cfg!stateful} except this config cannot be a Boolean.\n\nThis config is intended for classes to specify so that instances can simply\nenable statefulness using `stateful: true`.\n"
+  },
+  {
+   "name": "stateId",
+   "text": "The unique id for this object to use for state management purposes.\n"
+  },
+  {
+   "name": "style",
+   "text": "Additional CSS styles that will be rendered into an inline style attribute when\nthe widget is rendered.\n\nYou can pass either a string syntax:\n\n    style: 'background:red'\n\nOr by using an object:\n\n    style: {\n        background: 'red'\n    }\n\nWhen using the object syntax, you can define CSS Properties by using a string:\n\n    style: {\n        'border-left': '1px solid red'\n    }\n\nAlthough the object syntax is much easier to read, we suggest you to use the\nstring syntax for better performance.\n"
+  },
+  {
+   "name": "submitOnAction",
+   "text": "When this is set to `true`, the form will automatically submit itself whenever\nthe `action` event fires on a field in this form. The action event usually fires\nwhenever you press go or enter inside a textfield.\n"
+  },
+  {
+   "name": "tabIndex",
+   "text": "DOM tabIndex attribute for this component's\n{@link #property!focusEl #focusEl}.\n"
+  },
+  {
+   "name": "tbar",
+   "text": "Convenience config. Short for 'Top Bar'.\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        tbar: [{\n            xtype: 'button',\n            text : 'Button 1'\n        }]\n    });\n```\n\nis equivalent to\n\n```javascript\n@example({ framework: 'extjs' })\n    Ext.create({\n        xtype: 'panel',\n        fullscreen: true,\n        html: 'hello world',\n        padding: 20,\n        items: [{\n            xtype: 'toolbar',\n            docked: 'top',\n            items: [{\n                xtype: 'button',\n                text: 'Button 1'\n            }]\n        }]\n    });\n```\n"
+  },
+  {
+   "name": "timeout",
+   "text": "Timeout for server actions (in seconds).\n"
+  },
+  {
+   "name": "title",
+   "text": "The title text or config object for the {@link Ext.panel.Title} component.\n"
+  },
+  {
+   "name": "titleAlign",
+   "text": "The alignment of the title text within the available space between the\nicon and the tools.\n"
+  },
+  {
+   "name": "titleCollapse",
+   "text": "`true` to allow expanding and collapsing the panel (when `{@link #cfg!collapsible #collapsible} = true`)\nby clicking anywhere in the header bar, `false` to allow it only by clicking to tool\nbutton.\n"
+  },
+  {
+   "name": "toFrontOnShow",
+   "text": "True to automatically call {@link #method!toFront #toFront} when a {@link #cfg!floated #cfg-floated} Component is\nshown.\n"
+  },
+  {
+   "name": "toolDefaults",
+   "text": "The properties of this object are shallow copied (via {@link Ext#method!applyIf applyIf()}\nas opposed to {@link Ext#method!merge Ext.merge()} to each tool declared in the `{@link #cfg!tools tools}`\nconfig.\n"
+  },
+  {
+   "name": "tools",
+   "text": "An array of {@link Ext.Tool} configs or an object keyed by `itemId`.\n"
+  },
+  {
+   "name": "tooltip",
+   "text": "The tooltip for this component - can be a string to be used as innerHTML\n(html tags are accepted) or {@link Ext.tip.ToolTip} config object.\n\nThe default behavior is to use a shared tip instance. The tooltip configuration is\nregistered with the {@link Ext.tip.Manager}. To enable this, your application can set\nthe {@link Ext.app.Application#cfg!quickTips Ext.app.Application#quickTips} config, or an instance of the\n{@link Ext.tip.Manager} may be created manually.\n\nTo force a unique tooltip instance to be created, specify `autoCreate: true` on this\nconfiguration.\n\nConfiguring this with `autoHide: false` implies `autoCreate: true` so that the desired\npersistent behavior can be obtained with other targets still showing the singleton\ninstance.\n"
+  },
+  {
+   "name": "top",
+   "text": "The absolute top position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "touchAction",
+   "text": "\nEmulates the behavior of the CSS\n[touch-action](https://www.w3.org/TR/pointerevents/#the-touch-action-css-property)\nproperty in a cross-browser compatible manner.\n\nKeys in this object are touch action names, and values are `false` to disable\na touch action or `true` to enable it.  Accepted keys are:\n\n- `panX`\n- `panY`\n- `pinchZoom`\n- `doubleTapZoom`\n\nAll touch actions are enabled (`true`) by default, so it is usually only necessary\nto specify which touch actions to disable.  For example, the following disables\nonly horizontal scrolling and pinch-to-zoom on the component's main element:\n\n    touchAction: {\n        panX: false,\n        pinchZoom: false\n    }\n\nTouch actions can be specified on reference elements using the reference element\nname, for example:\n\n    // disables horizontal scrolling on the main element, and double-tap-zoom\n    // on the child element named \"body\"\n    touchAction: {\n        panY: false\n        body: {\n            doubleTapZoom: false\n        }\n    }\n\nThe primary motivation for setting the touch-action of an element is to prevent\nthe browser's default handling of a gesture such as pinch-to-zoom, or\ndrag-to-scroll, so that the application can implement its own handling of that\ngesture on the element.  Suppose, for example, a component has a custom drag\nhandler on its element and wishes to prevent horizontal scrolling of its container\nwhile it is being dragged:\n\n    Ext.create('Ext.Widget', {\n        touchAction: {\n            panX: false\n        },\n        listeners: {\n            drag: function(e) {\n                // implement drag logic\n            }\n        }\n    });\n"
+  },
+  {
+   "name": "tpl",
+   "text": "A {@link String}, {@link Ext.Template}, {@link Ext.XTemplate} or an {@link Array} of\nstrings to form an {@link Ext.XTemplate}. Used in conjunction with the {@link #cfg!data #data}\nand {@link #cfg!tplWriteMode #tplWriteMode} configurations.\n\n__Note__\nThe {@link #cfg!data #data} configuration _must_ be set for any content to be shown in the\ncomponent when using this configuration.\n"
+  },
+  {
+   "name": "tplWriteMode",
+   "text": "The Ext.(X)Template method to use when updating the content area of the\nComponent.\n\nValid modes are:\n\n- append\n- insertAfter\n- insertBefore\n- insertFirst\n- overwrite\n"
+  },
+  {
+   "name": "trackResetOnLoad",
+   "text": "If set to true, {@link #method!reset #reset}() resets to the last loaded or {@link #method!setValues #setValues}\ndata instead of when the form was first created.\n"
+  },
+  {
+   "name": "translatable"
+  },
+  {
+   "name": "twoWayBindable",
+   "text": "This object holds a map of `config` properties that will update their binding\nas they are modified. For example, `value` is a key added by form fields. The\nform of this config is the same as `{@link #cfg!publishes}`.\n\nThis config is defined so that updaters are not created and added for all\nbound properties since most cannot be modified by the end-user and hence are\nnot appropriate for two-way binding.\n"
+  },
+  {
+   "name": "ui",
+   "text": "The ui or uis to be used on this Component\n\nWhen a ui is configured, CSS class names are added to the {@link #property!element #element}, created\nby appending the ui name(s) to each {@link #property!classCls #classCls} and/or {@link #property!baseCls #baseCls}.\n"
+  },
+  {
+   "name": "url",
+   "text": "The default URL for server actions (`{@link #method!load load}` and `submit` in `formpanel`).\n"
+  },
+  {
+   "name": "userCls",
+   "text": "One or more CSS classes to add to the component's primary element. This config\nis intended solely for use by the component instantiator (the \"user\"), not by\nderived classes.\n\nFor example:\n\n     items: [{\n         xtype: 'button',\n         userCls: 'my-button'\n     ...\n     }]\n"
+  },
+  {
+   "name": "userSelectable",
+   "text": "\nSet to true to allow users to select text within this component.\n\nCan also be any valid value for the CSS3\n[user-select](https://developer.mozilla.org/en-US/docs/Web/CSS/user-select) property.\n\nA value of true implies `auto`, while false implies `none`.\n\nMay also be an object keyed by child element name.\n\nBy default, the user cannot click+drag+select text/elements of the UI.  Applications may\nwant to enable user selection for specific DOM elements, such as the bodyElement of\na component used as a tab panel.  The tab and tab text would not be user selectable in\nthis example, but the content area when the tab is selected would.\n\n     userSelectable: {\n         element: true,       // allow the element to be user selectable\n         bodyElement: true    // allow the component's body element to be user selectable\n     }\n"
+  },
+  {
+   "name": "viewModel",
+   "text": "The `ViewModel` is a data provider for this component and its children. The\ndata contained in the `ViewModel` is typically used by adding `{@link #cfg!bind bind}` configs\nto the components that want present or edit this data.\n\nWhen set, the `ViewModel` is created and links to any inherited `{@link #cfg!viewModel viewModel}`\ninstance from an ancestor container as the \"parent\". The `ViewModel` hierarchy,\nonce established, only supports creation or destruction of children. The\nparent of a `ViewModel` cannot be changed on the fly.\n\nIf this is a root-level `ViewModel`, the data model connection is made to this\ncomponent's associated `{@link Ext.data.Session}`. This is\ndetermined by calling `getInheritedSession`.\n"
+  },
+  {
+   "name": "weight",
+   "text": "This value controls this item's order in a {@link Ext.Container#cfg!weighted}\n{@link Ext.Container} (see {@link #cfg!parent}).\n\nLower values gravitate towards the start of the container - the top in vertical layouts,\nthe locale start side in horizontal layouts.\n"
+  },
+  {
+   "name": "weighted",
+   "text": "If set to `true`, then child {@link #cfg!items} may be specified as a object,\nwith each property name specifying an {@link #cfg!itemId}, and the property\nvalue being the child item configuration object.\n\nWhen using this scheme, each child item may contain a {@link #cfg!weight}\nconfiguration value which affects its order in this container. Lower weights\nare towards the start, higher weights towards the end.\n"
+  },
+  {
+   "name": "width",
+   "text": "The width of this Component; must be a valid CSS length value, e.g: `300`, `100px`,\n`30%`, etc. By default, if this is not explicitly set, this Component's element will\nsimply have its own natural size. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "x",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nThe x position at which to position this component. This is usually viewport-relative.\nBut if there is a `{@link #cfg!relative #relative}: true` ancestor, it will be relative to that.\n"
+  },
+  {
+   "name": "xtype",
+   "text": "The `{@link #cfg!xtype xtype}` configuration option can be used to optimize Component creation and rendering.\nIt serves as a shortcut to the full component name. For example, the component\n`Ext.button.Button` has an xtype of `button`.\n\nYou can define your own xtype on a custom {@link Ext.Component} like so:\n\n    Ext.define('PressMeButton', {\n        extend: 'Ext.button.Button',\n        xtype: 'pressmebutton',\n        text: 'Press Me'\n    });\n\nAny Component can be created implicitly as an object config with an xtype specified,\nallowing it to be declared and passed into the rendering pipeline without actually being\ninstantiated as an object. Not only is rendering deferred, but the actual creation of the\nobject itself is also deferred, saving memory and resources until they are actually needed.\nIn complex, nested layouts containing many Components, this can make a noticeable\nimprovement in performance.\n\n    // Explicit creation of contained Components:\n    var panel = new Ext.Panel({\n       // ...\n       items: [\n          Ext.create('Ext.button.Button', {\n             text: 'OK'\n          })\n       ]\n    });\n\n    // Implicit creation using xtype:\n    var panel = new Ext.Panel({\n       // ...\n       items: [{\n          xtype: 'button',\n          text: 'OK'\n       }]\n    });\n\nIn the first example, the button will always be created immediately during the panel's\ninitialization. With many added Components, this approach could potentially slow the\nrendering of the page. In the second example, the button will not be created or rendered\nuntil the panel is actually displayed in the browser. If the panel is never displayed\n(for example, if it is a tab that remains hidden) then the button will never be created and\nwill never consume any resources whatsoever.\n"
+  },
+  {
+   "name": "y",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nThe x position at which to position this component. This is usually viewport-relative.\nBut if there is a `{@link #cfg!relative #relative}: true` ancestor, it will be relative to that.\n"
+  },
+  {
+   "name": "zIndex",
+   "text": "The z-index to give this Component when it is rendered.\n\nNot valid for {@link #cfg!floated #cfg-floated} Components. The Z ordering of {@link #cfg!floated #cfg-floated}\nComponents is managed by ordering of the DOM elements.\n"
+  }
+ ],
+ "docEvents": [
+  {
+   "name": "activate",
+   "parameters": [
+    "newActiveItem",
+    "sender",
+    "oldActiveItem"
+   ]
+  },
+  {
+   "name": "activeItemchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "add",
+   "parameters": [
+    "sender",
+    "item",
+    "index"
+   ]
+  },
+  {
+   "name": "added",
+   "parameters": [
+    "sender",
+    "container",
+    "index"
+   ]
+  },
+  {
+   "name": "beforeactiveItemchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforebottomchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforecenteredchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforecollapse",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforedisabledchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforedockedchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeexpand",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforeheightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforehiddenchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforehide",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforeleftchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforemaxHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforemaxWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeminHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeminWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeorientationchange",
+   "parameters": []
+  },
+  {
+   "name": "beforeresizedragstart",
+   "parameters": [
+    "sender",
+    "context"
+   ]
+  },
+  {
+   "name": "beforerightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforescrollablechange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeshow",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforesubmit",
+   "parameters": [
+    "sender",
+    "values",
+    "options",
+    "e"
+   ]
+  },
+  {
+   "name": "beforetofront",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforetopchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforewidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "blur",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "bottomchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "centeredchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "collapse",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "deactivate",
+   "parameters": [
+    "oldActiveItem",
+    "sender",
+    "newActiveItem"
+   ]
+  },
+  {
+   "name": "destroy",
+   "parameters": []
+  },
+  {
+   "name": "dirtychange",
+   "parameters": [
+    "sender",
+    "dirty"
+   ]
+  },
+  {
+   "name": "disabledchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "dockedchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "drawerhide",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "drawershow",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "erased",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "exception",
+   "parameters": [
+    "sender",
+    "result"
+   ]
+  },
+  {
+   "name": "expand",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "floatingchange",
+   "parameters": [
+    "sender",
+    "positioned"
+   ]
+  },
+  {
+   "name": "focus",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "focusenter",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "focusleave",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "fullscreen",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "heightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "hiddenchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "hide",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "initialize",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "leftchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "maxHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "maxWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "minHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "minWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "move",
+   "parameters": [
+    "sender",
+    "item",
+    "toIndex",
+    "fromIndex"
+   ]
+  },
+  {
+   "name": "moved",
+   "parameters": [
+    "sender",
+    "container",
+    "toIndex",
+    "fromIndex"
+   ]
+  },
+  {
+   "name": "orientationchange",
+   "parameters": []
+  },
+  {
+   "name": "painted",
+   "parameters": [
+    "sender",
+    "element"
+   ]
+  },
+  {
+   "name": "positionedchange",
+   "parameters": [
+    "sender",
+    "positioned"
+   ]
+  },
+  {
+   "name": "remove",
+   "parameters": [
+    "sender",
+    "item",
+    "index"
+   ]
+  },
+  {
+   "name": "removed",
+   "parameters": [
+    "sender",
+    "container",
+    "index"
+   ]
+  },
+  {
+   "name": "renderedchange",
+   "parameters": [
+    "sender",
+    "item",
+    "rendered"
+   ]
+  },
+  {
+   "name": "resize",
+   "parameters": [
+    "element",
+    "info"
+   ]
+  },
+  {
+   "name": "resizedrag",
+   "parameters": [
+    "sender",
+    "context"
+   ]
+  },
+  {
+   "name": "resizedragcancel",
+   "parameters": [
+    "sender",
+    "context"
+   ]
+  },
+  {
+   "name": "resizedragend",
+   "parameters": [
+    "sender",
+    "context"
+   ]
+  },
+  {
+   "name": "resizedragstart",
+   "parameters": [
+    "sender",
+    "context"
+   ]
+  },
+  {
+   "name": "rightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "scrollablechange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "show",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "submit",
+   "parameters": [
+    "sender",
+    "result",
+    "e"
+   ]
+  },
+  {
+   "name": "tofront",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "topchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "updatedata",
+   "parameters": [
+    "sender",
+    "newData"
+   ]
+  },
+  {
+   "name": "widthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  }
+ ],
+ "eventString": "\n<div class=\"name\" onclick=\"toggleIt('event','Activate')\">onActivate = ({newActiveItem, sender, oldActiveItem})=> {);</div>\n<pre id=\"Activate\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onActivate = ({newActiveItem, sender, oldActiveItem}) => {\n    console.log('Activate')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onActivate={this.onActivate}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Activeitemchange')\">onActiveitemchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Activeitemchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onActiveitemchange = ({sender, value, oldValue}) => {\n    console.log('Activeitemchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onActiveitemchange={this.onActiveitemchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Add')\">onAdd = ({sender, item, index})=> {);</div>\n<pre id=\"Add\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onAdd = ({sender, item, index}) => {\n    console.log('Add')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onAdd={this.onAdd}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Added')\">onAdded = ({sender, container, index})=> {);</div>\n<pre id=\"Added\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onAdded = ({sender, container, index}) => {\n    console.log('Added')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onAdded={this.onAdded}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeactiveitemchange')\">onBeforeactiveitemchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeactiveitemchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeactiveitemchange = ({sender, value, oldValue}) => {\n    console.log('Beforeactiveitemchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeactiveitemchange={this.onBeforeactiveitemchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforebottomchange')\">onBeforebottomchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforebottomchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforebottomchange = ({sender, value, oldValue}) => {\n    console.log('Beforebottomchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforebottomchange={this.onBeforebottomchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforecenteredchange')\">onBeforecenteredchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforecenteredchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforecenteredchange = ({sender, value, oldValue}) => {\n    console.log('Beforecenteredchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforecenteredchange={this.onBeforecenteredchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforecollapse')\">onBeforecollapse = ({sender})=> {);</div>\n<pre id=\"Beforecollapse\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforecollapse = ({sender}) => {\n    console.log('Beforecollapse')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforecollapse={this.onBeforecollapse}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforedisabledchange')\">onBeforedisabledchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforedisabledchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforedisabledchange = ({sender, value, oldValue}) => {\n    console.log('Beforedisabledchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforedisabledchange={this.onBeforedisabledchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforedockedchange')\">onBeforedockedchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforedockedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforedockedchange = ({sender, value, oldValue}) => {\n    console.log('Beforedockedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforedockedchange={this.onBeforedockedchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeexpand')\">onBeforeexpand = ({sender})=> {);</div>\n<pre id=\"Beforeexpand\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeexpand = ({sender}) => {\n    console.log('Beforeexpand')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeexpand={this.onBeforeexpand}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeheightchange')\">onBeforeheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeheightchange = ({sender, value, oldValue}) => {\n    console.log('Beforeheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeheightchange={this.onBeforeheightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforehiddenchange')\">onBeforehiddenchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforehiddenchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforehiddenchange = ({sender, value, oldValue}) => {\n    console.log('Beforehiddenchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforehiddenchange={this.onBeforehiddenchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforehide')\">onBeforehide = ({sender})=> {);</div>\n<pre id=\"Beforehide\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforehide = ({sender}) => {\n    console.log('Beforehide')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforehide={this.onBeforehide}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeleftchange')\">onBeforeleftchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeleftchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeleftchange = ({sender, value, oldValue}) => {\n    console.log('Beforeleftchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeleftchange={this.onBeforeleftchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforemaxheightchange')\">onBeforemaxheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforemaxheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforemaxheightchange = ({sender, value, oldValue}) => {\n    console.log('Beforemaxheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforemaxheightchange={this.onBeforemaxheightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforemaxwidthchange')\">onBeforemaxwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforemaxwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforemaxwidthchange = ({sender, value, oldValue}) => {\n    console.log('Beforemaxwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforemaxwidthchange={this.onBeforemaxwidthchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeminheightchange')\">onBeforeminheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeminheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeminheightchange = ({sender, value, oldValue}) => {\n    console.log('Beforeminheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeminheightchange={this.onBeforeminheightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeminwidthchange')\">onBeforeminwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeminwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeminwidthchange = ({sender, value, oldValue}) => {\n    console.log('Beforeminwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeminwidthchange={this.onBeforeminwidthchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeorientationchange')\">onBeforeorientationchange = ({})=> {);</div>\n<pre id=\"Beforeorientationchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeorientationchange = ({}) => {\n    console.log('Beforeorientationchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeorientationchange={this.onBeforeorientationchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeresizedragstart')\">onBeforeresizedragstart = ({sender, context})=> {);</div>\n<pre id=\"Beforeresizedragstart\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeresizedragstart = ({sender, context}) => {\n    console.log('Beforeresizedragstart')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeresizedragstart={this.onBeforeresizedragstart}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforerightchange')\">onBeforerightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforerightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforerightchange = ({sender, value, oldValue}) => {\n    console.log('Beforerightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforerightchange={this.onBeforerightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforescrollablechange')\">onBeforescrollablechange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforescrollablechange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforescrollablechange = ({sender, value, oldValue}) => {\n    console.log('Beforescrollablechange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforescrollablechange={this.onBeforescrollablechange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeshow')\">onBeforeshow = ({sender})=> {);</div>\n<pre id=\"Beforeshow\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeshow = ({sender}) => {\n    console.log('Beforeshow')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforeshow={this.onBeforeshow}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforesubmit')\">onBeforesubmit = ({sender, values, options, e})=> {);</div>\n<pre id=\"Beforesubmit\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforesubmit = ({sender, values, options, e}) => {\n    console.log('Beforesubmit')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforesubmit={this.onBeforesubmit}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforetofront')\">onBeforetofront = ({sender})=> {);</div>\n<pre id=\"Beforetofront\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforetofront = ({sender}) => {\n    console.log('Beforetofront')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforetofront={this.onBeforetofront}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforetopchange')\">onBeforetopchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforetopchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforetopchange = ({sender, value, oldValue}) => {\n    console.log('Beforetopchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforetopchange={this.onBeforetopchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforewidthchange')\">onBeforewidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforewidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforewidthchange = ({sender, value, oldValue}) => {\n    console.log('Beforewidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBeforewidthchange={this.onBeforewidthchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Blur')\">onBlur = ({sender, event})=> {);</div>\n<pre id=\"Blur\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBlur = ({sender, event}) => {\n    console.log('Blur')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBlur={this.onBlur}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Bottomchange')\">onBottomchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Bottomchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBottomchange = ({sender, value, oldValue}) => {\n    console.log('Bottomchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onBottomchange={this.onBottomchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Centeredchange')\">onCenteredchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Centeredchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onCenteredchange = ({sender, value, oldValue}) => {\n    console.log('Centeredchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onCenteredchange={this.onCenteredchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Collapse')\">onCollapse = ({sender})=> {);</div>\n<pre id=\"Collapse\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onCollapse = ({sender}) => {\n    console.log('Collapse')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onCollapse={this.onCollapse}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Deactivate')\">onDeactivate = ({oldActiveItem, sender, newActiveItem})=> {);</div>\n<pre id=\"Deactivate\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDeactivate = ({oldActiveItem, sender, newActiveItem}) => {\n    console.log('Deactivate')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDeactivate={this.onDeactivate}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Destroy')\">onDestroy = ({})=> {);</div>\n<pre id=\"Destroy\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDestroy = ({}) => {\n    console.log('Destroy')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDestroy={this.onDestroy}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Dirtychange')\">onDirtychange = ({sender, dirty})=> {);</div>\n<pre id=\"Dirtychange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDirtychange = ({sender, dirty}) => {\n    console.log('Dirtychange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDirtychange={this.onDirtychange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Disabledchange')\">onDisabledchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Disabledchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDisabledchange = ({sender, value, oldValue}) => {\n    console.log('Disabledchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDisabledchange={this.onDisabledchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Dockedchange')\">onDockedchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Dockedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDockedchange = ({sender, value, oldValue}) => {\n    console.log('Dockedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDockedchange={this.onDockedchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Drawerhide')\">onDrawerhide = ({sender})=> {);</div>\n<pre id=\"Drawerhide\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDrawerhide = ({sender}) => {\n    console.log('Drawerhide')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDrawerhide={this.onDrawerhide}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Drawershow')\">onDrawershow = ({sender})=> {);</div>\n<pre id=\"Drawershow\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDrawershow = ({sender}) => {\n    console.log('Drawershow')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onDrawershow={this.onDrawershow}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Erased')\">onErased = ({sender})=> {);</div>\n<pre id=\"Erased\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onErased = ({sender}) => {\n    console.log('Erased')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onErased={this.onErased}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Exception')\">onException = ({sender, result})=> {);</div>\n<pre id=\"Exception\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onException = ({sender, result}) => {\n    console.log('Exception')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onException={this.onException}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Expand')\">onExpand = ({sender})=> {);</div>\n<pre id=\"Expand\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onExpand = ({sender}) => {\n    console.log('Expand')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onExpand={this.onExpand}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Floatingchange')\">onFloatingchange = ({sender, positioned})=> {);</div>\n<pre id=\"Floatingchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFloatingchange = ({sender, positioned}) => {\n    console.log('Floatingchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onFloatingchange={this.onFloatingchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Focus')\">onFocus = ({sender, event})=> {);</div>\n<pre id=\"Focus\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFocus = ({sender, event}) => {\n    console.log('Focus')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onFocus={this.onFocus}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Focusenter')\">onFocusenter = ({sender, event})=> {);</div>\n<pre id=\"Focusenter\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFocusenter = ({sender, event}) => {\n    console.log('Focusenter')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onFocusenter={this.onFocusenter}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Focusleave')\">onFocusleave = ({sender, event})=> {);</div>\n<pre id=\"Focusleave\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFocusleave = ({sender, event}) => {\n    console.log('Focusleave')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onFocusleave={this.onFocusleave}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Fullscreen')\">onFullscreen = ({sender})=> {);</div>\n<pre id=\"Fullscreen\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFullscreen = ({sender}) => {\n    console.log('Fullscreen')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onFullscreen={this.onFullscreen}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Heightchange')\">onHeightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Heightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onHeightchange = ({sender, value, oldValue}) => {\n    console.log('Heightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onHeightchange={this.onHeightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Hiddenchange')\">onHiddenchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Hiddenchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onHiddenchange = ({sender, value, oldValue}) => {\n    console.log('Hiddenchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onHiddenchange={this.onHiddenchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Hide')\">onHide = ({sender})=> {);</div>\n<pre id=\"Hide\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onHide = ({sender}) => {\n    console.log('Hide')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onHide={this.onHide}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Initialize')\">onInitialize = ({sender})=> {);</div>\n<pre id=\"Initialize\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onInitialize = ({sender}) => {\n    console.log('Initialize')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onInitialize={this.onInitialize}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Leftchange')\">onLeftchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Leftchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onLeftchange = ({sender, value, oldValue}) => {\n    console.log('Leftchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onLeftchange={this.onLeftchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Maxheightchange')\">onMaxheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Maxheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMaxheightchange = ({sender, value, oldValue}) => {\n    console.log('Maxheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onMaxheightchange={this.onMaxheightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Maxwidthchange')\">onMaxwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Maxwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMaxwidthchange = ({sender, value, oldValue}) => {\n    console.log('Maxwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onMaxwidthchange={this.onMaxwidthchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Minheightchange')\">onMinheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Minheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMinheightchange = ({sender, value, oldValue}) => {\n    console.log('Minheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onMinheightchange={this.onMinheightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Minwidthchange')\">onMinwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Minwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMinwidthchange = ({sender, value, oldValue}) => {\n    console.log('Minwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onMinwidthchange={this.onMinwidthchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Move')\">onMove = ({sender, item, toIndex, fromIndex})=> {);</div>\n<pre id=\"Move\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMove = ({sender, item, toIndex, fromIndex}) => {\n    console.log('Move')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onMove={this.onMove}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Moved')\">onMoved = ({sender, container, toIndex, fromIndex})=> {);</div>\n<pre id=\"Moved\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMoved = ({sender, container, toIndex, fromIndex}) => {\n    console.log('Moved')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onMoved={this.onMoved}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Orientationchange')\">onOrientationchange = ({})=> {);</div>\n<pre id=\"Orientationchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onOrientationchange = ({}) => {\n    console.log('Orientationchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onOrientationchange={this.onOrientationchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Painted')\">onPainted = ({sender, element})=> {);</div>\n<pre id=\"Painted\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onPainted = ({sender, element}) => {\n    console.log('Painted')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onPainted={this.onPainted}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Positionedchange')\">onPositionedchange = ({sender, positioned})=> {);</div>\n<pre id=\"Positionedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onPositionedchange = ({sender, positioned}) => {\n    console.log('Positionedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onPositionedchange={this.onPositionedchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Remove')\">onRemove = ({sender, item, index})=> {);</div>\n<pre id=\"Remove\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onRemove = ({sender, item, index}) => {\n    console.log('Remove')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onRemove={this.onRemove}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Removed')\">onRemoved = ({sender, container, index})=> {);</div>\n<pre id=\"Removed\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onRemoved = ({sender, container, index}) => {\n    console.log('Removed')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onRemoved={this.onRemoved}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Renderedchange')\">onRenderedchange = ({sender, item, rendered})=> {);</div>\n<pre id=\"Renderedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onRenderedchange = ({sender, item, rendered}) => {\n    console.log('Renderedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onRenderedchange={this.onRenderedchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Resize')\">onResize = ({element, info})=> {);</div>\n<pre id=\"Resize\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onResize = ({element, info}) => {\n    console.log('Resize')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onResize={this.onResize}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Resizedrag')\">onResizedrag = ({sender, context})=> {);</div>\n<pre id=\"Resizedrag\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onResizedrag = ({sender, context}) => {\n    console.log('Resizedrag')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onResizedrag={this.onResizedrag}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Resizedragcancel')\">onResizedragcancel = ({sender, context})=> {);</div>\n<pre id=\"Resizedragcancel\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onResizedragcancel = ({sender, context}) => {\n    console.log('Resizedragcancel')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onResizedragcancel={this.onResizedragcancel}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Resizedragend')\">onResizedragend = ({sender, context})=> {);</div>\n<pre id=\"Resizedragend\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onResizedragend = ({sender, context}) => {\n    console.log('Resizedragend')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onResizedragend={this.onResizedragend}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Resizedragstart')\">onResizedragstart = ({sender, context})=> {);</div>\n<pre id=\"Resizedragstart\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onResizedragstart = ({sender, context}) => {\n    console.log('Resizedragstart')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onResizedragstart={this.onResizedragstart}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Rightchange')\">onRightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Rightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onRightchange = ({sender, value, oldValue}) => {\n    console.log('Rightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onRightchange={this.onRightchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Scrollablechange')\">onScrollablechange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Scrollablechange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onScrollablechange = ({sender, value, oldValue}) => {\n    console.log('Scrollablechange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onScrollablechange={this.onScrollablechange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Show')\">onShow = ({sender})=> {);</div>\n<pre id=\"Show\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onShow = ({sender}) => {\n    console.log('Show')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onShow={this.onShow}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Submit')\">onSubmit = ({sender, result, e})=> {);</div>\n<pre id=\"Submit\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onSubmit = ({sender, result, e}) => {\n    console.log('Submit')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onSubmit={this.onSubmit}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Tofront')\">onTofront = ({sender})=> {);</div>\n<pre id=\"Tofront\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onTofront = ({sender}) => {\n    console.log('Tofront')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onTofront={this.onTofront}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Topchange')\">onTopchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Topchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onTopchange = ({sender, value, oldValue}) => {\n    console.log('Topchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onTopchange={this.onTopchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Updatedata')\">onUpdatedata = ({sender, newData})=> {);</div>\n<pre id=\"Updatedata\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onUpdatedata = ({sender, newData}) => {\n    console.log('Updatedata')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onUpdatedata={this.onUpdatedata}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Widthchange')\">onWidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Widthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onWidthchange = ({sender, value, oldValue}) => {\n    console.log('Widthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtPivotconfigform onWidthchange={this.onWidthchange}&gt;&lt;/ExtPivotconfigform&gt;\n    )\n  }\n}\n</pre>\n",
+ "propertyString": "\n  <div class=\"name\" onclick=\"toggleIt('cfg','activeChildTabIndex')\">activeChildTabIndex</div>\n  <pre id=\"activeChildTabIndex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform activeChildTabIndex=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','activeItem')\">activeItem</div>\n  <pre id=\"activeItem\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform activeItem=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','alignSelf')\">alignSelf</div>\n  <pre id=\"alignSelf\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform alignSelf=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','allowFocusingDisabledChildren')\">allowFocusingDisabledChildren</div>\n  <pre id=\"allowFocusingDisabledChildren\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform allowFocusingDisabledChildren=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','alwaysOnTop')\">alwaysOnTop</div>\n  <pre id=\"alwaysOnTop\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform alwaysOnTop=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','anchor')\">anchor</div>\n  <pre id=\"anchor\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform anchor=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','anchorPosition')\">anchorPosition</div>\n  <pre id=\"anchorPosition\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform anchorPosition=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','api')\">api</div>\n  <pre id=\"api\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform api=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaAttributes')\">ariaAttributes</div>\n  <pre id=\"ariaAttributes\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform ariaAttributes=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaDescribedBy')\">ariaDescribedBy</div>\n  <pre id=\"ariaDescribedBy\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform ariaDescribedBy=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaLabel')\">ariaLabel</div>\n  <pre id=\"ariaLabel\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform ariaLabel=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaLabelledBy')\">ariaLabelledBy</div>\n  <pre id=\"ariaLabelledBy\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform ariaLabelledBy=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','autoDestroy')\">autoDestroy</div>\n  <pre id=\"autoDestroy\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform autoDestroy=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','autoSize')\">autoSize</div>\n  <pre id=\"autoSize\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform autoSize=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','axisLock')\">axisLock</div>\n  <pre id=\"axisLock\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform axisLock=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','baseParams')\">baseParams</div>\n  <pre id=\"baseParams\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform baseParams=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bbar')\">bbar</div>\n  <pre id=\"bbar\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bbar=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bind')\">bind</div>\n  <pre id=\"bind\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bind=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bodyBorder')\">bodyBorder</div>\n  <pre id=\"bodyBorder\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bodyBorder=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bodyCls')\">bodyCls</div>\n  <pre id=\"bodyCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bodyCls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bodyPadding')\">bodyPadding</div>\n  <pre id=\"bodyPadding\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bodyPadding=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bodyStyle')\">bodyStyle</div>\n  <pre id=\"bodyStyle\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bodyStyle=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','border')\">border</div>\n  <pre id=\"border\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform border=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bottom')\">bottom</div>\n  <pre id=\"bottom\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bottom=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bubbleDirty')\">bubbleDirty</div>\n  <pre id=\"bubbleDirty\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform bubbleDirty=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','buttonAlign')\">buttonAlign</div>\n  <pre id=\"buttonAlign\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform buttonAlign=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','buttons')\">buttons</div>\n  <pre id=\"buttons\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform buttons=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','buttonToolbar')\">buttonToolbar</div>\n  <pre id=\"buttonToolbar\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform buttonToolbar=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','cardSwitchAnimation')\">cardSwitchAnimation</div>\n  <pre id=\"cardSwitchAnimation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform cardSwitchAnimation=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','centered')\">centered</div>\n  <pre id=\"centered\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform centered=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','closable')\">closable</div>\n  <pre id=\"closable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform closable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','closeAction')\">closeAction</div>\n  <pre id=\"closeAction\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform closeAction=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','closeToolText')\">closeToolText</div>\n  <pre id=\"closeToolText\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform closeToolText=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','cls')\">cls</div>\n  <pre id=\"cls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform cls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','collapsed')\">collapsed</div>\n  <pre id=\"collapsed\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform collapsed=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','collapsible')\">collapsible</div>\n  <pre id=\"collapsible\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform collapsible=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','constrainAlign')\">constrainAlign</div>\n  <pre id=\"constrainAlign\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform constrainAlign=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','contentEl')\">contentEl</div>\n  <pre id=\"contentEl\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform contentEl=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','control')\">control</div>\n  <pre id=\"control\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform control=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','controller')\">controller</div>\n  <pre id=\"controller\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform controller=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','data')\">data</div>\n  <pre id=\"data\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform data=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','defaultFocus')\">defaultFocus</div>\n  <pre id=\"defaultFocus\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform defaultFocus=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','defaultListenerScope')\">defaultListenerScope</div>\n  <pre id=\"defaultListenerScope\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform defaultListenerScope=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','defaults')\">defaults</div>\n  <pre id=\"defaults\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform defaults=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','defaultToolWeights')\">defaultToolWeights</div>\n  <pre id=\"defaultToolWeights\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform defaultToolWeights=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','defaultType')\">defaultType</div>\n  <pre id=\"defaultType\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform defaultType=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','dirty')\">dirty</div>\n  <pre id=\"dirty\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform dirty=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','disabled')\">disabled</div>\n  <pre id=\"disabled\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform disabled=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','displayed')\">displayed</div>\n  <pre id=\"displayed\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform displayed=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','docked')\">docked</div>\n  <pre id=\"docked\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform docked=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','draggable')\">draggable</div>\n  <pre id=\"draggable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform draggable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','enableSubmissionForm')\">enableSubmissionForm</div>\n  <pre id=\"enableSubmissionForm\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform enableSubmissionForm=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','enctype')\">enctype</div>\n  <pre id=\"enctype\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform enctype=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','undefined')\">undefined</div>\n  <pre id=\"undefined\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform undefined=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','undefined')\">undefined</div>\n  <pre id=\"undefined\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform undefined=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','undefined')\">undefined</div>\n  <pre id=\"undefined\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform undefined=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','fieldDefaults')\">fieldDefaults</div>\n  <pre id=\"fieldDefaults\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform fieldDefaults=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','fieldSeparators')\">fieldSeparators</div>\n  <pre id=\"fieldSeparators\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform fieldSeparators=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','flex')\">flex</div>\n  <pre id=\"flex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform flex=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','floated')\">floated</div>\n  <pre id=\"floated\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform floated=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','focusableContainer')\">focusableContainer</div>\n  <pre id=\"focusableContainer\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform focusableContainer=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','focusCls')\">focusCls</div>\n  <pre id=\"focusCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform focusCls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','fullscreen')\">fullscreen</div>\n  <pre id=\"fullscreen\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform fullscreen=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','header')\">header</div>\n  <pre id=\"header\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform header=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','headerPosition')\">headerPosition</div>\n  <pre id=\"headerPosition\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform headerPosition=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','height')\">height</div>\n  <pre id=\"height\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform height=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hidden')\">hidden</div>\n  <pre id=\"hidden\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform hidden=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hideAnimation')\">hideAnimation</div>\n  <pre id=\"hideAnimation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform hideAnimation=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hideMode')\">hideMode</div>\n  <pre id=\"hideMode\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform hideMode=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hideOnMaskTap')\">hideOnMaskTap</div>\n  <pre id=\"hideOnMaskTap\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform hideOnMaskTap=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','html')\">html</div>\n  <pre id=\"html\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform html=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','icon')\">icon</div>\n  <pre id=\"icon\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform icon=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','iconAlign')\">iconAlign</div>\n  <pre id=\"iconAlign\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform iconAlign=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','iconCls')\">iconCls</div>\n  <pre id=\"iconCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform iconCls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','id')\">id</div>\n  <pre id=\"id\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform id=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','inactiveChildTabIndex')\">inactiveChildTabIndex</div>\n  <pre id=\"inactiveChildTabIndex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform inactiveChildTabIndex=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','innerCls')\">innerCls</div>\n  <pre id=\"innerCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform innerCls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','inputBorders')\">inputBorders</div>\n  <pre id=\"inputBorders\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform inputBorders=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','instanceCls')\">instanceCls</div>\n  <pre id=\"instanceCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform instanceCls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','itemId')\">itemId</div>\n  <pre id=\"itemId\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform itemId=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','items')\">items</div>\n  <pre id=\"items\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform items=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','jsonSubmit')\">jsonSubmit</div>\n  <pre id=\"jsonSubmit\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform jsonSubmit=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','keyMap')\">keyMap</div>\n  <pre id=\"keyMap\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform keyMap=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','keyMapEnabled')\">keyMapEnabled</div>\n  <pre id=\"keyMapEnabled\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform keyMapEnabled=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','keyMapTarget')\">keyMapTarget</div>\n  <pre id=\"keyMapTarget\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform keyMapTarget=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','layout')\">layout</div>\n  <pre id=\"layout\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform layout=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','lbar')\">lbar</div>\n  <pre id=\"lbar\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform lbar=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','left')\">left</div>\n  <pre id=\"left\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform left=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','listeners')\">listeners</div>\n  <pre id=\"listeners\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform listeners=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','manageBorders')\">manageBorders</div>\n  <pre id=\"manageBorders\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform manageBorders=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','margin')\">margin</div>\n  <pre id=\"margin\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform margin=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','masked')\">masked</div>\n  <pre id=\"masked\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform masked=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','maxHeight')\">maxHeight</div>\n  <pre id=\"maxHeight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform maxHeight=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','maxWidth')\">maxWidth</div>\n  <pre id=\"maxWidth\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform maxWidth=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','method')\">method</div>\n  <pre id=\"method\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform method=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','minButtonWidth')\">minButtonWidth</div>\n  <pre id=\"minButtonWidth\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform minButtonWidth=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','minHeight')\">minHeight</div>\n  <pre id=\"minHeight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform minHeight=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','minWidth')\">minWidth</div>\n  <pre id=\"minWidth\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform minWidth=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','modal')\">modal</div>\n  <pre id=\"modal\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform modal=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','modelValidation')\">modelValidation</div>\n  <pre id=\"modelValidation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform modelValidation=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','multipartDetection')\">multipartDetection</div>\n  <pre id=\"multipartDetection\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform multipartDetection=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','name')\">name</div>\n  <pre id=\"name\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform name=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','nameable')\">nameable</div>\n  <pre id=\"nameable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform nameable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','nameHolder')\">nameHolder</div>\n  <pre id=\"nameHolder\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform nameHolder=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','padding')\">padding</div>\n  <pre id=\"padding\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform padding=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','paramOrder')\">paramOrder</div>\n  <pre id=\"paramOrder\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform paramOrder=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','paramsAsHash')\">paramsAsHash</div>\n  <pre id=\"paramsAsHash\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform paramsAsHash=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','plugins')\">plugins</div>\n  <pre id=\"plugins\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform plugins=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','publishes')\">publishes</div>\n  <pre id=\"publishes\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform publishes=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','rbar')\">rbar</div>\n  <pre id=\"rbar\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform rbar=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','record')\">record</div>\n  <pre id=\"record\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform record=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','reference')\">reference</div>\n  <pre id=\"reference\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform reference=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','referenceHolder')\">referenceHolder</div>\n  <pre id=\"referenceHolder\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform referenceHolder=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','relative')\">relative</div>\n  <pre id=\"relative\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform relative=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','renderTo')\">renderTo</div>\n  <pre id=\"renderTo\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform renderTo=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','resetFocusPosition')\">resetFocusPosition</div>\n  <pre id=\"resetFocusPosition\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform resetFocusPosition=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','resizable')\">resizable</div>\n  <pre id=\"resizable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform resizable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','right')\">right</div>\n  <pre id=\"right\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform right=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ripple')\">ripple</div>\n  <pre id=\"ripple\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform ripple=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','scrollable')\">scrollable</div>\n  <pre id=\"scrollable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform scrollable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','session')\">session</div>\n  <pre id=\"session\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform session=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','shadow')\">shadow</div>\n  <pre id=\"shadow\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform shadow=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','shareableName')\">shareableName</div>\n  <pre id=\"shareableName\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform shareableName=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','shim')\">shim</div>\n  <pre id=\"shim\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform shim=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','showAnimation')\">showAnimation</div>\n  <pre id=\"showAnimation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform showAnimation=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','standardButtons')\">standardButtons</div>\n  <pre id=\"standardButtons\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform standardButtons=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','standardSubmit')\">standardSubmit</div>\n  <pre id=\"standardSubmit\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform standardSubmit=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','stateful')\">stateful</div>\n  <pre id=\"stateful\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform stateful=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','statefulDefaults')\">statefulDefaults</div>\n  <pre id=\"statefulDefaults\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform statefulDefaults=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','stateId')\">stateId</div>\n  <pre id=\"stateId\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform stateId=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','style')\">style</div>\n  <pre id=\"style\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform style=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','submitOnAction')\">submitOnAction</div>\n  <pre id=\"submitOnAction\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform submitOnAction=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tabIndex')\">tabIndex</div>\n  <pre id=\"tabIndex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform tabIndex=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tbar')\">tbar</div>\n  <pre id=\"tbar\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform tbar=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','timeout')\">timeout</div>\n  <pre id=\"timeout\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform timeout=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','title')\">title</div>\n  <pre id=\"title\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform title=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','titleAlign')\">titleAlign</div>\n  <pre id=\"titleAlign\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform titleAlign=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','titleCollapse')\">titleCollapse</div>\n  <pre id=\"titleCollapse\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform titleCollapse=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','toFrontOnShow')\">toFrontOnShow</div>\n  <pre id=\"toFrontOnShow\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform toFrontOnShow=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','toolDefaults')\">toolDefaults</div>\n  <pre id=\"toolDefaults\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform toolDefaults=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tools')\">tools</div>\n  <pre id=\"tools\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform tools=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tooltip')\">tooltip</div>\n  <pre id=\"tooltip\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform tooltip=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','top')\">top</div>\n  <pre id=\"top\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform top=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','touchAction')\">touchAction</div>\n  <pre id=\"touchAction\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform touchAction=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tpl')\">tpl</div>\n  <pre id=\"tpl\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform tpl=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tplWriteMode')\">tplWriteMode</div>\n  <pre id=\"tplWriteMode\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform tplWriteMode=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','trackResetOnLoad')\">trackResetOnLoad</div>\n  <pre id=\"trackResetOnLoad\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform trackResetOnLoad=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','translatable')\">translatable</div>\n  <pre id=\"translatable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform translatable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','twoWayBindable')\">twoWayBindable</div>\n  <pre id=\"twoWayBindable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform twoWayBindable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ui')\">ui</div>\n  <pre id=\"ui\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform ui=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','url')\">url</div>\n  <pre id=\"url\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform url=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','userCls')\">userCls</div>\n  <pre id=\"userCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform userCls=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','userSelectable')\">userSelectable</div>\n  <pre id=\"userSelectable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform userSelectable=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','viewModel')\">viewModel</div>\n  <pre id=\"viewModel\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform viewModel=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','weight')\">weight</div>\n  <pre id=\"weight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform weight=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','weighted')\">weighted</div>\n  <pre id=\"weighted\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform weighted=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','width')\">width</div>\n  <pre id=\"width\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform width=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','x')\">x</div>\n  <pre id=\"x\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform x=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','xtype')\">xtype</div>\n  <pre id=\"xtype\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform xtype=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','y')\">y</div>\n  <pre id=\"y\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform y=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','zIndex')\">zIndex</div>\n  <pre id=\"zIndex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtPivotconfigform } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtPivotconfigform zIndex=''&gt;&lt;/ExtPivotconfigform&gt;\n      )\n    }\n  }\n  </pre>\n  ",
+ "first": "",
+ "text": "his class implements the form that allows changing the field settings.\n"
+}

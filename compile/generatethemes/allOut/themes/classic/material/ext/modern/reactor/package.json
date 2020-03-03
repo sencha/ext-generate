@@ -4,7 +4,7 @@
   "ext-name": "@sencha/ext-reactor",
   "SenchaExtName": "@sencha/ext-reactor",
   "SenchaExtReactName": "@sencha/ext-react",
-  "version": "7.2.0.56",
+  "version": "7.2.0.57",
   "description": "This package contains all classes related to the Ext.reactor namespace",
   "keywords": [
     "sencha",

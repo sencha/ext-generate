@@ -1,0 +1,1412 @@
+[
+ {
+  "text": "Actionsheet",
+  "xtype": "actionsheet",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Audio",
+  "xtype": "audio",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Breadcrumbbar",
+  "xtype": "breadcrumbbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Button",
+  "xtype": "button",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_event",
+  "xtype": "calendar-event",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_form_add",
+  "xtype": "calendar-form-add",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_calendar_picker",
+  "xtype": "calendar-calendar-picker",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_form_edit",
+  "xtype": "calendar-form-edit",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_timefield",
+  "xtype": "calendar-timefield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_daysheader",
+  "xtype": "calendar-daysheader",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_weeksheader",
+  "xtype": "calendar-weeksheader",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_list",
+  "xtype": "calendar-list",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_day",
+  "xtype": "calendar-day",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_days",
+  "xtype": "calendar-days",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_month",
+  "xtype": "calendar-month",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar",
+  "xtype": "calendar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_week",
+  "xtype": "calendar-week",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_weeks",
+  "xtype": "calendar-weeks",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_dayview",
+  "xtype": "calendar-dayview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_daysview",
+  "xtype": "calendar-daysview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_monthview",
+  "xtype": "calendar-monthview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_multiview",
+  "xtype": "calendar-multiview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_weekview",
+  "xtype": "calendar-weekview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Calendar_weeksview",
+  "xtype": "calendar-weeksview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Carousel",
+  "xtype": "carousel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Cartesian",
+  "xtype": "cartesian",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Chart",
+  "xtype": "chart",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Legend",
+  "xtype": "legend",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Chartnavigator",
+  "xtype": "chartnavigator",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Polar",
+  "xtype": "polar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Spacefilling",
+  "xtype": "spacefilling",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Chip",
+  "xtype": "chip",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Component",
+  "xtype": "component",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Container",
+  "xtype": "container",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_canvas",
+  "xtype": "d3-canvas",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_heatmap",
+  "xtype": "d3-heatmap",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_pack",
+  "xtype": "d3-pack",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_partition",
+  "xtype": "d3-partition",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_sunburst",
+  "xtype": "d3-sunburst",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_tree",
+  "xtype": "d3-tree",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_horizontal_tree",
+  "xtype": "d3-horizontal-tree",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_treemap",
+  "xtype": "d3-treemap",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3_svg",
+  "xtype": "d3-svg",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "D3",
+  "xtype": "d3",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Boundlist",
+  "xtype": "boundlist",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Chipview",
+  "xtype": "chipview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Componentdataview",
+  "xtype": "componentdataview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Dataitem",
+  "xtype": "dataitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Dataview",
+  "xtype": "dataview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Emptytext",
+  "xtype": "emptytext",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Indexbar",
+  "xtype": "indexbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Itemheader",
+  "xtype": "itemheader",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "List",
+  "xtype": "list",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Listitem",
+  "xtype": "listitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Listitemplaceholder",
+  "xtype": "listitemplaceholder",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Listswiperitem",
+  "xtype": "listswiperitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Listswiperstepper",
+  "xtype": "listswiperstepper",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Nestedlist",
+  "xtype": "nestedlist",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pullrefreshbar",
+  "xtype": "pullrefreshbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pullrefreshspinner",
+  "xtype": "pullrefreshspinner",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Simplelistitem",
+  "xtype": "simplelistitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Dialog",
+  "xtype": "dialog",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Window",
+  "xtype": "window",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Draw",
+  "xtype": "draw",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Surface",
+  "xtype": "surface",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Editor",
+  "xtype": "editor",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Checkbox",
+  "xtype": "checkbox",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Checkboxfield",
+  "xtype": "checkboxfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Checkboxgroup",
+  "xtype": "checkboxgroup",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Combobox",
+  "xtype": "combobox",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Comboboxfield",
+  "xtype": "comboboxfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Containerfield",
+  "xtype": "containerfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Fieldcontainer",
+  "xtype": "fieldcontainer",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datefield",
+  "xtype": "datefield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datepickerfield",
+  "xtype": "datepickerfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datepickernativefield",
+  "xtype": "datepickernativefield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Displayfield",
+  "xtype": "displayfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Emailfield",
+  "xtype": "emailfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Field",
+  "xtype": "field",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Groupcontainer",
+  "xtype": "groupcontainer",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Filefield",
+  "xtype": "filefield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Filebutton",
+  "xtype": "filebutton",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Hiddenfield",
+  "xtype": "hiddenfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Inputfield",
+  "xtype": "inputfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Numberfield",
+  "xtype": "numberfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Fieldpanel",
+  "xtype": "fieldpanel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Passwordfield",
+  "xtype": "passwordfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pickerfield",
+  "xtype": "pickerfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Radio",
+  "xtype": "radio",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Radiofield",
+  "xtype": "radiofield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Radiogroup",
+  "xtype": "radiogroup",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Searchfield",
+  "xtype": "searchfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Selectfield",
+  "xtype": "selectfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Singlesliderfield",
+  "xtype": "singlesliderfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sliderfield",
+  "xtype": "sliderfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Spinnerfield",
+  "xtype": "spinnerfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Textfield",
+  "xtype": "textfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Textareafield",
+  "xtype": "textareafield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Timefield",
+  "xtype": "timefield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Togglefield",
+  "xtype": "togglefield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Cleartrigger",
+  "xtype": "cleartrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datetrigger",
+  "xtype": "datetrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Expandtrigger",
+  "xtype": "expandtrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Menutrigger",
+  "xtype": "menutrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Revealtrigger",
+  "xtype": "revealtrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Spindowntrigger",
+  "xtype": "spindowntrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Spinuptrigger",
+  "xtype": "spinuptrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Timetrigger",
+  "xtype": "timetrigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Trigger",
+  "xtype": "trigger",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Urlfield",
+  "xtype": "urlfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Fieldset",
+  "xtype": "fieldset",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Formpanel",
+  "xtype": "formpanel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Froalaeditor",
+  "xtype": "froalaeditor",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Froalaeditorfield",
+  "xtype": "froalaeditorfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridcellbase",
+  "xtype": "gridcellbase",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Booleancell",
+  "xtype": "booleancell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridcell",
+  "xtype": "gridcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Checkcell",
+  "xtype": "checkcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datecell",
+  "xtype": "datecell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Numbercell",
+  "xtype": "numbercell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Rownumberercell",
+  "xtype": "rownumberercell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Textcell",
+  "xtype": "textcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Treecell",
+  "xtype": "treecell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Widgetcell",
+  "xtype": "widgetcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Celleditor",
+  "xtype": "celleditor",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Booleancolumn",
+  "xtype": "booleancolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Checkcolumn",
+  "xtype": "checkcolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridcolumn",
+  "xtype": "gridcolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Column",
+  "xtype": "column",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Templatecolumn",
+  "xtype": "templatecolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datecolumn",
+  "xtype": "datecolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Dragcolumn",
+  "xtype": "dragcolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Numbercolumn",
+  "xtype": "numbercolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Rownumberer",
+  "xtype": "rownumberer",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Selectioncolumn",
+  "xtype": "selectioncolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Textcolumn",
+  "xtype": "textcolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Treecolumn",
+  "xtype": "treecolumn",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Grid",
+  "xtype": "grid",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Headercontainer",
+  "xtype": "headercontainer",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Lockedgrid",
+  "xtype": "lockedgrid",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Lockedgridregion",
+  "xtype": "lockedgridregion",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridcolumnsmenu",
+  "xtype": "gridcolumnsmenu",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridgroupbythismenuitem",
+  "xtype": "gridgroupbythismenuitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridshowingroupsmenuitem",
+  "xtype": "gridshowingroupsmenuitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridsortascmenuitem",
+  "xtype": "gridsortascmenuitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridsortdescmenuitem",
+  "xtype": "gridsortdescmenuitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pagingtoolbar",
+  "xtype": "pagingtoolbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridrow",
+  "xtype": "gridrow",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Rowbody",
+  "xtype": "rowbody",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Roweditorbar",
+  "xtype": "roweditorbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Roweditorcell",
+  "xtype": "roweditorcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Roweditor",
+  "xtype": "roweditor",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Roweditorgap",
+  "xtype": "roweditorgap",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Rowheader",
+  "xtype": "rowheader",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gridsummaryrow",
+  "xtype": "gridsummaryrow",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tree",
+  "xtype": "tree",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Image",
+  "xtype": "image",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Img",
+  "xtype": "img",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Indicator",
+  "xtype": "indicator",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Label",
+  "xtype": "label",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Treelist",
+  "xtype": "treelist",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Treelistitem",
+  "xtype": "treelistitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Loadmask",
+  "xtype": "loadmask",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Mask",
+  "xtype": "mask",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Media",
+  "xtype": "media",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Menucheckitem",
+  "xtype": "menucheckitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Menuitem",
+  "xtype": "menuitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Menu",
+  "xtype": "menu",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Menuradioitem",
+  "xtype": "menuradioitem",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Menuseparator",
+  "xtype": "menuseparator",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Messagebox",
+  "xtype": "messagebox",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Navigationview",
+  "xtype": "navigationview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Panel",
+  "xtype": "panel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Accordion",
+  "xtype": "accordion",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datepanel",
+  "xtype": "datepanel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datetitle",
+  "xtype": "datetitle",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Panelheader",
+  "xtype": "panelheader",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Timepanel",
+  "xtype": "timepanel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Paneltitle",
+  "xtype": "paneltitle",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Yearpicker",
+  "xtype": "yearpicker",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Datepicker",
+  "xtype": "datepicker",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Picker",
+  "xtype": "picker",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Selectpicker",
+  "xtype": "selectpicker",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pickerslot",
+  "xtype": "pickerslot",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tabletpicker",
+  "xtype": "tabletpicker",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotgridcell",
+  "xtype": "pivotgridcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotgridgroupcell",
+  "xtype": "pivotgridgroupcell",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotd3container",
+  "xtype": "pivotd3container",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotheatmap",
+  "xtype": "pivotheatmap",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivottreemap",
+  "xtype": "pivottreemap",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotgrid",
+  "xtype": "pivotgrid",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotconfigfield",
+  "xtype": "pivotconfigfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotconfigcontainer",
+  "xtype": "pivotconfigcontainer",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotconfigform",
+  "xtype": "pivotconfigform",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotconfigpanel",
+  "xtype": "pivotconfigpanel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotsettings",
+  "xtype": "pivotsettings",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotrangeeditor",
+  "xtype": "pivotrangeeditor",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Pivotgridrow",
+  "xtype": "pivotgridrow",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Progress",
+  "xtype": "progress",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Progressbarwidget",
+  "xtype": "progressbarwidget",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Segmentedbutton",
+  "xtype": "segmentedbutton",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sheet",
+  "xtype": "sheet",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Slider",
+  "xtype": "slider",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Thumb",
+  "xtype": "thumb",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Toggleslider",
+  "xtype": "toggleslider",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Spacer",
+  "xtype": "spacer",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklinebar",
+  "xtype": "sparklinebar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparkline",
+  "xtype": "sparkline",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklinebox",
+  "xtype": "sparklinebox",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklinebullet",
+  "xtype": "sparklinebullet",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklinediscrete",
+  "xtype": "sparklinediscrete",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklineline",
+  "xtype": "sparklineline",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklinepie",
+  "xtype": "sparklinepie",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Sparklinetristate",
+  "xtype": "sparklinetristate",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Splitbutton",
+  "xtype": "splitbutton",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tabbar",
+  "xtype": "tabbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tabpanel",
+  "xtype": "tabpanel",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tab",
+  "xtype": "tab",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tooltip",
+  "xtype": "tooltip",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Title",
+  "xtype": "title",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Titlebar",
+  "xtype": "titlebar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Tool",
+  "xtype": "tool",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Paneltool",
+  "xtype": "paneltool",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Toolbar",
+  "xtype": "toolbar",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Colorbutton",
+  "xtype": "colorbutton",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Colorpickercolorpreview",
+  "xtype": "colorpickercolorpreview",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Colorfield",
+  "xtype": "colorfield",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Colorselector",
+  "xtype": "colorselector",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Gauge",
+  "xtype": "gauge",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Map",
+  "xtype": "map",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Google_map",
+  "xtype": "google-map",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Rating",
+  "xtype": "rating",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Video",
+  "xtype": "video",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Viewport",
+  "xtype": "viewport",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ },
+ {
+  "text": "Widget",
+  "xtype": "widget",
+  "iconCls": "x-fa fa-cog",
+  "leaf": true
+ }
+]

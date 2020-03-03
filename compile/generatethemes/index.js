@@ -67,7 +67,7 @@ function getSenchaGenerateApp(toolkit, appName) {
   var appPath = `./${appName}`
   var toolkitParm = `-${toolkit}`
   var themeParm = `theme-${appName}`
-  return ['-sdk', '/Volumes/BOOTCAMP/aaExt/ext-7.2.0.56', 'generate', 'app', '-theme', themeParm, toolkitParm, appName, appPath]
+  return ['-sdk', '/Volumes/BOOTCAMP/aaExt/ext-7.2.0.57', 'generate', 'app', '-theme', themeParm, toolkitParm, appName, appPath]
 }
 
 function modifyAppJson(themeFolder) {

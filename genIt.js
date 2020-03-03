@@ -55,10 +55,12 @@ function doCreateFolders() {
   }
 
   if (doDoc == true) {
+    rimraf.sync(`${docPackageFolder}`);
+    mkdirp.sync(`${docPackageFolder}`);
     // docFolder = outputFolder + 'doc/';
     // docStagingFolder = outputFolder + 'docStaging/';
-    mkdirp.sync(docFolder);
-    mkdirp.sync(docStagingFolder);
+    //mkdirp.sync(docFolder);
+    //mkdirp.sync(docStagingFolder);
   }
 }
 
@@ -90,7 +92,7 @@ function doLaunch(item) {
     var aliases = []
     item.xtypes = []
     if (item.alias != undefined) {
-      if (item.alias.substring(0, 6) == 'widget') {
+      //if (item.alias.substring(0, 6) == 'widget') {
         aliases = item.alias.split(",")
         for (alias = 0; alias < aliases.length; alias++) {
           if (aliases[alias].substring(0, 6) == 'widget') {
@@ -98,7 +100,7 @@ function doLaunch(item) {
             item.xtypes.push(xtypelocal)
           }
         }
-      }
+      //}
     }
 
     if (info.toolkit == 'classic') {
@@ -121,6 +123,12 @@ function doLaunch(item) {
 }
 
 function oneItem(item) {
+  // if (item.alias == 'widget.container') {
+  //   console.log('*****')
+  //   console.log(item)
+  //   console.log('*****')
+  // }
+
   var names = item.names;
   var xtypes = item.xtypes;
 
@@ -237,87 +245,28 @@ function oneItem(item) {
         }
 
         if (doDoc == true) {
-          //docs
-          var ewcProperties = ''
-          info.propertyObj.propertiesArray.forEach(property => {
-              var Text = ''
-              if (property.text != undefined) {
-                  Text = property.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-              }
-              property.ewc = `${property.name}<br/>${Text}<br/><br/>`;
-              ewcProperties = ewcProperties + property.ewc + '\n';
-          });
-
-          var ewcEvents = ''
-          info.eventObj.eventsArray.forEach(event => {
-              var parameters = ''
-              event.parameters.forEach(parameter => {
-                  if (parameter != undefined) {
-                      parameters = parameters + parameter + ', '
-                  }
-              })
-              const EventName = event.name.charAt(0).toUpperCase() + event.name.slice(1);
-              const Parameters = parameters.replace(/,\s*$/, "");
-              event.ewc = `on${EventName} = ( {detail: { ${Parameters} }} ) => {}<br/>`;
-              ewcEvents = ewcEvents + event.ewc + '\n'
-          });
-
-          var n = 0
-          if (item.text != undefined) {
-              n = item.text.indexOf(". ");
-          }
-          var text200 = ''; try {text200 = item.text.substring(0, n+1)}catch(e) {}
-          var Xtype = xtypes[j].charAt(0).toUpperCase() + xtypes[j].slice(1).replace(/-/g,'_');
-          //var xtype = xtypes[j];
-
-          var values3 = {
-              ewcEvents : ewcEvents,
-              ewcProperties : ewcProperties,
-              propertiesDocs: info.propertyObj.propertiesDocs,
-              methodsDocs: info.methodObj.methodsDocs,
-              eventsDocs: info.eventObj.eventsDocs,
-              //sPROPERTIESGETSET: sGETSET,
-              sMETHODS: info.eventObj.sMETHODS,
-              sPROPERTIES: info.propertyObj.sPROPERTIES,
-              //sPROPERTIESOBJECT: sPROPERTIESOBJECT,
-              sEVENTS: info.eventObj.sEVENTS,
-              sEVENTNAMES: info.eventObj.sEVENTNAMES,
-              //sEVENTSGETSET: sEVENTSGETSET,
-              classname: classname,
-              folder: folder,
-              Xtype: Xtype,
-              xtype: xtypes[j],
-              alias: item.alias,
-              extend:item.extend,
-              extenders:item.extenders,
-              mixed:item.mixed,
-              mixins:item.mixins,
-              name:item.name,
-              requires:item.requires,
-              text:item.text,
-              text200: text200,
-              items:item.items,
-              src:item.src
-          }
-
-          docs.push({
-              xtype: xtypes[j],
-              hash: xtypes[j],
-              leaf: 'true',
-              iconCls: 'x-fa fa-map',
-              desc: item.text,
-              text: xtypes[j],
-              properties: info.propertyObj.propertiesArray,
-              methods: info.methodObj.methodsArray,
-              events: info.eventObj.eventsArray,
-          })
-          writeTemplateFile(`${templateFolder}docs/docdetail.tpl`, `${docStagingFolder}ext-${xtypes[j]}.doc.html`, values3)
-          writeTemplateFile(`${templateFolder}docs/docdata.tpl`, `${docStagingFolder}ext-${xtypes[j]}.doc.js`, {props: info.propertyObj.propNames.toString()})
-          //docs
+          require("./docs").doDocStuff(xtypes[j], info, item);
         }
 
       }
   }
+
+
+
+  //mjg
+  if (doDoc == true) {
+    all.push({
+      xtypes: item.xtypes,
+      names: item.names,
+      alias: item.alias,
+      extends: item.extends,
+      alternateClassNames: item.alternateClassNames,
+      eventsArrayForDoc: item.eventsArrayForDoc
+    })
+  }
+
+
+
 }
 
 function doPostLaunch() {
@@ -655,7 +604,35 @@ function shouldProcessIt(o) {
   }
 
   if (info.toolkit == 'modern') {
-    if (o.extended == undefined) {
+
+    var localxtypes = [];
+    if (o.alias != undefined) {
+      //if (item.alias.substring(0, 6) == 'widget') {
+        var aliases = o.alias.split(",")
+        for (alias = 0; alias < aliases.length; alias++) {
+          if (aliases[alias].substring(0, 6) == 'widget') {
+            var xtypelocal = aliases[alias].substring(7)
+            localxtypes.push(xtypelocal)
+          }
+        //}
+      }
+    }
+
+    if (localxtypes.length == 0) {
+      processIt = false;
+      return processIt;
+    }
+
+
+
+
+
+
+    if (o.alias == undefined) {
+      processIt = false;
+    }
+
+    else if (o.extended == undefined) {
       processIt = false;
     }
     else {
@@ -702,6 +679,18 @@ function doEnd() {
   }
   if(doReact == true) {
     console.log(`https://sencha.myget.org/feed/early-adopter/package/npm/%40sencha/ext-react${info.toolkitshown}${info.bundle}/${info.version}`)
+  }
+  //mjg
+  if(doDoc == true) {
+    all.forEach(a => {
+      //if (a.alternateClassNames != undefined) {
+        //console.log(a.eventsArrayForDoc)
+        //console.log(a.alias + '     ' + a.extends + '     ' + a.names)
+
+        //console.log(a.alias + '     ' + a.names + '     ' + a.alternateClassNames)
+        //console.log(a.names.length + '    ' + a.alternateClassNames.length)
+      //}
+    })
   }
   console.log('\n')
 }

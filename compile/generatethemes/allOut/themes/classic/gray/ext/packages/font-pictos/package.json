@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-font-pictos",
     "SenchaExtName": "@sencha/ext-font-pictos",
     "SenchaExtReactName": "@sencha/ext-react-font-pictos",
-    "version": "7.2.0.56",
+    "version": "7.2.0.57",
     "sencha": {
         "name": "font-pictos",
         "namespace": "Ext",

@@ -145,7 +145,7 @@ Ext.define('Ext.dataview.plugin.SortableList', {
         list.setGaps(gaps);
     },
 
-    onDragEnd: function(source, info) {
+    onDragEnd: function(source, info, e) {
         var me = this,
             list = me.getList(),
             item = info.item,
@@ -173,12 +173,12 @@ Ext.define('Ext.dataview.plugin.SortableList', {
 
             store.insert(index, rec);
             index = store.indexOf(rec);
-
-            // Make sure that the dropped record is visible on smaller screens
-            list.ensureVisible(index).then(function() {
-                list.fireEvent('dragsort', list, list.mapToItem(rec), index);
-            });
+            list.fireEvent('dragsort', list, list.mapToItem(rec), index);
         }, me, { single: true });
+
+        // Since we are dragging inside the scroller we do not want this event to bubble up to the 
+        // scroller. This will cause the scroller to scroll and the list to 'jump'.
+        e.stopPropagation();
 
         pos = compareItem ? compareItem.$y0 : list.mapToItem(store.getAt(index - 1)).$y1;
 

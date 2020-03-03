@@ -1,0 +1,826 @@
+{
+ "title": "&lt;ExtSparklinediscrete&gt;&lt;/ExtSparklinediscrete&gt;",
+ "docProperties": [
+  {
+   "name": "alignSelf",
+   "text": "Specifies the self alignment of this widget in a box layout\n"
+  },
+  {
+   "name": "alwaysOnTop",
+   "text": "A flag indicating that this component should\nbe above its floated siblings.\n\nThis may be a positive number to prioritize the ordering of multiple visible always on\ntop components.\n\nThis may be set to a *negative* number to prioritize a component to the *bottom* of the\nz-index stack.\n"
+  },
+  {
+   "name": "ariaAttributes",
+   "text": "An object containing ARIA attributes to be set\non this Component's ARIA element. Use this to set the attributes that cannot be\ndetermined by the Component's state, such as `aria-live`, `aria-flowto`, etc.\n\n**Note** that this config is only meaningful at the Component rendering time,\nand setting it after that will do nothing.\n"
+  },
+  {
+   "name": "ariaDescribedBy",
+   "text": "DOM selector for a child element that is to be used\nas description for this Component, set in `aria-describedby` attribute.\nThe selector works the same way as {@link #cfg!ariaLabelledBy #ariaLabelledBy}.\n"
+  },
+  {
+   "name": "ariaLabel",
+   "text": "ARIA label for this Component. It is best to use\n{@link #cfg!ariaLabelledBy #ariaLabelledBy} option instead, because screen readers prefer\n`aria-labelledby` attribute to `aria-label`. {@link #cfg!ariaLabel #ariaLabel} and\n{@link #cfg!ariaLabelledBy #ariaLabelledBy} config options are mutually exclusive.\n"
+  },
+  {
+   "name": "ariaLabelledBy",
+   "text": "DOM selector for a child element that is to be used\nas label for this Component, set in `aria-labelledby` attribute.\nIf the selector is by `{@link #cfg!id #id}`, the label element can be any existing element,\nnot necessarily a child of the main Component element.\n\n{@link #cfg!ariaLabelledBy #ariaLabelledBy} and {@link #cfg!ariaLabel #ariaLabel} config options are\nmutually exclusive, and `{@link #cfg!ariaLabelledBy ariaLabelledBy}` has the higher precedence.\n"
+  },
+  {
+   "name": "axisLock",
+   "text": "If `true`, then, when {@link #method!showBy #showBy} or {@link #method!alignTo #alignTo} fallback on\nconstraint violation only takes place along the major align axis.\n\nThat is, if alignment `\"l-r\"` is being used, and `axisLock: true` is used,\nthen if constraints fail, only fallback to `\"r-l\"` is considered.\n"
+  },
+  {
+   "name": "bind",
+   "text": "Setting this config option adds or removes data bindings for other configs.\nFor example, to bind the `title` config:\n\n     var panel = Ext.create({\n         xtype: 'panel',\n         bind: {\n             title: 'Hello {user.name}'\n         }\n     });\n\nTo dynamically add bindings:\n\n     panel.setBind({\n         title: 'Greetings {user.name}!'\n     });\n\nTo remove bindings:\n\n     panel.setBind({\n         title: null\n     });\n\nThe bind expressions are presented to `{@link Ext.app.ViewModel#method!bind Ext.app.ViewModel#bind}`. The\n`ViewModel` instance is determined by `{@link #method!lookupViewModel lookupViewModel}`.\n\n**Note:** If  bind is passed as a string, it will use the\n{@link Ext.Component#property!defaultBindProperty Ext.Component#property-defaultBindProperty} for the binding.\n"
+  },
+  {
+   "name": "border",
+   "text": "Enables or disables bordering on this component.\nThe following values are accepted:\n\n- `null` or `true (default): Do nothing and allow the border to be specified\nby the theme.\n- `false`: suppress the default border provided by the theme.\n\nPlease note that enabling bordering via this config will not add a `border-color`\nor `border-style` CSS property to the component; you provide the `border-color`\nand `border-style` via CSS rule or {@link #cfg!style #style} configuration\n(if not already provide by the theme).\n\n## Using {@link #cfg!style #style}:\n\n    Ext.Viewport.add({\n        centered: true,\n        width: 100,\n        height: 100,\n\n        style: 'border: 1px solid blue;'\n        // ...\n    });\n\n## Using CSS:\n\n    Ext.Viewport.add({\n        centered: true,\n        width: 100,\n        height: 100,\n\n        cls: 'my-component'\n        // ...\n    });\n\nAnd your CSS file:\n\n    .my-component {\n        border: 1px solid red;\n    }\n"
+  },
+  {
+   "name": "bottom",
+   "text": "The absolute bottom position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "centered",
+   "text": "Configure this as `true` to have this Component centered within its Container.\nSetting this value to `true` will make this Component become 'positioned', which means\nit will no longer participate in the layout of the Container that it resides in.\n"
+  },
+  {
+   "name": "chartRangeClip",
+   "text": "If true then the y values supplied to plot will be clipped\nto fall between {@link #cfg!chartRangeMin #chartRangeMin} and {@link #cfg!chartRangeMax #chartRangeMax} - By default\nchartRangeMin/Max just ensure that the chart spans at least that range of values,\nbut does not constrain it.\n"
+  },
+  {
+   "name": "chartRangeMax",
+   "text": "The maximum value to use for the range of Y values\nof the chart - Defaults to the maximum value supplied.\n"
+  },
+  {
+   "name": "chartRangeMin",
+   "text": "The minimum value to use for the range of Y values\nof the chart - Defaults to the minimum value supplied.\n"
+  },
+  {
+   "name": "cls",
+   "text": "The CSS class to add to this widget's element, in\naddition to the {@link #property!baseCls #baseCls}. In many cases, this property will be specified\nby the derived widget class. See {@link #cfg!userCls #userCls} for adding additional CSS\nclasses to widget instances (such as items in a {@link Ext.Container}).\n"
+  },
+  {
+   "name": "constrainAlign",
+   "text": "A specification of the constraint to apply when {@link #method!showBy #showBy} or {@link #method!alignTo #alignTo}\nis called to align a {@link #cfg!floated #floated} or positioned component.\n\nDefaults to the parent container for *positioned* components (components\nwhich have their {@link #cfg!top}, {@link #cfg!right}, {@link #cfg!bottom} or\n{@link #cfg!left} set to move them out of their container's layout flow).\n\nDefaults to the viewport for {@link #cfg!floated #floated} components.\n\nMay be a {@link Ext.ComponentQuery} selector to find an ancestor\ncomponent to constrain within.\n\nMay be `false` to specify that constraining is not applied.\n\nYou may also specify an element, or a {@link Ext.util.Region}\n"
+  },
+  {
+   "name": "contentEl",
+   "text": "The configured element will automatically be added as the content of this\ncomponent. When you pass a string, we expect it to be an element id. If the\ncontent element is hidden, we will automatically show it.\n"
+  },
+  {
+   "name": "controller",
+   "text": "A string alias, a configuration object or an instance of a `ViewController` for\nthis container. Sample usage:\n\n    Ext.define('MyApp.UserController', {\n        alias: 'controller.user'\n    });\n\n    Ext.define('UserContainer', {\n        extend: 'Ext.container.container',\n        controller: 'user'\n    });\n    // Or\n    Ext.define('UserContainer', {\n        extend: 'Ext.container.container',\n        controller: {\n            type: 'user',\n            someConfig: true\n        }\n    });\n\n    // Can also instance at runtime\n    var ctrl = new MyApp.UserController();\n    var view = new UserContainer({\n        controller: ctrl\n    });\n"
+  },
+  {
+   "name": "data",
+   "text": "The initial set of data to apply to the `{@link #cfg!tpl #tpl}` to\nupdate the content area of the Component.\n\n**Note:** Data will be appended to any existing data.\n"
+  },
+  {
+   "name": "defaultListenerScope",
+   "text": "If `true`, this component will be the default scope (this pointer) for events\nspecified with string names so that the scope can be dynamically resolved. The\ncomponent will automatically become the defaultListenerScope if a\n{@link #cfg!controller #controller} is specified.\n\nSee the introductory docs for {@link Ext.Container Ext.container.Container} for some sample\nusages.\n\n**NOTE**: This value can only be reliably set at construction time. Setting it\nafter that time may not correctly rewire all of the potentially effected\nlisteners.\n"
+  },
+  {
+   "name": "disabled",
+   "text": "Whether or not this component is disabled\n"
+  },
+  {
+   "name": "disableTooltips",
+   "text": "Set to `true` to disable mouseover tooltips.\n"
+  },
+  {
+   "name": "displayed",
+   "text": "Set to `true` to call `show` and `false` to call `hide`. Unlike the `{@link #cfg!hidden hidden}`\nconfig, changing this config will potentially involve animations to show or\nhide the component.\n"
+  },
+  {
+   "name": "docked",
+   "text": "The dock position of this component in its container. Can be `{@link #cfg!left left}`, `{@link #cfg!top top}`, `{@link #cfg!right right}` or\n`{@link #cfg!bottom bottom}`.\n\n__Notes__\n\nYou must use a HTML5 doctype for {@link #cfg!docked #docked} `{@link #cfg!bottom bottom}` to work. To do this, simply\nadd the following code to the HTML file:\n\n    <!doctype html>\n\nSo your index.html file should look a little like this:\n\n    <!doctype html>\n    <html>\n        <head>\n            <title>MY application title</title>\n            ...\n"
+  },
+  {
+   "name": "draggable",
+   "text": "Set to `true` to allow this component to be dragged. This can also be the config\nobject for the `{@link Ext.drag.Source}` that will manage the drag.\n"
+  },
+  {},
+  {},
+  {},
+  {
+   "name": "flex",
+   "text": "The flex of this item *if* this item item is inside a {@link Ext.layout.HBox}\nor {@link Ext.layout.VBox} layout.\n\nYou can also update the flex of a component dynamically using\nthe {@link Ext.layout.FlexBox#setItemFlex} method.\n\nWhen supplied as a string or number this option supports the same syntax\nas CSS [flex](https://developer.mozilla.org/en-US/docs/Web/CSS/flex).\nFor example:\n\n    flex: '1 2 auto'\n\nsets `flex-grow` property to `0`, `flex-shrink` to `2` and `flex-basis` to\n`'auto'`.\n\nThe default `flex-shrink` value for box layout items is set to `0` in the\nstylesheet, which is different from the browser's default `flex-shrink` value\nof `1`.  This accommodates the majority use case for applications since where\nnon-flexed components are typically not expected to shrink smaller than their\ndefault size.\n\nFor convenience when only a single number is supplied it is used as the value\nfor both `flex-grow` and `flex-shrink`, for example `flex: 3` is the same as\n`flex: '3 3'`\n\nAn object form is also accepted:\n\n    flex: {\n        grow: 1,\n        shrink: 2,\n        basis: 'auto'\n    }\n\nWhen the object form is supplied `shrink` always defaults to `0` regardless\nof the value of `grow`.\n\nAlthough `'auto'` is the default value for flex-basis, flex-basis defaults to 0%\nwhen flex is supplied as a single numeric or string value (e.g. `flex: 1`). If\nthis behavior is not desired either explicitly set flex-basis to `'auto'` or use\nthe object form to set only grow and/or shrink:\n\n    flex: {\n        grow: 2\n    }\n"
+  },
+  {
+   "name": "floated",
+   "text": "A Component may be floated above all other components in the application. This means that\nthe component is absolutely positioned, and will move to the front and occlude other\nsibling floated component if clicked.\n\nA Floated component may have floated descendants. It will bring these decendants to the\nfront with it when brought to the front of its sibling floated components.\n\nBy default, descendant floated components are all positioned using the viewport\ncoordinate system. To make a floating component a positioning parent for descendants,\nand have the ancestors positioned relatively, configure the parent floated component\nwith `{@link #cfg!relative #cfg-relative}: true`.\n"
+  },
+  {
+   "name": "focusCls",
+   "text": "CSS class that will be added to focused\ncomponent's {@link #property!focusClsEl #focusClsEl}, and removed when component blurs.\n"
+  },
+  {
+   "name": "fullscreen",
+   "text": "Force the component to take up 100% width and height available, by adding it\nto {@link Ext.Viewport}.\n"
+  },
+  {
+   "name": "height",
+   "text": "The height of this Component; must be a valid CSS length value, e.g: `300`, `100px`,\n`30%`, etc. By default, if this is not explicitly set, this Component's element will\nsimply have its own natural size. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "hidden",
+   "text": "Whether or not this Component is hidden (its CSS `display` property is set to `none`).\n\nDefaults to `true` for {@link #cfg!floated #floated} Components.\n"
+  },
+  {
+   "name": "hideAnimation",
+   "text": "Animation effect to apply when the Component is being hidden.  Typically you want to use\nan outbound animation type such as 'fadeOut' or 'slideOut'. For more animations, check\nthe {@link Ext.fx.Animation#cfg!type Ext.fx.Animation#type} config.\n"
+  },
+  {
+   "name": "hideMode",
+   "text": "A String which specifies how this component's DOM element will be hidden. The\naccepted values are any of these:\n\n- `'clip'` : Hide using {@link Ext.dom.Element#static-property!CLIP clip}.\n- `'display'` : Hide using {@link Ext.dom.Element#static-property!DISPLAY display}.\n- `'offsets'` : Hide using positioning {@link Ext.dom.Element#static-property!OFFSETS offsets}.\n- `'opacity'` : Hide using {@link Ext.dom.Element#static-property!OPACITY opacity}.\n- `'visibility'` : Hide using {@link Ext.dom.Element#static-property!VISIBILITY visibility}.\n\nHiding using ``display`` results in having no dimensions as well as resetting\nscroll positions to 0.\n\nThe other modes overcome this but may have different trade-offs in certain\ncircumstances.\n"
+  },
+  {
+   "name": "hideOnMaskTap",
+   "text": "When using a {@link #cfg!modal} Component, setting this to `true` will hide\nthe modal mask and the Container when the mask is tapped on.\n"
+  },
+  {
+   "name": "highlightColor",
+   "text": "The hex value for the highlight color to use when mouseing over a graph segment.\n"
+  },
+  {
+   "name": "highlightLighten",
+   "text": "How much to lighten the highlight color by when mouseing over a graph segment.\n"
+  },
+  {
+   "name": "html",
+   "text": "Optional HTML content to render inside this Component, or a reference to an\nexisting element on the page.\n"
+  },
+  {
+   "name": "id",
+   "text": "The **unique id of this component instance.**\n\nIt should not be necessary to use this configuration except for singleton objects in\nyour application. Components created with an id may be accessed globally\nusing {@link Ext#method!getCmp Ext.getCmp}.\n\nInstead of using assigned ids, use the {@link #cfg!itemId #itemId} config,\nand {@link Ext.ComponentQuery} which provides selector-based searching\nfor Sencha Components analogous to DOM querying. The {@link Ext.Container} class\ncontains {@link Ext.Container#method!down shortcut methods} to query its descendant Components\nby selector.\n\nNote that this id will also be used as the element id for the containing HTML element\nthat is rendered to the page for this component. This allows you to write id-based CSS\nrules to style the specific instance of this component uniquely, and also to select\nsub-elements using this component's id as the parent.\n\n**Note**: to avoid complications imposed by a unique id also see `{@link #cfg!itemId #itemId}`.\n\nDefaults to an auto-assigned id.\n"
+  },
+  {
+   "name": "instanceCls",
+   "text": "\nAn extra CSS class or classes to augment the {@link #property!classCls #classCls} on an individual instance\n"
+  },
+  {
+   "name": "itemId",
+   "text": "An itemId can be used as an alternative way to get a reference to a component when no\nobject reference is available. Instead of using an `{@link #cfg!id #id}` with {@link Ext#method!getCmp Ext#getCmp},\nuse `{@link #cfg!itemId itemId}` with {@link Ext.Container#method!getComponent Ext.Container#getComponent} which will retrieve `{@link #cfg!itemId itemId}`'s or\n{@link #cfg!id #id}'s. Since `{@link #cfg!itemId itemId}`'s are an index to the container's internal MixedCollection,\nthe `{@link #cfg!itemId itemId}` is scoped locally to the container - avoiding potential conflicts with\n{@link Ext.ComponentManager} which requires a **unique** `{@link #cfg!id #id}`.\n\nAlso see {@link #cfg!id #id}, {@link Ext.Container#method!query Ext.Container#query}, {@link Ext.Container#method!down Ext.Container#down} and\n{@link Ext.Container#method!child Ext.Container#child}.\n"
+  },
+  {
+   "name": "keyMap",
+   "text": "An object containing handlers for keyboard events. The property names of this\nobject are the key name and any modifiers. The values of the properties are the\ndescriptors of how to handle each event.\n\nThe handler descriptor can be simply the handler function(either the\nliteral function or the method name), or it can be an object with these\nproperties:\n\n - `handler`: The function or its name to call to handle the event.\n - `scope`: The this pointer context (can be \"this\" or \"controller\").\n - `event`: An optional override of the key event to which to listen.\n\n**Important:** Calls to `setKeyMap` do not replace the entire `{@link #cfg!keyMap keyMap}` but\ninstead update the provided mappings. That is, unless `null` is passed as the\nvalue of the `{@link #cfg!keyMap keyMap}` which will clear the `{@link #cfg!keyMap keyMap}` of all entries.\n"
+  },
+  {
+   "name": "keyMapEnabled",
+   "text": "Enables or disables processing keys in the `{@link #cfg!keyMap keyMap}`. This value starts as\n`null` and if it is `null` when `{@link #method!initKeyMap initKeyMap}` is called, it will automatically\nbe set to `true`. Since `{@link #method!initKeyMap initKeyMap}` is called by `{@link Ext.Component}` at the\nproper time, this is not something application code normally handles.\n"
+  },
+  {
+   "name": "keyMapTarget",
+   "text": "The name of the member that should be used to listen for keydown/keypress events.\nThis is intended to be controlled at the class level not per instance.\n"
+  },
+  {
+   "name": "left",
+   "text": "The absolute left position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "lineColor",
+   "text": "The hex value for line colors in graphs which\ndisplay lines ({@link Ext.sparkline.Box},\n{@link Ext.sparkline.Discrete} and {@link Ext.sparkline.Line}).\n"
+  },
+  {
+   "name": "lineHeight",
+   "text": "Height of each line in pixels - Defaults to 30% of the\ngraph height.\n"
+  },
+  {
+   "name": "listeners",
+   "text": "\nA config object containing one or more event handlers to be added to this object during\ninitialization. This should be a valid listeners config object as specified in the\n{@link Ext.util.Observable#method!addListener addListener} example for attaching\nmultiple handlers at once.\n\n**DOM events from Ext JS {@link Ext.Component}**\n\nWhile _some_ Ext JS Component classes export selected DOM events (e.g. \"click\",\n\"mouseover\" etc), this is usually only done when extra value can be added. For example\nthe {@link Ext.view.View DataView}'s **`{@link Ext.view.View#itemclick itemclick}`**\nevent passing the node clicked on. To access DOM events directly from a child element\nof a Component, we need to specify the `element` option to identify the Component\nproperty to add a DOM listener to:\n\n    new Ext.panel.Panel({\n        width: 400,\n        height: 200,\n        dockedItems: [{\n            xtype: 'toolbar'\n        }],\n        listeners: {\n            click: {\n                element: 'el', //bind to the underlying el property on the panel\n                fn: function(){ console.log('click el'); }\n            },\n            dblclick: {\n                element: 'body', //bind to the underlying body property on the panel\n                fn: function(){ console.log('dblclick body'); }\n            }\n        }\n    });\n"
+  },
+  {
+   "name": "margin",
+   "text": "The margin to use on this Component. Can be specified as a number (in which\ncase all edges get the same margin) or a CSS string like '5 10 10 10'\n"
+  },
+  {
+   "name": "maxHeight",
+   "text": "The maximum height of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size. Note that this config will not apply if the\nComponent is 'positioned' (absolutely positioned or centered)\n"
+  },
+  {
+   "name": "maxWidth",
+   "text": "The maximum width of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size. Note that this config will not apply if the\nComponent is 'positioned' (absolutely positioned or centered)\n"
+  },
+  {
+   "name": "minHeight",
+   "text": "The minimum height of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "minWidth",
+   "text": "The minimum width of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "modal",
+   "text": "`true` to make this Component modal. This will create a mask underneath the\nComponent that covers its parent and does not allow the user to interact with\nany other Components until this Component is dismissed.\n"
+  },
+  {
+   "name": "modelValidation",
+   "text": "This config enables binding to your `{@link Ext.data.Model#cfg!validators Ext.data.Model#validators}`. This\nis only processed by form fields (e.g., `Ext.field.*`) at present, however, this\nsetting is inherited and so can be set on a parent container.\n\nWhen set to `true` by a component (or by an ancestor container), the `validators`\nof for any {@Ext.data.Model record} fields will be used wherever the `value` is\nbound to such data fields.\n\nWhile this config can be set arbitrarily high in the component hierarchy, doing\nso can create a lot overhead if most of your form fields do not actually rely on\n`validators` in your data model.\n\nUsing this setting for a form that is bound to an `{@link Ext.data.Model}` might look\nlike this:\n\n     {\n         xtype: 'panel',\n         modelValidation: true,\n         items: [{\n             xtype: 'textfield',\n             bind: '{theUser.firstName}'\n         },{\n             xtype: 'textfield',\n             bind: '{theUser.lastName}'\n         },{\n             xtype: 'textfield',\n             bind: '{theUser.phoneNumber}'\n         },{\n             xtype: 'textfield',\n             bind: '{theUser.email}'\n         }]\n     }\n"
+  },
+  {
+   "name": "name",
+   "text": "Name for the widget to be used with {@link Ext.Container#method!lookupName Ext.Container#lookupName}\net al.\n"
+  },
+  {
+   "name": "nameable",
+   "text": "Set to `true` for this component's `name` property to be tracked by its containing\n`nameHolder`.\n"
+  },
+  {
+   "name": "padding",
+   "text": "The padding to use on this Component. Can be specified as a number (in which\ncase all edges get the same padding) or a CSS string like '5 10 10 10'\n"
+  },
+  {
+   "name": "plugins",
+   "text": "This config describes one or more plugin config objects used to create plugin\ninstances for this component.\n\nPlugins are a way to bundle and reuse custom functionality. Plugins should extend\n`{@link Ext.plugin.Abstract}` but technically the only requirement for a valid plugin\nis that it contain an `init` method that accepts a reference to its owner. Once\na plugin is created, the owner will call the `init` method, passing a reference\nto itself. Each plugin can then call methods or respond to events on its owner\nas needed to provide its functionality.\n\nThis config's value can take several different forms.\n\nThe value can be a single string with the plugin's {@link Ext.enums.Plugin alias}:\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: 'listpaging'\n     });\n\nIn the above examples, the string \"listpaging\" is the type alias for\n`{@link Ext.dataview.plugin.ListPaging}`. The full alias includes the \"plugin.\" prefix\n(i.e., 'plugin.listpaging').\n\nThe preferred form for multiple plugins or to configure plugins is the\nkeyed-object form (new in version 6.5):\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: {\n             pullrefresh: true,\n             listpaging: {\n                 autoPaging: true,\n                 weight: 10\n             }\n         }\n     });\n\nThe object keys are the `id`'s as well as the default type alias. This form\nallows the value of the `{@link #cfg!plugins plugins}` to be merged from base class to derived class\nand finally with the instance configuration. This allows classes to define a\nset of plugins that derived classes or instantiators can further configure or\ndisable. This merge behavior is a feature of the\n{@link Ext.Class#cfg!config}.\n\nThe `{@link #cfg!plugins plugins}` config can also be an array of plugin aliases (arrays are not\nmerged so this form does not respect plugins defined by the class author):\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: ['listpaging', 'pullrefresh']\n     });\n\nAn array can also contain elements that are config objects with a `type`\nproperty holding the type alias:\n\n     var list = Ext.create({\n         xtype: 'list',\n         itemTpl: '<div class=\"item\">{title}</div>',\n         store: 'Items',\n\n         plugins: ['pullrefresh', {\n             type: 'listpaging',\n             autoPaging: true\n         }]\n     });\n"
+  },
+  {
+   "name": "publishes",
+   "text": "One or more names of config properties that this component should publish\nto its ViewModel. Generally speaking, only properties defined in a class config\nblock (including ancestor config blocks and mixins) are eligible for publishing\nto the viewModel. Some components override this and publish their most useful\nconfigs by default.\n\n**Note:** We'll discuss publishing properties **not** found in the config block below.\n\nValues determined to be invalid by component (often form fields and model validations)\nwill not be published to the ViewModel.\n\nThis config uses the `{@link #cfg!reference #cfg-reference}` to determine the name of the data\nobject to place in the `ViewModel`. If `{@link #cfg!reference reference}` is not set then this config\nis ignored.\n\nBy using this config and `{@link #cfg!reference #cfg-reference}` you can bind configs between\ncomponents. For example:\n\n     ...\n         items: [{\n             xtype: 'textfield',\n             reference: 'somefield',  // component's name in the ViewModel\n             publishes: 'value' // value is not published by default\n         },{\n             ...\n         },{\n             xtype: 'displayfield',\n             bind: 'You have entered \"{somefield.value}\"'\n         }]\n     ...\n\nClasses must provide this config as an Object:\n\n     Ext.define('App.foo.Bar', {\n         publishes: {\n             foo: true,\n             bar: true\n         }\n     });\n\nThis is required for the config system to properly merge values from derived\nclasses.\n\nFor instances this value can be specified as a value as show above or an array\nor object as follows:\n\n     {\n         xtype: 'textfield',\n         reference: 'somefield',\n         publishes: [\n             'value',\n             'rawValue',\n             'dirty'\n         ]\n     }\n\n     // This achieves the same result as the above array form.\n     {\n         xtype: 'textfield',\n         reference: 'somefield',\n         publishes: {\n             value: true,\n             rawValue: true,\n             dirty: true\n         }\n     }\n\nIn some cases, users may want to publish a property to the viewModel that is not found\nin a class  config block. In these situations, you may utilize {@link #method!publishState #publishState}\nif the property has a  setter method. Let's use\n{@link Ext.form.Labelable#setFieldLabel setFieldLabel} as an example:\n\n      setFieldLabel: function(fieldLabel) {\n          this.callParent(arguments);\n          this.publishState('fieldLabel', fieldLabel);\n      }\n\nWith the above chunk of code, fieldLabel may now be published to the viewModel.\n"
+  },
+  {
+   "name": "record",
+   "text": "A model instance which updates the Component's html based on it's tpl. Similar\nto the data configuration, but tied to to a record to make allow dynamic\nupdates.  This must be a model instance and not a configuration of one.\n"
+  },
+  {
+   "name": "reference",
+   "text": "Specifies a name for this component inside its component hierarchy. This name\nmust be unique within its {@link Ext.Container#cfg!referenceHolder view}\nor its {@link Ext.app.ViewController}. See the documentation in\n{@link Ext.Container Ext.container.Container} for more information about references.\n\n**Note**: Valid identifiers start with a letter or underscore and are followed\nby zero or more additional letters, underscores or digits. References are case\nsensitive.\n"
+  },
+  {
+   "name": "relative",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nConfigure this as `true` if you require descendant floated components to be positioned\nrelative to this component's coordinate space, not the viewport's coordinate space.\n\n*Note:* The coordinate space is this Component's encapsulating element's area. Not that\nof the inner element in which static child items are rendered by the layout.\n"
+  },
+  {
+   "name": "renderTo",
+   "text": "Optional element to render this Component to.\nNot required if this component is an {@link Ext.Container#cfg!items item} of a Container\nof a Container.\n"
+  },
+  {
+   "name": "right",
+   "text": "The absolute right position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "ripple",
+   "text": "Set to truthy, Color or Object value for the ripple.\n"
+  },
+  {
+   "name": "scrollable",
+   "text": "Configuration options to make this Component scrollable. Acceptable values are:\n\n- `true` to enable auto scrolling.\n- `false` (or `null`) to disable scrolling - this is the default.\n- `{@link #cfg!x x}` or `horizontal` to enable horizontal scrolling only\n- `{@link #cfg!y y}` or `vertical` to enable vertical scrolling only\n\nAlso accepts a configuration object for a `{@link Ext.scroll.Scroller}` if\nif advanced configuration is needed.\n\nThe getter for this config returns the {@link Ext.scroll.Scroller}\ninstance.  You can use the Scroller API to read or manipulate the scroll position:\n\n    // scrolls the component to 5 on the x axis and 10 on the y axis\n    component.getScrollable().scrollTo(5, 10);\n"
+  },
+  {
+   "name": "session",
+   "text": "If provided this creates a new `Session` instance for this component. If this\nis a `Container`, this will then be inherited by all child components.\n\nTo create a new session you can specify `true`:\n\n     Ext.create({\n         xtype: 'viewport',\n         session: true,\n\n         items: [{\n             ...\n         }]\n     });\n\nAlternatively, a config object can be provided:\n\n     Ext.create({\n         xtype: 'viewport',\n         session: {\n             ...\n         },\n\n         items: [{\n             ...\n         }]\n     });\n"
+  },
+  {
+   "name": "shadow",
+   "text": "Configure as `true` for the component to have a drop shadow. 'false' will suppress any\ndefault shadow. By default the theme will determine the presence of a shadow.\n"
+  },
+  {
+   "name": "shareableName",
+   "text": "Set to `true` to allow this component's `name` to be shared by other items in the\nsame `nameHolder`. Such items will be returned in an array from `lookupName`.\n"
+  },
+  {
+   "name": "shim",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nConfigure as `true` for the component to use an `<iframe>` as an underlay to ensure\ncertain non-standard browser plugins are occluded by this component.\n"
+  },
+  {
+   "name": "showAnimation",
+   "text": "Animation effect to apply when the Component is being shown.  Typically you want to use\nan inbound animation type such as 'fadeIn' or 'slideIn'. For more animations, check the\n{@link Ext.fx.Animation#cfg!type Ext.fx.Animation#type} config.\n"
+  },
+  {
+   "name": "stateful",
+   "text": "\nThis config specifies the config properties that will be persisted using the\n{@link Ext.state.Provider}. If this config is set to `true`, the\nconfigs specified by `{@link #cfg!statefulDefaults statefulDefaults}` will be assumed.\n\n     stateful: true\n\nOtherwise, this config can be an array of strings of the properties to save:\n\n     stateful: [\n         'width',\n         'height',\n         'collapsed'\n     ]\n\nThe above is equivalent to:\n\n     stateful: {\n         width: true,\n         height: true,\n         collapsed: true\n     }\n\n**Note:** To be truly stateful, an `id` or `{@link #cfg!stateId stateId}` must also be assigned.\n\nA stateful object will save its state when any of these config properties change\nvalue.\n"
+  },
+  {
+   "name": "statefulDefaults",
+   "text": "The default set of {@link #cfg!stateful} properties. The form of this config\nis the same as {@link #cfg!stateful} except this config cannot be a Boolean.\n\nThis config is intended for classes to specify so that instances can simply\nenable statefulness using `stateful: true`.\n"
+  },
+  {
+   "name": "stateId",
+   "text": "The unique id for this object to use for state management purposes.\n"
+  },
+  {
+   "name": "style",
+   "text": "Additional CSS styles that will be rendered into an inline style attribute when\nthe widget is rendered.\n\nYou can pass either a string syntax:\n\n    style: 'background:red'\n\nOr by using an object:\n\n    style: {\n        background: 'red'\n    }\n\nWhen using the object syntax, you can define CSS Properties by using a string:\n\n    style: {\n        'border-left': '1px solid red'\n    }\n\nAlthough the object syntax is much easier to read, we suggest you to use the\nstring syntax for better performance.\n"
+  },
+  {
+   "name": "tabIndex",
+   "text": "DOM tabIndex attribute for this component's\n{@link #property!focusEl #focusEl}.\n"
+  },
+  {
+   "name": "thresholdColor",
+   "text": "Colour to use in combination with {@link #cfg!thresholdValue #thresholdValue}\n"
+  },
+  {
+   "name": "thresholdValue",
+   "text": "Values less than this value will be drawn using\n{@link #cfg!thresholdColor #thresholdColor} instead of lineColor\n"
+  },
+  {
+   "name": "tipTpl",
+   "text": "An XTemplate used to display the value or values in a tooltip when hovering\nover a Sparkline.\n\nThe implemented subclases all define their own `{@link #cfg!tipTpl tipTpl}`, but it can be overridden.\n"
+  },
+  {
+   "name": "toFrontOnShow",
+   "text": "True to automatically call {@link #method!toFront #toFront} when a {@link #cfg!floated #cfg-floated} Component is\nshown.\n"
+  },
+  {
+   "name": "tooltip",
+   "text": "The tooltip for this component - can be a string to be used as innerHTML\n(html tags are accepted) or {@link Ext.tip.ToolTip} config object.\n\nThe default behavior is to use a shared tip instance. The tooltip configuration is\nregistered with the {@link Ext.tip.Manager}. To enable this, your application can set\nthe {@link Ext.app.Application#cfg!quickTips Ext.app.Application#quickTips} config, or an instance of the\n{@link Ext.tip.Manager} may be created manually.\n\nTo force a unique tooltip instance to be created, specify `autoCreate: true` on this\nconfiguration.\n\nConfiguring this with `autoHide: false` implies `autoCreate: true` so that the desired\npersistent behavior can be obtained with other targets still showing the singleton\ninstance.\n"
+  },
+  {
+   "name": "tooltipPrefix",
+   "text": "A string to prepend to each field displayed in a tooltip.\n"
+  },
+  {
+   "name": "tooltipSkipNull",
+   "text": "Null values will not have a tooltip displayed.\n"
+  },
+  {
+   "name": "tooltipSuffix",
+   "text": "A string to append to each field displayed in a tooltip.\n"
+  },
+  {
+   "name": "top",
+   "text": "The absolute top position of this Component; must be a valid CSS length value,\ne.g: `300`, `100px`, `30%`, etc. Explicitly setting this value will make this Component\nbecome 'positioned', which means it will no longer participate in the layout of the\nContainer that it resides in.\n"
+  },
+  {
+   "name": "touchAction",
+   "text": "\nEmulates the behavior of the CSS\n[touch-action](https://www.w3.org/TR/pointerevents/#the-touch-action-css-property)\nproperty in a cross-browser compatible manner.\n\nKeys in this object are touch action names, and values are `false` to disable\na touch action or `true` to enable it.  Accepted keys are:\n\n- `panX`\n- `panY`\n- `pinchZoom`\n- `doubleTapZoom`\n\nAll touch actions are enabled (`true`) by default, so it is usually only necessary\nto specify which touch actions to disable.  For example, the following disables\nonly horizontal scrolling and pinch-to-zoom on the component's main element:\n\n    touchAction: {\n        panX: false,\n        pinchZoom: false\n    }\n\nTouch actions can be specified on reference elements using the reference element\nname, for example:\n\n    // disables horizontal scrolling on the main element, and double-tap-zoom\n    // on the child element named \"body\"\n    touchAction: {\n        panY: false\n        body: {\n            doubleTapZoom: false\n        }\n    }\n\nThe primary motivation for setting the touch-action of an element is to prevent\nthe browser's default handling of a gesture such as pinch-to-zoom, or\ndrag-to-scroll, so that the application can implement its own handling of that\ngesture on the element.  Suppose, for example, a component has a custom drag\nhandler on its element and wishes to prevent horizontal scrolling of its container\nwhile it is being dragged:\n\n    Ext.create('Ext.Widget', {\n        touchAction: {\n            panX: false\n        },\n        listeners: {\n            drag: function(e) {\n                // implement drag logic\n            }\n        }\n    });\n"
+  },
+  {
+   "name": "tpl",
+   "text": "A {@link String}, {@link Ext.Template}, {@link Ext.XTemplate} or an {@link Array} of\nstrings to form an {@link Ext.XTemplate}. Used in conjunction with the {@link #cfg!data #data}\nand {@link #cfg!tplWriteMode #tplWriteMode} configurations.\n\n__Note__\nThe {@link #cfg!data #data} configuration _must_ be set for any content to be shown in the\ncomponent when using this configuration.\n"
+  },
+  {
+   "name": "tplWriteMode",
+   "text": "The Ext.(X)Template method to use when updating the content area of the\nComponent.\n\nValid modes are:\n\n- append\n- insertAfter\n- insertBefore\n- insertFirst\n- overwrite\n"
+  },
+  {
+   "name": "translatable"
+  },
+  {
+   "name": "twoWayBindable",
+   "text": "This object holds a map of `config` properties that will update their binding\nas they are modified. For example, `value` is a key added by form fields. The\nform of this config is the same as `{@link #cfg!publishes}`.\n\nThis config is defined so that updaters are not created and added for all\nbound properties since most cannot be modified by the end-user and hence are\nnot appropriate for two-way binding.\n"
+  },
+  {
+   "name": "ui",
+   "text": "The ui or uis to be used on this Component\n\nWhen a ui is configured, CSS class names are added to the {@link #property!element #element}, created\nby appending the ui name(s) to each {@link #property!classCls #classCls} and/or {@link #property!baseCls #baseCls}.\n"
+  },
+  {
+   "name": "userCls",
+   "text": "One or more CSS classes to add to the component's primary element. This config\nis intended solely for use by the component instantiator (the \"user\"), not by\nderived classes.\n\nFor example:\n\n     items: [{\n         xtype: 'button',\n         userCls: 'my-button'\n     ...\n     }]\n"
+  },
+  {
+   "name": "userSelectable",
+   "text": "\nSet to true to allow users to select text within this component.\n\nCan also be any valid value for the CSS3\n[user-select](https://developer.mozilla.org/en-US/docs/Web/CSS/user-select) property.\n\nA value of true implies `auto`, while false implies `none`.\n\nMay also be an object keyed by child element name.\n\nBy default, the user cannot click+drag+select text/elements of the UI.  Applications may\nwant to enable user selection for specific DOM elements, such as the bodyElement of\na component used as a tab panel.  The tab and tab text would not be user selectable in\nthis example, but the content area when the tab is selected would.\n\n     userSelectable: {\n         element: true,       // allow the element to be user selectable\n         bodyElement: true    // allow the component's body element to be user selectable\n     }\n"
+  },
+  {
+   "name": "values",
+   "text": "An array of numbers which define the chart.\n"
+  },
+  {
+   "name": "viewModel",
+   "text": "The `ViewModel` is a data provider for this component and its children. The\ndata contained in the `ViewModel` is typically used by adding `{@link #cfg!bind bind}` configs\nto the components that want present or edit this data.\n\nWhen set, the `ViewModel` is created and links to any inherited `{@link #cfg!viewModel viewModel}`\ninstance from an ancestor container as the \"parent\". The `ViewModel` hierarchy,\nonce established, only supports creation or destruction of children. The\nparent of a `ViewModel` cannot be changed on the fly.\n\nIf this is a root-level `ViewModel`, the data model connection is made to this\ncomponent's associated `{@link Ext.data.Session}`. This is\ndetermined by calling `getInheritedSession`.\n"
+  },
+  {
+   "name": "weight",
+   "text": "This value controls this item's order in a {@link Ext.Container#cfg!weighted}\n{@link Ext.Container} (see {@link #cfg!parent}).\n\nLower values gravitate towards the start of the container - the top in vertical layouts,\nthe locale start side in horizontal layouts.\n"
+  },
+  {
+   "name": "width",
+   "text": "The width of this Component; must be a valid CSS length value, e.g: `300`, `100px`,\n`30%`, etc. By default, if this is not explicitly set, this Component's element will\nsimply have its own natural size. If set to `auto`, it will set the width to `null`\nmeaning it will have its own natural size.\n"
+  },
+  {
+   "name": "x",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nThe x position at which to position this component. This is usually viewport-relative.\nBut if there is a `{@link #cfg!relative #relative}: true` ancestor, it will be relative to that.\n"
+  },
+  {
+   "name": "xtype",
+   "text": "The `{@link #cfg!xtype xtype}` configuration option can be used to optimize Component creation and rendering.\nIt serves as a shortcut to the full component name. For example, the component\n`Ext.button.Button` has an xtype of `button`.\n\nYou can define your own xtype on a custom {@link Ext.Component} like so:\n\n    Ext.define('PressMeButton', {\n        extend: 'Ext.button.Button',\n        xtype: 'pressmebutton',\n        text: 'Press Me'\n    });\n\nAny Component can be created implicitly as an object config with an xtype specified,\nallowing it to be declared and passed into the rendering pipeline without actually being\ninstantiated as an object. Not only is rendering deferred, but the actual creation of the\nobject itself is also deferred, saving memory and resources until they are actually needed.\nIn complex, nested layouts containing many Components, this can make a noticeable\nimprovement in performance.\n\n    // Explicit creation of contained Components:\n    var panel = new Ext.Panel({\n       // ...\n       items: [\n          Ext.create('Ext.button.Button', {\n             text: 'OK'\n          })\n       ]\n    });\n\n    // Implicit creation using xtype:\n    var panel = new Ext.Panel({\n       // ...\n       items: [{\n          xtype: 'button',\n          text: 'OK'\n       }]\n    });\n\nIn the first example, the button will always be created immediately during the panel's\ninitialization. With many added Components, this approach could potentially slow the\nrendering of the page. In the second example, the button will not be created or rendered\nuntil the panel is actually displayed in the browser. If the panel is never displayed\n(for example, if it is a tab that remains hidden) then the button will never be created and\nwill never consume any resources whatsoever.\n"
+  },
+  {
+   "name": "y",
+   "text": "*Only valid when a component is `{@link #cfg!floated #cfg-floated}`*\n\nThe x position at which to position this component. This is usually viewport-relative.\nBut if there is a `{@link #cfg!relative #relative}: true` ancestor, it will be relative to that.\n"
+  },
+  {
+   "name": "zIndex",
+   "text": "The z-index to give this Component when it is rendered.\n\nNot valid for {@link #cfg!floated #cfg-floated} Components. The Z ordering of {@link #cfg!floated #cfg-floated}\nComponents is managed by ordering of the DOM elements.\n"
+  }
+ ],
+ "docEvents": [
+  {
+   "name": "added",
+   "parameters": [
+    "sender",
+    "container",
+    "index"
+   ]
+  },
+  {
+   "name": "beforebottomchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforecenteredchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforedisabledchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforedockedchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeheightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforehiddenchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforehide",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforeleftchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforemaxHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforemaxWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeminHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeminWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeorientationchange",
+   "parameters": []
+  },
+  {
+   "name": "beforerightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforescrollablechange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforeshow",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforetofront",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "beforetopchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "beforewidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue",
+    null
+   ]
+  },
+  {
+   "name": "blur",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "bottomchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "centeredchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "destroy",
+   "parameters": []
+  },
+  {
+   "name": "disabledchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "dockedchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "erased",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "floatingchange",
+   "parameters": [
+    "sender",
+    "positioned"
+   ]
+  },
+  {
+   "name": "focus",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "focusenter",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "focusleave",
+   "parameters": [
+    "sender",
+    "event"
+   ]
+  },
+  {
+   "name": "fullscreen",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "heightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "hiddenchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "hide",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "initialize",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "leftchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "maxHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "maxWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "minHeightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "minWidthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "moved",
+   "parameters": [
+    "sender",
+    "container",
+    "toIndex",
+    "fromIndex"
+   ]
+  },
+  {
+   "name": "orientationchange",
+   "parameters": []
+  },
+  {
+   "name": "painted",
+   "parameters": [
+    "sender",
+    "element"
+   ]
+  },
+  {
+   "name": "positionedchange",
+   "parameters": [
+    "sender",
+    "positioned"
+   ]
+  },
+  {
+   "name": "removed",
+   "parameters": [
+    "sender",
+    "container",
+    "index"
+   ]
+  },
+  {
+   "name": "resize",
+   "parameters": [
+    "element",
+    "info"
+   ]
+  },
+  {
+   "name": "rightchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "scrollablechange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "show",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "tofront",
+   "parameters": [
+    "sender"
+   ]
+  },
+  {
+   "name": "topchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  },
+  {
+   "name": "updatedata",
+   "parameters": [
+    "sender",
+    "newData"
+   ]
+  },
+  {
+   "name": "widthchange",
+   "parameters": [
+    "sender",
+    "value",
+    "oldValue"
+   ]
+  }
+ ],
+ "eventString": "\n<div class=\"name\" onclick=\"toggleIt('event','Added')\">onAdded = ({sender, container, index})=> {);</div>\n<pre id=\"Added\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onAdded = ({sender, container, index}) => {\n    console.log('Added')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onAdded={this.onAdded}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforebottomchange')\">onBeforebottomchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforebottomchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforebottomchange = ({sender, value, oldValue}) => {\n    console.log('Beforebottomchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforebottomchange={this.onBeforebottomchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforecenteredchange')\">onBeforecenteredchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforecenteredchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforecenteredchange = ({sender, value, oldValue}) => {\n    console.log('Beforecenteredchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforecenteredchange={this.onBeforecenteredchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforedisabledchange')\">onBeforedisabledchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforedisabledchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforedisabledchange = ({sender, value, oldValue}) => {\n    console.log('Beforedisabledchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforedisabledchange={this.onBeforedisabledchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforedockedchange')\">onBeforedockedchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforedockedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforedockedchange = ({sender, value, oldValue}) => {\n    console.log('Beforedockedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforedockedchange={this.onBeforedockedchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeheightchange')\">onBeforeheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeheightchange = ({sender, value, oldValue}) => {\n    console.log('Beforeheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforeheightchange={this.onBeforeheightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforehiddenchange')\">onBeforehiddenchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforehiddenchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforehiddenchange = ({sender, value, oldValue}) => {\n    console.log('Beforehiddenchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforehiddenchange={this.onBeforehiddenchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforehide')\">onBeforehide = ({sender})=> {);</div>\n<pre id=\"Beforehide\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforehide = ({sender}) => {\n    console.log('Beforehide')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforehide={this.onBeforehide}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeleftchange')\">onBeforeleftchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeleftchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeleftchange = ({sender, value, oldValue}) => {\n    console.log('Beforeleftchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforeleftchange={this.onBeforeleftchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforemaxheightchange')\">onBeforemaxheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforemaxheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforemaxheightchange = ({sender, value, oldValue}) => {\n    console.log('Beforemaxheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforemaxheightchange={this.onBeforemaxheightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforemaxwidthchange')\">onBeforemaxwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforemaxwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforemaxwidthchange = ({sender, value, oldValue}) => {\n    console.log('Beforemaxwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforemaxwidthchange={this.onBeforemaxwidthchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeminheightchange')\">onBeforeminheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeminheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeminheightchange = ({sender, value, oldValue}) => {\n    console.log('Beforeminheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforeminheightchange={this.onBeforeminheightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeminwidthchange')\">onBeforeminwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforeminwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeminwidthchange = ({sender, value, oldValue}) => {\n    console.log('Beforeminwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforeminwidthchange={this.onBeforeminwidthchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeorientationchange')\">onBeforeorientationchange = ({})=> {);</div>\n<pre id=\"Beforeorientationchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeorientationchange = ({}) => {\n    console.log('Beforeorientationchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforeorientationchange={this.onBeforeorientationchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforerightchange')\">onBeforerightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforerightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforerightchange = ({sender, value, oldValue}) => {\n    console.log('Beforerightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforerightchange={this.onBeforerightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforescrollablechange')\">onBeforescrollablechange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforescrollablechange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforescrollablechange = ({sender, value, oldValue}) => {\n    console.log('Beforescrollablechange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforescrollablechange={this.onBeforescrollablechange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforeshow')\">onBeforeshow = ({sender})=> {);</div>\n<pre id=\"Beforeshow\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforeshow = ({sender}) => {\n    console.log('Beforeshow')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforeshow={this.onBeforeshow}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforetofront')\">onBeforetofront = ({sender})=> {);</div>\n<pre id=\"Beforetofront\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforetofront = ({sender}) => {\n    console.log('Beforetofront')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforetofront={this.onBeforetofront}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforetopchange')\">onBeforetopchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforetopchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforetopchange = ({sender, value, oldValue}) => {\n    console.log('Beforetopchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforetopchange={this.onBeforetopchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Beforewidthchange')\">onBeforewidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Beforewidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBeforewidthchange = ({sender, value, oldValue}) => {\n    console.log('Beforewidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBeforewidthchange={this.onBeforewidthchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Blur')\">onBlur = ({sender, event})=> {);</div>\n<pre id=\"Blur\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBlur = ({sender, event}) => {\n    console.log('Blur')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBlur={this.onBlur}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Bottomchange')\">onBottomchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Bottomchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onBottomchange = ({sender, value, oldValue}) => {\n    console.log('Bottomchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onBottomchange={this.onBottomchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Centeredchange')\">onCenteredchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Centeredchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onCenteredchange = ({sender, value, oldValue}) => {\n    console.log('Centeredchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onCenteredchange={this.onCenteredchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Destroy')\">onDestroy = ({})=> {);</div>\n<pre id=\"Destroy\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDestroy = ({}) => {\n    console.log('Destroy')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onDestroy={this.onDestroy}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Disabledchange')\">onDisabledchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Disabledchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDisabledchange = ({sender, value, oldValue}) => {\n    console.log('Disabledchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onDisabledchange={this.onDisabledchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Dockedchange')\">onDockedchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Dockedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onDockedchange = ({sender, value, oldValue}) => {\n    console.log('Dockedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onDockedchange={this.onDockedchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Erased')\">onErased = ({sender})=> {);</div>\n<pre id=\"Erased\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onErased = ({sender}) => {\n    console.log('Erased')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onErased={this.onErased}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Floatingchange')\">onFloatingchange = ({sender, positioned})=> {);</div>\n<pre id=\"Floatingchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFloatingchange = ({sender, positioned}) => {\n    console.log('Floatingchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onFloatingchange={this.onFloatingchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Focus')\">onFocus = ({sender, event})=> {);</div>\n<pre id=\"Focus\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFocus = ({sender, event}) => {\n    console.log('Focus')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onFocus={this.onFocus}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Focusenter')\">onFocusenter = ({sender, event})=> {);</div>\n<pre id=\"Focusenter\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFocusenter = ({sender, event}) => {\n    console.log('Focusenter')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onFocusenter={this.onFocusenter}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Focusleave')\">onFocusleave = ({sender, event})=> {);</div>\n<pre id=\"Focusleave\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFocusleave = ({sender, event}) => {\n    console.log('Focusleave')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onFocusleave={this.onFocusleave}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Fullscreen')\">onFullscreen = ({sender})=> {);</div>\n<pre id=\"Fullscreen\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onFullscreen = ({sender}) => {\n    console.log('Fullscreen')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onFullscreen={this.onFullscreen}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Heightchange')\">onHeightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Heightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onHeightchange = ({sender, value, oldValue}) => {\n    console.log('Heightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onHeightchange={this.onHeightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Hiddenchange')\">onHiddenchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Hiddenchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onHiddenchange = ({sender, value, oldValue}) => {\n    console.log('Hiddenchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onHiddenchange={this.onHiddenchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Hide')\">onHide = ({sender})=> {);</div>\n<pre id=\"Hide\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onHide = ({sender}) => {\n    console.log('Hide')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onHide={this.onHide}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Initialize')\">onInitialize = ({sender})=> {);</div>\n<pre id=\"Initialize\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onInitialize = ({sender}) => {\n    console.log('Initialize')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onInitialize={this.onInitialize}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Leftchange')\">onLeftchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Leftchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onLeftchange = ({sender, value, oldValue}) => {\n    console.log('Leftchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onLeftchange={this.onLeftchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Maxheightchange')\">onMaxheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Maxheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMaxheightchange = ({sender, value, oldValue}) => {\n    console.log('Maxheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onMaxheightchange={this.onMaxheightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Maxwidthchange')\">onMaxwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Maxwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMaxwidthchange = ({sender, value, oldValue}) => {\n    console.log('Maxwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onMaxwidthchange={this.onMaxwidthchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Minheightchange')\">onMinheightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Minheightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMinheightchange = ({sender, value, oldValue}) => {\n    console.log('Minheightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onMinheightchange={this.onMinheightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Minwidthchange')\">onMinwidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Minwidthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMinwidthchange = ({sender, value, oldValue}) => {\n    console.log('Minwidthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onMinwidthchange={this.onMinwidthchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Moved')\">onMoved = ({sender, container, toIndex, fromIndex})=> {);</div>\n<pre id=\"Moved\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onMoved = ({sender, container, toIndex, fromIndex}) => {\n    console.log('Moved')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onMoved={this.onMoved}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Orientationchange')\">onOrientationchange = ({})=> {);</div>\n<pre id=\"Orientationchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onOrientationchange = ({}) => {\n    console.log('Orientationchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onOrientationchange={this.onOrientationchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Painted')\">onPainted = ({sender, element})=> {);</div>\n<pre id=\"Painted\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onPainted = ({sender, element}) => {\n    console.log('Painted')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onPainted={this.onPainted}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Positionedchange')\">onPositionedchange = ({sender, positioned})=> {);</div>\n<pre id=\"Positionedchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onPositionedchange = ({sender, positioned}) => {\n    console.log('Positionedchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onPositionedchange={this.onPositionedchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Removed')\">onRemoved = ({sender, container, index})=> {);</div>\n<pre id=\"Removed\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onRemoved = ({sender, container, index}) => {\n    console.log('Removed')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onRemoved={this.onRemoved}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Resize')\">onResize = ({element, info})=> {);</div>\n<pre id=\"Resize\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onResize = ({element, info}) => {\n    console.log('Resize')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onResize={this.onResize}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Rightchange')\">onRightchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Rightchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onRightchange = ({sender, value, oldValue}) => {\n    console.log('Rightchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onRightchange={this.onRightchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Scrollablechange')\">onScrollablechange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Scrollablechange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onScrollablechange = ({sender, value, oldValue}) => {\n    console.log('Scrollablechange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onScrollablechange={this.onScrollablechange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Show')\">onShow = ({sender})=> {);</div>\n<pre id=\"Show\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onShow = ({sender}) => {\n    console.log('Show')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onShow={this.onShow}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Tofront')\">onTofront = ({sender})=> {);</div>\n<pre id=\"Tofront\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onTofront = ({sender}) => {\n    console.log('Tofront')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onTofront={this.onTofront}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Topchange')\">onTopchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Topchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onTopchange = ({sender, value, oldValue}) => {\n    console.log('Topchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onTopchange={this.onTopchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Updatedata')\">onUpdatedata = ({sender, newData})=> {);</div>\n<pre id=\"Updatedata\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onUpdatedata = ({sender, newData}) => {\n    console.log('Updatedata')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onUpdatedata={this.onUpdatedata}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n\n<div class=\"name\" onclick=\"toggleIt('event','Widthchange')\">onWidthchange = ({sender, value, oldValue})=> {);</div>\n<pre id=\"Widthchange\" class=\"code\" style=\"display:none;\">\nimport React, { Component } from 'react';\nimport { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\nexport default class App extends Component {\n  onWidthchange = ({sender, value, oldValue}) => {\n    console.log('Widthchange')\n  };\n\n  render() {\n    return (\n      &lt;ExtSparklinediscrete onWidthchange={this.onWidthchange}&gt;&lt;/ExtSparklinediscrete&gt;\n    )\n  }\n}\n</pre>\n",
+ "propertyString": "\n  <div class=\"name\" onclick=\"toggleIt('cfg','alignSelf')\">alignSelf</div>\n  <pre id=\"alignSelf\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete alignSelf=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','alwaysOnTop')\">alwaysOnTop</div>\n  <pre id=\"alwaysOnTop\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete alwaysOnTop=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaAttributes')\">ariaAttributes</div>\n  <pre id=\"ariaAttributes\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete ariaAttributes=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaDescribedBy')\">ariaDescribedBy</div>\n  <pre id=\"ariaDescribedBy\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete ariaDescribedBy=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaLabel')\">ariaLabel</div>\n  <pre id=\"ariaLabel\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete ariaLabel=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ariaLabelledBy')\">ariaLabelledBy</div>\n  <pre id=\"ariaLabelledBy\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete ariaLabelledBy=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','axisLock')\">axisLock</div>\n  <pre id=\"axisLock\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete axisLock=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bind')\">bind</div>\n  <pre id=\"bind\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete bind=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','border')\">border</div>\n  <pre id=\"border\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete border=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','bottom')\">bottom</div>\n  <pre id=\"bottom\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete bottom=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','centered')\">centered</div>\n  <pre id=\"centered\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete centered=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','chartRangeClip')\">chartRangeClip</div>\n  <pre id=\"chartRangeClip\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete chartRangeClip=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','chartRangeMax')\">chartRangeMax</div>\n  <pre id=\"chartRangeMax\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete chartRangeMax=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','chartRangeMin')\">chartRangeMin</div>\n  <pre id=\"chartRangeMin\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete chartRangeMin=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','cls')\">cls</div>\n  <pre id=\"cls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete cls=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','constrainAlign')\">constrainAlign</div>\n  <pre id=\"constrainAlign\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete constrainAlign=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','contentEl')\">contentEl</div>\n  <pre id=\"contentEl\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete contentEl=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','controller')\">controller</div>\n  <pre id=\"controller\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete controller=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','data')\">data</div>\n  <pre id=\"data\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete data=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','defaultListenerScope')\">defaultListenerScope</div>\n  <pre id=\"defaultListenerScope\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete defaultListenerScope=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','disabled')\">disabled</div>\n  <pre id=\"disabled\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete disabled=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','disableTooltips')\">disableTooltips</div>\n  <pre id=\"disableTooltips\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete disableTooltips=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','displayed')\">displayed</div>\n  <pre id=\"displayed\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete displayed=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','docked')\">docked</div>\n  <pre id=\"docked\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete docked=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','draggable')\">draggable</div>\n  <pre id=\"draggable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete draggable=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','undefined')\">undefined</div>\n  <pre id=\"undefined\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete undefined=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','undefined')\">undefined</div>\n  <pre id=\"undefined\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete undefined=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','undefined')\">undefined</div>\n  <pre id=\"undefined\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete undefined=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','flex')\">flex</div>\n  <pre id=\"flex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete flex=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','floated')\">floated</div>\n  <pre id=\"floated\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete floated=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','focusCls')\">focusCls</div>\n  <pre id=\"focusCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete focusCls=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','fullscreen')\">fullscreen</div>\n  <pre id=\"fullscreen\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete fullscreen=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','height')\">height</div>\n  <pre id=\"height\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete height=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hidden')\">hidden</div>\n  <pre id=\"hidden\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete hidden=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hideAnimation')\">hideAnimation</div>\n  <pre id=\"hideAnimation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete hideAnimation=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hideMode')\">hideMode</div>\n  <pre id=\"hideMode\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete hideMode=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','hideOnMaskTap')\">hideOnMaskTap</div>\n  <pre id=\"hideOnMaskTap\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete hideOnMaskTap=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','highlightColor')\">highlightColor</div>\n  <pre id=\"highlightColor\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete highlightColor=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','highlightLighten')\">highlightLighten</div>\n  <pre id=\"highlightLighten\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete highlightLighten=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','html')\">html</div>\n  <pre id=\"html\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete html=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','id')\">id</div>\n  <pre id=\"id\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete id=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','instanceCls')\">instanceCls</div>\n  <pre id=\"instanceCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete instanceCls=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','itemId')\">itemId</div>\n  <pre id=\"itemId\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete itemId=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','keyMap')\">keyMap</div>\n  <pre id=\"keyMap\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete keyMap=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','keyMapEnabled')\">keyMapEnabled</div>\n  <pre id=\"keyMapEnabled\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete keyMapEnabled=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','keyMapTarget')\">keyMapTarget</div>\n  <pre id=\"keyMapTarget\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete keyMapTarget=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','left')\">left</div>\n  <pre id=\"left\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete left=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','lineColor')\">lineColor</div>\n  <pre id=\"lineColor\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete lineColor=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','lineHeight')\">lineHeight</div>\n  <pre id=\"lineHeight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete lineHeight=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','listeners')\">listeners</div>\n  <pre id=\"listeners\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete listeners=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','margin')\">margin</div>\n  <pre id=\"margin\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete margin=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','maxHeight')\">maxHeight</div>\n  <pre id=\"maxHeight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete maxHeight=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','maxWidth')\">maxWidth</div>\n  <pre id=\"maxWidth\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete maxWidth=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','minHeight')\">minHeight</div>\n  <pre id=\"minHeight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete minHeight=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','minWidth')\">minWidth</div>\n  <pre id=\"minWidth\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete minWidth=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','modal')\">modal</div>\n  <pre id=\"modal\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete modal=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','modelValidation')\">modelValidation</div>\n  <pre id=\"modelValidation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete modelValidation=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','name')\">name</div>\n  <pre id=\"name\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete name=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','nameable')\">nameable</div>\n  <pre id=\"nameable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete nameable=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','padding')\">padding</div>\n  <pre id=\"padding\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete padding=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','plugins')\">plugins</div>\n  <pre id=\"plugins\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete plugins=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','publishes')\">publishes</div>\n  <pre id=\"publishes\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete publishes=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','record')\">record</div>\n  <pre id=\"record\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete record=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','reference')\">reference</div>\n  <pre id=\"reference\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete reference=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','relative')\">relative</div>\n  <pre id=\"relative\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete relative=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','renderTo')\">renderTo</div>\n  <pre id=\"renderTo\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete renderTo=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','right')\">right</div>\n  <pre id=\"right\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete right=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ripple')\">ripple</div>\n  <pre id=\"ripple\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete ripple=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','scrollable')\">scrollable</div>\n  <pre id=\"scrollable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete scrollable=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','session')\">session</div>\n  <pre id=\"session\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete session=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','shadow')\">shadow</div>\n  <pre id=\"shadow\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete shadow=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','shareableName')\">shareableName</div>\n  <pre id=\"shareableName\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete shareableName=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','shim')\">shim</div>\n  <pre id=\"shim\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete shim=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','showAnimation')\">showAnimation</div>\n  <pre id=\"showAnimation\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete showAnimation=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','stateful')\">stateful</div>\n  <pre id=\"stateful\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete stateful=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','statefulDefaults')\">statefulDefaults</div>\n  <pre id=\"statefulDefaults\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete statefulDefaults=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','stateId')\">stateId</div>\n  <pre id=\"stateId\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete stateId=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','style')\">style</div>\n  <pre id=\"style\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete style=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tabIndex')\">tabIndex</div>\n  <pre id=\"tabIndex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tabIndex=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','thresholdColor')\">thresholdColor</div>\n  <pre id=\"thresholdColor\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete thresholdColor=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','thresholdValue')\">thresholdValue</div>\n  <pre id=\"thresholdValue\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete thresholdValue=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tipTpl')\">tipTpl</div>\n  <pre id=\"tipTpl\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tipTpl=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','toFrontOnShow')\">toFrontOnShow</div>\n  <pre id=\"toFrontOnShow\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete toFrontOnShow=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tooltip')\">tooltip</div>\n  <pre id=\"tooltip\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tooltip=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tooltipPrefix')\">tooltipPrefix</div>\n  <pre id=\"tooltipPrefix\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tooltipPrefix=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tooltipSkipNull')\">tooltipSkipNull</div>\n  <pre id=\"tooltipSkipNull\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tooltipSkipNull=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tooltipSuffix')\">tooltipSuffix</div>\n  <pre id=\"tooltipSuffix\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tooltipSuffix=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','top')\">top</div>\n  <pre id=\"top\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete top=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','touchAction')\">touchAction</div>\n  <pre id=\"touchAction\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete touchAction=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tpl')\">tpl</div>\n  <pre id=\"tpl\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tpl=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','tplWriteMode')\">tplWriteMode</div>\n  <pre id=\"tplWriteMode\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete tplWriteMode=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','translatable')\">translatable</div>\n  <pre id=\"translatable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete translatable=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','twoWayBindable')\">twoWayBindable</div>\n  <pre id=\"twoWayBindable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete twoWayBindable=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','ui')\">ui</div>\n  <pre id=\"ui\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete ui=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','userCls')\">userCls</div>\n  <pre id=\"userCls\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete userCls=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','userSelectable')\">userSelectable</div>\n  <pre id=\"userSelectable\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete userSelectable=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','values')\">values</div>\n  <pre id=\"values\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete values=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','viewModel')\">viewModel</div>\n  <pre id=\"viewModel\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete viewModel=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','weight')\">weight</div>\n  <pre id=\"weight\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete weight=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','width')\">width</div>\n  <pre id=\"width\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete width=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','x')\">x</div>\n  <pre id=\"x\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete x=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','xtype')\">xtype</div>\n  <pre id=\"xtype\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete xtype=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','y')\">y</div>\n  <pre id=\"y\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete y=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  \n  <div class=\"name\" onclick=\"toggleIt('cfg','zIndex')\">zIndex</div>\n  <pre id=\"zIndex\" class=\"code\" style=\"display:none;\">\n  import React, { Component } from 'react';\n  import { ExtSparklinediscrete } from \"@sencha/ext-react-modern\";\n\n    render() {\n      return (\n        &lt;ExtSparklinediscrete zIndex=''&gt;&lt;/ExtSparklinediscrete&gt;\n      )\n    }\n  }\n  </pre>\n  ",
+ "first": "\nPlots a series of thin vertical lines based upon the input <a href=\"javascript:sendToContext('cfg','values');\">values</a> array.",
+ "text": "See {@link Ext.sparkline.Base} for a simple example.\n"
+}

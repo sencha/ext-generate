@@ -1,0 +1,94 @@
+.x-docked-top .x-has-badge .x-badge-el {
+  top: 0px;
+}
+
+.x-tabbar {
+  background-color: white;
+}
+
+.x-tab {
+  background-color: white;
+}
+
+.navigationTabPanel {
+  font-family: monospace;
+  font-size: 18px;
+}
+
+/* Navigation */
+.navigationTabPanel .x-tab-bar-default-top {
+  background : transparent;
+  background-image: none !important;
+}
+.navigationTabPanel .x-tab-bar-default-top {
+  border-width: 0;
+  /* fix for border top */
+}
+.navigationTabPanel .x-tab-bar-body a {
+  background-image: none !important;
+  box-shadow: none;
+  border: 0;
+  border-radius : 0;
+  padding: 10px 25px 0;
+}
+.navigationTabPanel .x-tab-bar-body .x-table-plain td {
+  background : transparent !important;
+  background-image: none !important;
+}
+.navigationTabPanel .x-tab-bar-body .x-tab-default-top {
+  background : #f0f0f0 !important;
+}
+.navigationTabPanel .x-tab-bar-body .x-tab-default-top-active {
+  background : #f7fafc !important;
+  border-color: #ffffff !important;
+  border-width: 1px 1px 0 1px !important;
+  border-style: solid;
+}
+.navigationTabPanel .x-tab-bar-body-default-top {
+  padding-bottom :0;
+}
+.navigationTabPanel .x-tab-default-top {
+  border-bottom : 0;
+}
+/* change the height of tabs */
+.navigationTabPanel .x-tab-bar-strip {
+  display : none !important;
+  /* no border between */
+}
+.navigationTabPanel .x-tab-bar .x-tab-bar-body {
+  height: 37px !important;
+  /* default is 23 */
+  border: 0 !important;
+}
+.navigationTabPanel .x-tab-bar .x-tab-bar-body .x-box-inner {
+  height: 35px !important;
+  /* default is 21 */
+}
+.navigationTabPanel .x-tab-bar .x-tab-bar-body .x-box-inner .x-tab {
+  height: 35px !important;
+  box-shadow: none;
+  /* default is 21 */
+}
+.navigationTabPanel .x-tab-bar .x-tab-bar-body .x-box-inner .x-tab button {
+  height: 37px !important;
+  line-height: 37px !important;
+}
+.navigationTabPanel .x-tab-center {
+  margin-top: -10px;
+}
+.navigationTabPanelBody {
+  background : #f7fafc;
+  border-color: #ffffff;
+  border-width: 0 1px 1px 1px;
+  border-style: solid;
+  -webkit-border-radius: 5px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius: 5px;
+  -moz-border-radius-topleft: 0;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  padding : 20px 10px 10px;
+}
+.navigationTabPanelBody .x-panel-body-default {
+  background : transparent;
+}

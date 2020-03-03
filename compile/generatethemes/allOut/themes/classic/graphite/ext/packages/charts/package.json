@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-charts",
     "SenchaExtName": "@sencha/ext-charts",
     "SenchaExtReactName": "@sencha/ext-react-charts",
-    "version": "7.2.0.56",
+    "version": "7.2.0.57",
     "sencha": {
         "name": "charts",
         "namespace": "Ext",

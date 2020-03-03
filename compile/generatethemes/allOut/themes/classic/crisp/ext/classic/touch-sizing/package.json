@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-classic-touch-sizing",
     "SenchaExtName": "@sencha/ext-classic-touch-sizing",
     "SenchaExtReactName": "@sencha/ext-react-classic-touch-sizing",
-    "version": "7.2.0.56",
+    "version": "7.2.0.57",
     "sencha": {
         "name": "touch-sizing",
         "type": "code",

@@ -2,6 +2,7 @@ exports.setGlobals =() => {
 
   //global["docs"]      = [];
 
+  // for prod
   global["doWebComponents"]      = true;
   global["doAngular"]            = true;
   global["doReact"]              = true;
@@ -13,6 +14,19 @@ exports.setGlobals =() => {
   global["npmInstall"]           = true;
   global["npmPublishRightAfter"] = false;
   global["copy"]                 = true;
+
+  // for doc testing
+  // global["doWebComponents"]      = false;
+  // global["doAngular"]            = false;
+  // global["doReact"]              = false;
+  // global["doDoc"]                = true;
+
+  // global["createFolders"]        = true;
+  // global["launch"]               = true;
+  // global["postLaunch"]           = false;
+  // global["npmInstall"]           = false;
+  // global["npmPublishRightAfter"] = false;
+  // global["copy"]                 = false;
 
   console.log(`doWebComponents:\t${doWebComponents}`)
   console.log(`doAngular:\t\t${doAngular}`)
@@ -48,6 +62,7 @@ exports.setGlobals =() => {
   global["mkdirp"] = require("mkdirp");
   require("./XTemplate");
 
+  global["all"] = [];
   global["info"] = {};
   info.now = new Date().toString();
   info.toolkit = toolkit;
@@ -249,6 +264,9 @@ angularPackageFolder = `${typeFolder}ext-angular${info.toolkitshown}${info.bundl
 
 global["reactPackageFolder"];
 reactPackageFolder = `${typeFolder}ext-react${info.toolkitshown}${info.bundle}/`;
+
+global["docPackageFolder"];
+docPackageFolder = `${typeFolder}doc${info.toolkitshown}${info.bundle}/`;
 
 // global["angularFolder"];
 // global["angularStagingFolder"];

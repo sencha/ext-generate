@@ -10,7 +10,7 @@ var outputFolder = `./allOut/`
 var classicFolderLocalSDK = `${localSDK}classic/`;
 var modernFolderLocalSDK = `${localSDK}modern/`;
 
-var folderRemoteSDK = `/Volumes/BOOTCAMP/aaExt/ext-7.2.0.56/`;
+var folderRemoteSDK = `/Volumes/BOOTCAMP/aaExt/ext-7.2.0.57/`;
 
 var classicEnterprisePathsRemoteSDK = [
   `${folderRemoteSDK}build/ext-all-debug.js`,

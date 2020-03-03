@@ -4,7 +4,7 @@
     "ext-name": "@sencha/ext-classic-theme-neutral",
     "SenchaExtName": "@sencha/ext-classic-theme-neutral",
     "SenchaExtReactName": "@sencha/ext-react-classic-theme-neutral",
-    "version": "7.2.0.56",
+    "version": "7.2.0.57",
     "sencha": {
         "name": "theme-neutral",
         "namespace": "Ext",

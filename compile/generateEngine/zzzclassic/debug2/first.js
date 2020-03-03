@@ -1,1 +1,0 @@
-var Ext = window['Ext']
