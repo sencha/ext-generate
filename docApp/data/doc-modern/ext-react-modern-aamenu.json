@@ -2,1410 +2,1880 @@
  {
   "text": "Actionsheet",
   "xtype": "actionsheet",
+  "extends": "Ext.Sheet",
+  "name": "Ext.ActionSheet",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Audio",
   "xtype": "audio",
+  "extends": "Ext.Media",
+  "name": "Ext.Audio",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Breadcrumbbar",
   "xtype": "breadcrumbbar",
+  "extends": "Ext.Toolbar",
+  "name": "Ext.BreadcrumbBar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Button",
   "xtype": "button",
+  "extends": "Ext.Component",
+  "name": "Ext.Button",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_event",
   "xtype": "calendar-event",
+  "extends": "Ext.calendar.EventBase",
+  "name": "Ext.calendar.Event",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_form_add",
   "xtype": "calendar-form-add",
+  "extends": "Ext.calendar.form.Form",
+  "name": "Ext.calendar.form.Add",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_calendar_picker",
   "xtype": "calendar-calendar-picker",
+  "extends": "Ext.field.Select",
+  "name": "Ext.calendar.form.CalendarPicker",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_form_edit",
   "xtype": "calendar-form-edit",
+  "extends": "Ext.calendar.form.Form",
+  "name": "Ext.calendar.form.Edit",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_timefield",
   "xtype": "calendar-timefield",
+  "extends": "Ext.field.Select",
+  "name": "Ext.calendar.form.TimeField",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_daysheader",
   "xtype": "calendar-daysheader",
+  "extends": "Ext.calendar.header.Base",
+  "name": "Ext.calendar.header.Days",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_weeksheader",
   "xtype": "calendar-weeksheader",
+  "extends": "Ext.calendar.header.Base",
+  "name": "Ext.calendar.header.Weeks",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_list",
   "xtype": "calendar-list",
+  "extends": "Ext.calendar.AbstractList",
+  "name": "Ext.calendar.List",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_day",
   "xtype": "calendar-day",
+  "extends": "Ext.calendar.panel.Days",
+  "name": "Ext.calendar.panel.Day",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_days",
   "xtype": "calendar-days",
+  "extends": "Ext.calendar.panel.Base",
+  "name": "Ext.calendar.panel.Days",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_month",
   "xtype": "calendar-month",
+  "extends": "Ext.calendar.panel.Weeks",
+  "name": "Ext.calendar.panel.Month",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar",
   "xtype": "calendar",
+  "extends": "Ext.calendar.panel.AbstractPanel",
+  "name": "Ext.calendar.panel.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_week",
   "xtype": "calendar-week",
+  "extends": "Ext.calendar.panel.Days",
+  "name": "Ext.calendar.panel.Week",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_weeks",
   "xtype": "calendar-weeks",
+  "extends": "Ext.calendar.panel.Base",
+  "name": "Ext.calendar.panel.Weeks",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_dayview",
   "xtype": "calendar-dayview",
+  "extends": "Ext.calendar.view.Days",
+  "name": "Ext.calendar.view.Day",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_daysview",
   "xtype": "calendar-daysview",
+  "extends": "Ext.calendar.view.Base",
+  "name": "Ext.calendar.view.Days",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_monthview",
   "xtype": "calendar-monthview",
+  "extends": "Ext.calendar.view.Weeks",
+  "name": "Ext.calendar.view.Month",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_multiview",
   "xtype": "calendar-multiview",
+  "extends": "Ext.container.Container",
+  "name": "Ext.calendar.view.Multi",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_weekview",
   "xtype": "calendar-weekview",
+  "extends": "Ext.calendar.view.Days",
+  "name": "Ext.calendar.view.Week",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Calendar_weeksview",
   "xtype": "calendar-weeksview",
+  "extends": "Ext.calendar.view.Base",
+  "name": "Ext.calendar.view.Weeks",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Carousel",
   "xtype": "carousel",
+  "extends": "Ext.Container",
+  "name": "Ext.carousel.Carousel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Cartesian",
   "xtype": "cartesian",
+  "extends": "Ext.chart.AbstractChart",
+  "name": "Ext.chart.CartesianChart",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Chart",
   "xtype": "chart",
+  "extends": "Ext.chart.AbstractChart",
+  "name": "Ext.chart.CartesianChart",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Legend",
   "xtype": "legend",
+  "extends": "Ext.chart.legend.LegendBase",
+  "name": "Ext.chart.legend.Legend",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Chartnavigator",
   "xtype": "chartnavigator",
+  "extends": "Ext.chart.navigator.ContainerBase",
+  "name": "Ext.chart.navigator.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Polar",
   "xtype": "polar",
+  "extends": "Ext.chart.AbstractChart",
+  "name": "Ext.chart.PolarChart",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Spacefilling",
   "xtype": "spacefilling",
+  "extends": "Ext.chart.AbstractChart",
+  "name": "Ext.chart.SpaceFillingChart",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Chip",
   "xtype": "chip",
+  "extends": "Ext.Component",
+  "name": "Ext.Chip",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Component",
   "xtype": "component",
+  "extends": "Ext.Widget",
+  "name": "Ext.Component",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Container",
   "xtype": "container",
+  "extends": "Ext.Component",
+  "name": "Ext.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_canvas",
   "xtype": "d3-canvas",
+  "extends": "Ext.d3.Component",
+  "name": "Ext.d3.canvas.Canvas",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_heatmap",
   "xtype": "d3-heatmap",
+  "extends": "Ext.d3.svg.Svg",
+  "name": "Ext.d3.HeatMap",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_pack",
   "xtype": "d3-pack",
+  "extends": "Ext.d3.hierarchy.Hierarchy",
+  "name": "Ext.d3.hierarchy.Pack",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_partition",
   "xtype": "d3-partition",
+  "extends": "Ext.d3.hierarchy.Hierarchy",
+  "name": "Ext.d3.hierarchy.partition.Partition",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_sunburst",
   "xtype": "d3-sunburst",
+  "extends": "Ext.d3.hierarchy.partition.Partition",
+  "name": "Ext.d3.hierarchy.partition.Sunburst",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_tree",
   "xtype": "d3-tree",
+  "extends": "Ext.d3.hierarchy.tree.Tree",
+  "name": "Ext.d3.hierarchy.tree.HorizontalTree",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_horizontal_tree",
   "xtype": "d3-horizontal-tree",
+  "extends": "Ext.d3.hierarchy.tree.Tree",
+  "name": "Ext.d3.hierarchy.tree.HorizontalTree",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_treemap",
   "xtype": "d3-treemap",
+  "extends": "Ext.d3.hierarchy.Hierarchy",
+  "name": "Ext.d3.hierarchy.TreeMap",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3_svg",
   "xtype": "d3-svg",
+  "extends": "Ext.d3.Component",
+  "name": "Ext.d3.svg.Svg",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "D3",
   "xtype": "d3",
+  "extends": "Ext.d3.Component",
+  "name": "Ext.d3.svg.Svg",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Boundlist",
   "xtype": "boundlist",
+  "extends": "Ext.dataview.List",
+  "name": "Ext.dataview.BoundList",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Chipview",
   "xtype": "chipview",
+  "extends": "Ext.dataview.DataView",
+  "name": "Ext.dataview.ChipView",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Componentdataview",
   "xtype": "componentdataview",
+  "extends": "Ext.dataview.Abstract",
+  "name": "Ext.dataview.Component",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Dataitem",
   "xtype": "dataitem",
+  "extends": "Ext.Container",
+  "name": "Ext.dataview.DataItem",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Dataview",
   "xtype": "dataview",
+  "extends": "Ext.dataview.Abstract",
+  "name": "Ext.dataview.DataView",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Emptytext",
   "xtype": "emptytext",
+  "extends": "Ext.Component",
+  "name": "Ext.dataview.EmptyText",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Indexbar",
   "xtype": "indexbar",
+  "extends": "Ext.Component",
+  "name": "Ext.dataview.IndexBar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Itemheader",
   "xtype": "itemheader",
+  "extends": "Ext.Component",
+  "name": "Ext.dataview.ItemHeader",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "List",
   "xtype": "list",
+  "extends": "Ext.dataview.Component",
+  "name": "Ext.dataview.List",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Listitem",
   "xtype": "listitem",
+  "extends": "Ext.dataview.DataItem",
+  "name": "Ext.dataview.ListItem",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Listitemplaceholder",
   "xtype": "listitemplaceholder",
+  "extends": "Ext.dataview.SimpleListItem",
+  "name": "Ext.dataview.ListItemPlaceholder",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Listswiperitem",
   "xtype": "listswiperitem",
+  "extends": "Ext.Container",
+  "name": "Ext.dataview.listswiper.Item",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Listswiperstepper",
   "xtype": "listswiperstepper",
+  "extends": "Ext.dataview.listswiper.Item",
+  "name": "Ext.dataview.listswiper.Stepper",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Nestedlist",
   "xtype": "nestedlist",
+  "extends": "Ext.Container",
+  "name": "Ext.dataview.NestedList",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pullrefreshbar",
   "xtype": "pullrefreshbar",
+  "extends": "Ext.dataview.pullrefresh.Item",
+  "name": "Ext.dataview.pullrefresh.Bar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pullrefreshspinner",
   "xtype": "pullrefreshspinner",
+  "extends": "Ext.dataview.pullrefresh.Item",
+  "name": "Ext.dataview.pullrefresh.Spinner",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Simplelistitem",
   "xtype": "simplelistitem",
+  "extends": "Ext.Component",
+  "name": "Ext.dataview.SimpleListItem",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Dialog",
   "xtype": "dialog",
+  "extends": "Ext.Panel",
+  "name": "Ext.Dialog",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Window",
   "xtype": "window",
+  "extends": "Ext.Panel",
+  "name": "Ext.Dialog",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Draw",
   "xtype": "draw",
+  "extends": "Ext.draw.ContainerBase",
+  "name": "Ext.draw.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Surface",
   "xtype": "surface",
+  "extends": "Ext.draw.SurfaceBase",
+  "name": "Ext.draw.Surface",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Editor",
   "xtype": "editor",
+  "extends": "Ext.Container",
+  "name": "Ext.Editor",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Checkbox",
   "xtype": "checkbox",
+  "extends": "Ext.field.Input",
+  "name": "Ext.field.Checkbox",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Checkboxfield",
   "xtype": "checkboxfield",
+  "extends": "Ext.field.Input",
+  "name": "Ext.field.Checkbox",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Checkboxgroup",
   "xtype": "checkboxgroup",
+  "extends": "Ext.field.FieldGroupContainer",
+  "name": "Ext.field.CheckboxGroup",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Combobox",
   "xtype": "combobox",
+  "extends": "Ext.field.Select",
+  "name": "Ext.field.ComboBox",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Comboboxfield",
   "xtype": "comboboxfield",
+  "extends": "Ext.field.Select",
+  "name": "Ext.field.ComboBox",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Containerfield",
   "xtype": "containerfield",
+  "extends": "Ext.field.Field",
+  "name": "Ext.field.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Fieldcontainer",
   "xtype": "fieldcontainer",
+  "extends": "Ext.field.Field",
+  "name": "Ext.field.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datefield",
   "xtype": "datefield",
+  "extends": "Ext.field.Picker",
+  "name": "Ext.field.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datepickerfield",
   "xtype": "datepickerfield",
+  "extends": "Ext.field.Picker",
+  "name": "Ext.field.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datepickernativefield",
   "xtype": "datepickernativefield",
+  "extends": "Ext.field.Date",
+  "name": "Ext.field.DatePickerNative",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Displayfield",
   "xtype": "displayfield",
+  "extends": "Ext.field.Field",
+  "name": "Ext.field.Display",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Emailfield",
   "xtype": "emailfield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.Email",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Field",
   "xtype": "field",
+  "extends": "Ext.Component",
+  "name": "Ext.field.Field",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Groupcontainer",
   "xtype": "groupcontainer",
+  "extends": "Ext.field.Container",
+  "name": "Ext.field.FieldGroupContainer",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Filefield",
   "xtype": "filefield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.File",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Filebutton",
   "xtype": "filebutton",
+  "extends": "Ext.Button",
+  "name": "Ext.field.FileButton",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Hiddenfield",
   "xtype": "hiddenfield",
+  "extends": "Ext.field.Input",
+  "name": "Ext.field.Hidden",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Inputfield",
   "xtype": "inputfield",
+  "extends": "Ext.field.Field",
+  "name": "Ext.field.Input",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Numberfield",
   "xtype": "numberfield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.Number",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Fieldpanel",
   "xtype": "fieldpanel",
+  "extends": "Ext.Panel",
+  "name": "Ext.field.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Passwordfield",
   "xtype": "passwordfield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.Password",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pickerfield",
   "xtype": "pickerfield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.Picker",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Radio",
   "xtype": "radio",
+  "extends": "Ext.field.Checkbox",
+  "name": "Ext.field.Radio",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Radiofield",
   "xtype": "radiofield",
+  "extends": "Ext.field.Checkbox",
+  "name": "Ext.field.Radio",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Radiogroup",
   "xtype": "radiogroup",
+  "extends": "Ext.field.FieldGroupContainer",
+  "name": "Ext.field.RadioGroup",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Searchfield",
   "xtype": "searchfield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.Search",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Selectfield",
   "xtype": "selectfield",
+  "extends": "Ext.field.Picker",
+  "name": "Ext.field.Select",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Singlesliderfield",
   "xtype": "singlesliderfield",
+  "extends": "Ext.field.Slider",
+  "name": "Ext.field.SingleSlider",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sliderfield",
   "xtype": "sliderfield",
+  "extends": "Ext.field.Field",
+  "name": "Ext.field.Slider",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Spinnerfield",
   "xtype": "spinnerfield",
+  "extends": "Ext.field.Number",
+  "name": "Ext.field.Spinner",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Textfield",
   "xtype": "textfield",
+  "extends": "Ext.field.Input",
+  "name": "Ext.field.Text",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Textareafield",
   "xtype": "textareafield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.TextArea",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Timefield",
   "xtype": "timefield",
+  "extends": "Ext.field.Picker",
+  "name": "Ext.field.Time",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Togglefield",
   "xtype": "togglefield",
+  "extends": "Ext.field.SingleSlider",
+  "name": "Ext.field.Toggle",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Cleartrigger",
   "xtype": "cleartrigger",
+  "extends": "Ext.field.trigger.Trigger",
+  "name": "Ext.field.trigger.Clear",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datetrigger",
   "xtype": "datetrigger",
+  "extends": "Ext.field.trigger.Expand",
+  "name": "Ext.field.trigger.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Expandtrigger",
   "xtype": "expandtrigger",
+  "extends": "Ext.field.trigger.Trigger",
+  "name": "Ext.field.trigger.Expand",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Menutrigger",
   "xtype": "menutrigger",
+  "extends": "Ext.field.trigger.Trigger",
+  "name": "Ext.field.trigger.Menu",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Revealtrigger",
   "xtype": "revealtrigger",
+  "extends": "Ext.field.trigger.Trigger",
+  "name": "Ext.field.trigger.Reveal",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Spindowntrigger",
   "xtype": "spindowntrigger",
+  "extends": "Ext.field.trigger.Trigger",
+  "name": "Ext.field.trigger.SpinDown",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Spinuptrigger",
   "xtype": "spinuptrigger",
+  "extends": "Ext.field.trigger.Trigger",
+  "name": "Ext.field.trigger.SpinUp",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Timetrigger",
   "xtype": "timetrigger",
+  "extends": "Ext.field.trigger.Expand",
+  "name": "Ext.field.trigger.Time",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Trigger",
   "xtype": "trigger",
+  "extends": "Ext.field.trigger.Base",
+  "name": "Ext.field.trigger.Trigger",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Urlfield",
   "xtype": "urlfield",
+  "extends": "Ext.field.Text",
+  "name": "Ext.field.Url",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Fieldset",
   "xtype": "fieldset",
+  "extends": "Ext.Container",
+  "name": "Ext.form.FieldSet",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Formpanel",
   "xtype": "formpanel",
+  "extends": "Ext.field.Panel",
+  "name": "Ext.form.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Froalaeditor",
   "xtype": "froalaeditor",
+  "extends": "Ext.Component",
+  "name": "Ext.froala.Editor",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Froalaeditorfield",
   "xtype": "froalaeditorfield",
+  "extends": "Ext.field.Container",
+  "name": "Ext.froala.EditorField",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridcellbase",
   "xtype": "gridcellbase",
+  "extends": "Ext.Widget",
+  "name": "Ext.grid.cell.Base",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Booleancell",
   "xtype": "booleancell",
+  "extends": "Ext.grid.cell.Text",
+  "name": "Ext.grid.cell.Boolean",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridcell",
   "xtype": "gridcell",
+  "extends": "Ext.grid.cell.Text",
+  "name": "Ext.grid.cell.Cell",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Checkcell",
   "xtype": "checkcell",
+  "extends": "Ext.grid.cell.Base",
+  "name": "Ext.grid.cell.Check",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datecell",
   "xtype": "datecell",
+  "extends": "Ext.grid.cell.Text",
+  "name": "Ext.grid.cell.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Numbercell",
   "xtype": "numbercell",
+  "extends": "Ext.grid.cell.Text",
+  "name": "Ext.grid.cell.Number",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Rownumberercell",
   "xtype": "rownumberercell",
+  "extends": "Ext.grid.cell.Number",
+  "name": "Ext.grid.cell.RowNumberer",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Textcell",
   "xtype": "textcell",
+  "extends": "Ext.grid.cell.Base",
+  "name": "Ext.grid.cell.Text",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Treecell",
   "xtype": "treecell",
+  "extends": "Ext.grid.cell.Cell",
+  "name": "Ext.grid.cell.Tree",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Widgetcell",
   "xtype": "widgetcell",
+  "extends": "Ext.grid.cell.Base",
+  "name": "Ext.grid.cell.Widget",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Celleditor",
   "xtype": "celleditor",
+  "extends": "Ext.Editor",
+  "name": "Ext.grid.CellEditor",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Booleancolumn",
   "xtype": "booleancolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Boolean",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Checkcolumn",
   "xtype": "checkcolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Check",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridcolumn",
   "xtype": "gridcolumn",
+  "extends": "Ext.grid.HeaderContainer",
+  "name": "Ext.grid.column.Column",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Column",
   "xtype": "column",
+  "extends": "Ext.grid.HeaderContainer",
+  "name": "Ext.grid.column.Column",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Templatecolumn",
   "xtype": "templatecolumn",
+  "extends": "Ext.grid.HeaderContainer",
+  "name": "Ext.grid.column.Column",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datecolumn",
   "xtype": "datecolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Dragcolumn",
   "xtype": "dragcolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Drag",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Numbercolumn",
   "xtype": "numbercolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Number",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Rownumberer",
   "xtype": "rownumberer",
+  "extends": "Ext.grid.column.Number",
+  "name": "Ext.grid.column.RowNumberer",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Selectioncolumn",
   "xtype": "selectioncolumn",
+  "extends": "Ext.grid.column.Check",
+  "name": "Ext.grid.column.Selection",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Textcolumn",
   "xtype": "textcolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Text",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Treecolumn",
   "xtype": "treecolumn",
+  "extends": "Ext.grid.column.Column",
+  "name": "Ext.grid.column.Tree",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Grid",
   "xtype": "grid",
+  "extends": "Ext.dataview.List",
+  "name": "Ext.grid.Grid",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Headercontainer",
   "xtype": "headercontainer",
+  "extends": "Ext.Container",
+  "name": "Ext.grid.HeaderContainer",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Lockedgrid",
   "xtype": "lockedgrid",
+  "extends": "Ext.Panel",
+  "name": "Ext.grid.locked.Grid",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Lockedgridregion",
   "xtype": "lockedgridregion",
+  "extends": "Ext.Panel",
+  "name": "Ext.grid.locked.Region",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridcolumnsmenu",
   "xtype": "gridcolumnsmenu",
+  "extends": "Ext.grid.menu.Shared",
+  "name": "Ext.grid.menu.Columns",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridgroupbythismenuitem",
   "xtype": "gridgroupbythismenuitem",
+  "extends": "Ext.menu.Item",
+  "name": "Ext.grid.menu.GroupByThis",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridshowingroupsmenuitem",
   "xtype": "gridshowingroupsmenuitem",
+  "extends": "Ext.menu.CheckItem",
+  "name": "Ext.grid.menu.ShowInGroups",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridsortascmenuitem",
   "xtype": "gridsortascmenuitem",
+  "extends": "Ext.menu.RadioItem",
+  "name": "Ext.grid.menu.SortAsc",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridsortdescmenuitem",
   "xtype": "gridsortdescmenuitem",
+  "extends": "Ext.menu.RadioItem",
+  "name": "Ext.grid.menu.SortDesc",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pagingtoolbar",
   "xtype": "pagingtoolbar",
+  "extends": "Ext.Toolbar",
+  "name": "Ext.grid.PagingToolbar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridrow",
   "xtype": "gridrow",
+  "extends": "Ext.Component",
+  "name": "Ext.grid.Row",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Rowbody",
   "xtype": "rowbody",
+  "extends": "Ext.Component",
+  "name": "Ext.grid.RowBody",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Roweditorbar",
   "xtype": "roweditorbar",
+  "extends": "Ext.Panel",
+  "name": "Ext.grid.rowedit.Bar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Roweditorcell",
   "xtype": "roweditorcell",
+  "extends": "Ext.Component",
+  "name": "Ext.grid.rowedit.Cell",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Roweditor",
   "xtype": "roweditor",
+  "extends": "Ext.dataview.ListItem",
+  "name": "Ext.grid.rowedit.Editor",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Roweditorgap",
   "xtype": "roweditorgap",
+  "extends": "Ext.Component",
+  "name": "Ext.grid.rowedit.Gap",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Rowheader",
   "xtype": "rowheader",
+  "extends": "Ext.dataview.ItemHeader",
+  "name": "Ext.grid.RowHeader",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gridsummaryrow",
   "xtype": "gridsummaryrow",
+  "extends": "Ext.grid.Row",
+  "name": "Ext.grid.SummaryRow",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tree",
   "xtype": "tree",
+  "extends": "Ext.grid.Grid",
+  "name": "Ext.grid.Tree",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Image",
   "xtype": "image",
+  "extends": "Ext.Component",
+  "name": "Ext.Img",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Img",
   "xtype": "img",
+  "extends": "Ext.Component",
+  "name": "Ext.Img",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Indicator",
   "xtype": "indicator",
+  "extends": "Ext.Component",
+  "name": "Ext.Indicator",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Label",
   "xtype": "label",
+  "extends": "Ext.Component",
+  "name": "Ext.Label",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Treelist",
   "xtype": "treelist",
+  "extends": "Ext.Gadget",
+  "name": "Ext.list.Tree",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Treelistitem",
   "xtype": "treelistitem",
+  "extends": "Ext.list.AbstractTreeItem",
+  "name": "Ext.list.TreeItem",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Loadmask",
   "xtype": "loadmask",
+  "extends": "Ext.Mask",
+  "name": "Ext.LoadMask",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Mask",
   "xtype": "mask",
+  "extends": "Ext.Component",
+  "name": "Ext.Mask",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Media",
   "xtype": "media",
+  "extends": "Ext.Component",
+  "name": "Ext.Media",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Menucheckitem",
   "xtype": "menucheckitem",
+  "extends": "Ext.menu.Item",
+  "name": "Ext.menu.CheckItem",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Menuitem",
   "xtype": "menuitem",
+  "extends": "Ext.Component",
+  "name": "Ext.menu.Item",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Menu",
   "xtype": "menu",
+  "extends": "Ext.Panel",
+  "name": "Ext.menu.Menu",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Menuradioitem",
   "xtype": "menuradioitem",
+  "extends": "Ext.menu.CheckItem",
+  "name": "Ext.menu.RadioItem",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Menuseparator",
   "xtype": "menuseparator",
+  "extends": "Ext.Component",
+  "name": "Ext.menu.Separator",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Messagebox",
   "xtype": "messagebox",
+  "extends": "Ext.Dialog",
+  "name": "Ext.MessageBox",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Navigationview",
   "xtype": "navigationview",
+  "extends": "Ext.Container",
+  "name": "Ext.navigation.View",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Panel",
   "xtype": "panel",
+  "extends": "Ext.Container",
+  "name": "Ext.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Accordion",
   "xtype": "accordion",
+  "extends": "Ext.Panel",
+  "name": "Ext.panel.Accordion",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datepanel",
   "xtype": "datepanel",
+  "extends": "Ext.Panel",
+  "name": "Ext.panel.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datetitle",
   "xtype": "datetitle",
+  "extends": "Ext.panel.Title",
+  "name": "Ext.panel.DateTitle",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Panelheader",
   "xtype": "panelheader",
+  "extends": "Ext.Container",
+  "name": "Ext.panel.Header",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Timepanel",
   "xtype": "timepanel",
+  "extends": "Ext.Panel",
+  "name": "Ext.panel.Time",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Paneltitle",
   "xtype": "paneltitle",
+  "extends": "Ext.Component",
+  "name": "Ext.panel.Title",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Yearpicker",
   "xtype": "yearpicker",
+  "extends": "Ext.dataview.BoundList",
+  "name": "Ext.panel.YearPicker",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Datepicker",
   "xtype": "datepicker",
+  "extends": "Ext.picker.Picker",
+  "name": "Ext.picker.Date",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Picker",
   "xtype": "picker",
+  "extends": "Ext.Sheet",
+  "name": "Ext.picker.Picker",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Selectpicker",
   "xtype": "selectpicker",
+  "extends": "Ext.picker.Picker",
+  "name": "Ext.picker.SelectPicker",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pickerslot",
   "xtype": "pickerslot",
+  "extends": "Ext.dataview.DataView",
+  "name": "Ext.picker.Slot",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tabletpicker",
   "xtype": "tabletpicker",
+  "extends": "Ext.Panel",
+  "name": "Ext.picker.Tablet",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotgridcell",
   "xtype": "pivotgridcell",
+  "extends": "Ext.grid.cell.Cell",
+  "name": "Ext.pivot.cell.Cell",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotgridgroupcell",
   "xtype": "pivotgridgroupcell",
+  "extends": "Ext.pivot.cell.Cell",
+  "name": "Ext.pivot.cell.Group",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotd3container",
   "xtype": "pivotd3container",
+  "extends": "Ext.pivot.d3.AbstractContainer",
+  "name": "Ext.pivot.d3.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotheatmap",
   "xtype": "pivotheatmap",
+  "extends": "Ext.d3.HeatMap",
+  "name": "Ext.pivot.d3.HeatMap",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivottreemap",
   "xtype": "pivottreemap",
+  "extends": "Ext.d3.hierarchy.TreeMap",
+  "name": "Ext.pivot.d3.TreeMap",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotgrid",
   "xtype": "pivotgrid",
+  "extends": "Ext.grid.Grid",
+  "name": "Ext.pivot.Grid",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotconfigfield",
   "xtype": "pivotconfigfield",
+  "extends": "Ext.dataview.ListItem",
+  "name": "Ext.pivot.plugin.configurator.Column",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotconfigcontainer",
   "xtype": "pivotconfigcontainer",
+  "extends": "Ext.Panel",
+  "name": "Ext.pivot.plugin.configurator.Container",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotconfigform",
   "xtype": "pivotconfigform",
+  "extends": "Ext.form.Panel",
+  "name": "Ext.pivot.plugin.configurator.Form",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotconfigpanel",
   "xtype": "pivotconfigpanel",
+  "extends": "Ext.Panel",
+  "name": "Ext.pivot.plugin.configurator.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotsettings",
   "xtype": "pivotsettings",
+  "extends": "Ext.form.Panel",
+  "name": "Ext.pivot.plugin.configurator.Settings",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotrangeeditor",
   "xtype": "pivotrangeeditor",
+  "extends": "Ext.form.Panel",
+  "name": "Ext.pivot.plugin.rangeeditor.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Pivotgridrow",
   "xtype": "pivotgridrow",
+  "extends": "Ext.grid.Row",
+  "name": "Ext.pivot.Row",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Progress",
   "xtype": "progress",
+  "extends": "Ext.Gadget",
+  "name": "Ext.Progress",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Progressbarwidget",
   "xtype": "progressbarwidget",
+  "extends": "Ext.Gadget",
+  "name": "Ext.Progress",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Segmentedbutton",
   "xtype": "segmentedbutton",
+  "extends": "Ext.Container",
+  "name": "Ext.SegmentedButton",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sheet",
   "xtype": "sheet",
+  "extends": "Ext.Panel",
+  "name": "Ext.Sheet",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Slider",
   "xtype": "slider",
+  "extends": "Ext.Component",
+  "name": "Ext.slider.Slider",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Thumb",
   "xtype": "thumb",
+  "extends": "Ext.Component",
+  "name": "Ext.slider.Thumb",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Toggleslider",
   "xtype": "toggleslider",
+  "extends": "Ext.slider.Slider",
+  "name": "Ext.slider.Toggle",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Spacer",
   "xtype": "spacer",
+  "extends": "Ext.Component",
+  "name": "Ext.Spacer",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklinebar",
   "xtype": "sparklinebar",
+  "extends": "Ext.sparkline.BarBase",
+  "name": "Ext.sparkline.Bar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparkline",
   "xtype": "sparkline",
+  "extends": "Ext.Gadget",
+  "name": "Ext.sparkline.Base",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklinebox",
   "xtype": "sparklinebox",
+  "extends": "Ext.sparkline.Base",
+  "name": "Ext.sparkline.Box",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklinebullet",
   "xtype": "sparklinebullet",
+  "extends": "Ext.sparkline.Base",
+  "name": "Ext.sparkline.Bullet",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklinediscrete",
   "xtype": "sparklinediscrete",
+  "extends": "Ext.sparkline.BarBase",
+  "name": "Ext.sparkline.Discrete",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklineline",
   "xtype": "sparklineline",
+  "extends": "Ext.sparkline.Base",
+  "name": "Ext.sparkline.Line",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklinepie",
   "xtype": "sparklinepie",
+  "extends": "Ext.sparkline.Base",
+  "name": "Ext.sparkline.Pie",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Sparklinetristate",
   "xtype": "sparklinetristate",
+  "extends": "Ext.sparkline.BarBase",
+  "name": "Ext.sparkline.TriState",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Splitbutton",
   "xtype": "splitbutton",
+  "extends": "Ext.Button",
+  "name": "Ext.SplitButton",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tabbar",
   "xtype": "tabbar",
+  "extends": "Ext.Toolbar",
+  "name": "Ext.tab.Bar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tabpanel",
   "xtype": "tabpanel",
+  "extends": "Ext.Container",
+  "name": "Ext.tab.Panel",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tab",
   "xtype": "tab",
+  "extends": "Ext.Button",
+  "name": "Ext.tab.Tab",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tooltip",
   "xtype": "tooltip",
+  "extends": "Ext.Panel",
+  "name": "Ext.tip.ToolTip",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Title",
   "xtype": "title",
+  "extends": "Ext.Component",
+  "name": "Ext.Title",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Titlebar",
   "xtype": "titlebar",
+  "extends": "Ext.Container",
+  "name": "Ext.TitleBar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Tool",
   "xtype": "tool",
+  "extends": "Ext.Component",
+  "name": "Ext.Tool",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Paneltool",
   "xtype": "paneltool",
+  "extends": "Ext.Component",
+  "name": "Ext.Tool",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Toolbar",
   "xtype": "toolbar",
+  "extends": "Ext.Container",
+  "name": "Ext.Toolbar",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Colorbutton",
   "xtype": "colorbutton",
+  "extends": "Ext.Component",
+  "name": "Ext.ux.colorpick.Button",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Colorpickercolorpreview",
   "xtype": "colorpickercolorpreview",
+  "extends": "Ext.Component",
+  "name": "Ext.ux.colorpick.ColorPreview",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Colorfield",
   "xtype": "colorfield",
+  "extends": "Ext.field.Picker",
+  "name": "Ext.ux.colorpick.Field",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Colorselector",
   "xtype": "colorselector",
+  "extends": "Ext.panel.Panel",
+  "name": "Ext.ux.colorpick.Selector",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Gauge",
   "xtype": "gauge",
+  "extends": "Ext.Gadget",
+  "name": "Ext.ux.gauge.Gauge",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Map",
   "xtype": "map",
+  "extends": "Ext.Container",
+  "name": "Ext.ux.google.Map",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Google_map",
   "xtype": "google-map",
+  "extends": "Ext.Container",
+  "name": "Ext.ux.google.Map",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Rating",
   "xtype": "rating",
+  "extends": "Ext.Gadget",
+  "name": "Ext.ux.rating.Picker",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Video",
   "xtype": "video",
+  "extends": "Ext.Media",
+  "name": "Ext.Video",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Viewport",
   "xtype": "viewport",
+  "extends": "Ext.Container",
+  "name": "Ext.viewport.Default",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  },
  {
   "text": "Widget",
   "xtype": "widget",
+  "extends": "Ext.Evented",
+  "name": "Ext.Widget",
   "iconCls": "x-fa fa-cog",
   "leaf": true
  }

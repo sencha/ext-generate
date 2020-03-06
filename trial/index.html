@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=10,user-scalable=yes">
+</head>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<script src="modern.engine.enterprise.js"></script>
+<link rel="stylesheet" type="text/css" href="material/material-all.css"></link>
+<link rel="stylesheet" type="text/css" href="style.css"></link>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
+<script type="module" src="imports.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
+<script>
+var ref = {}
+
+const copyToClipboard = str => {
+  const el = document.createElement('textarea');  // Create a <textarea> element
+  el.value = str;                                 // Set its value to the string that you want copied
+  el.setAttribute('readonly', '');                // Make it readonly to be tamper-proof
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';                      // Move outside the screen to make it invisible
+  document.body.appendChild(el);                  // Append the <textarea> element to the HTML document
+  const selected =
+    document.getSelection().rangeCount > 0        // Check if there is any content selected previously
+      ? document.getSelection().getRangeAt(0)     // Store selection if found
+      : false;                                    // Mark as false to know no selection existed before
+  el.select();                                    // Select the <textarea> content
+  document.execCommand('copy');                   // Copy - only works as a result of a user action (e.g. click events)
+  document.body.removeChild(el);                  // Remove the <textarea> element
+  if (selected) {                                 // If a selection existed before copying
+    document.getSelection().removeAllRanges();    // Unselect everything on the HTML document
+    document.getSelection().addRange(selected);   // Restore the original selection
+  }
+};
+
+function panelReady(event) {
+    for (var prop in event.detail.cmpObj) {
+      ref[prop] = event.detail.cmpObj[prop];
+    }
+}
+
+function _createAccount1() {
+  if (!ref.form.validate()) {
+    Ext.Msg.alert('Form not Valid', 'Please enter all fields on the form');
+    return
+  }
+  ref.mask.setHidden(false);
+  let data = {
+    first: ref.first.getValue(),
+    last: ref.last.getValue(),
+    email: ref.email.getValue()
+  };
+  postData('https://test-api.sencha.com/v1/trial', data)
+    .then((response) => {
+      if (response.data.created == true) {
+        ref.username.setHtml('Username: ' + response.data.username);
+        ref.password.setHtml('Password: ' + response.data.password);
+        ref.mask.setHidden(true);
+        ref.form.setHidden(true);
+        ref.quickstart.setHidden(false);
+        ref.step2.setHidden(false);
+      }
+      else {
+        alert('not created!')
+      }
+    });
+}
+
+async function postData(url = '', data = {}) {
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic aHR0cHdhd0cHdhd0cHdhdGNoOmYNoOmYNoOmY=',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+  let result = await response.json();
+  return result;
+}
+
+function getSelectionText() {
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+    return text;
+}
+
+</script>
+
+<body>
+  <ext-panel viewport="true" layout="fit" onReady="panelReady" weighted="true" bodyStyle="margin-left:0">
+    <ext-container xcls="title" weight="20" docked="top" html="<div style='display:flex;align-items: baseline;background:rgb(9 64 88);color:white;'><img src='sencha.png'><h1 class='heading'>Sign up for a trial of Sencha ExtReact</h1></div>"></ext-container>
+    <ext-container
+      xautoSize="true"
+      cls="b"
+      layout="hbox"
+      defaults='{"bodyPadding": "10","shadow": "true","margin": "30 10 10 10"}'
+    >
+
+      <ext-container
+        extname="quickstart"
+        cls="quickstart"
+        hidden="true"
+        flex="3"
+        scrollable="true"
+        html='<zero-md style="background:white;padding:10px;"" src="README.md"></zero-md>'
+      >
+      </ext-container>
+
+      <ext-formpanel
+        cls="c"
+        hidden="false"
+        extname="form"
+        width="400"
+        bodyPadding="10"
+        shadow="true"
+      >
+        <ext-container cls="title" docked="top" html="<div>Complete the form and provide a valid email address to start your evaluation</div>"></ext-container>
+        <ext-fieldset defaults='{"labelAlign": "placeholder"}' defaults='{ "errorTarget": "under" }'>
+          <ext-textfield  extname="first" label="First Name" required="true" placeholder="Enter your first name"  ></ext-textfield>
+          <ext-textfield  extname="last"  label="Last Name"  required="true" placeholder="Enter your last name"  > </ext-textfield>
+          <ext-emailfield extname="email" label="Email"      required="true" validators="email"  placeholder="me@sencha.com">         </ext-emailfield>
+          <div>&nbsp;</div>
+          <ext-button onTap="_createAccount1" text="Start Trial" shadow="true" arrowAlign="bottom"></ext-button>
+          <ext-loadmask extname="mask" hidden="true" message='Starting...' />
+        </ext-fieldset>
+      </ext-formpanel>
+
+      <ext-panel
+        cls="c"
+        hidden="true"
+        width="400"
+        xstyle='display: none'
+        extname="step2"
+        xref='step2'
+        xid='step2'
+        layout='{"type": "vbox", "align": "stretch"}'
+        bodyPadding="10"
+        xtitle="Step 2"
+        shadow="true"
+      >
+        <ext-container cls="title" docked="top" html="<div>Your login has been created.<br/>Please follow the Quick Start Guide</div>"></ext-container>
+        <ext-label cls="response" html="npm repo access credentials"></ext-label>
+        <ext-label html="<hr>&nbsp;"></ext-label>
+        <ext-label cls="response" extname="username"></ext-label>
+        <ext-label html="&nbsp;"></ext-label>
+        <ext-label cls="response" extname="password"></ext-label>
+      </ext-panel>
+
+    </ext-container>
+
+    <ext-panel cls="footer" docked="bottom" bodyStyle="background:lightgray"></ext-panel>
+
+  </ext-panel>
+</body>
+</html>

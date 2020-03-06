@@ -4,13 +4,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=10,user-scalable=yes">
 </head>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-
+<script src="./node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
 <script src="./node_modules/@sencha/ext-web-components-modern/ext-runtime-modern/modern.engine.enterprise.js"></script>
-<!-- <link rel="stylesheet" type="text/css" href="node_modules/@sencha/ext-web-components-modern/ext-runtime-modern/material/material-all.css"></link> -->
 <link rel="stylesheet" type="text/css" href="/material/material-all.css"></link>
+<link rel="stylesheet" type="text/css" href="./node_modules/froala-editor/css/froala_editor.pkgd.min.css"></link>
 <link rel="stylesheet" type="text/css" href="styles.css"></link>
 <link rel="stylesheet" type="text/css" href="tabs.css"></link>
 
+<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-list.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-panel.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-toolbar.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-button.component.js"></script>
@@ -18,8 +19,12 @@
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-treelist.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-container.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-tabpanel.component.js"></script>
+<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-textareafield.component.js"></script>
+<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-froalaeditorfield.component.js"></script>
+<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-froalaeditor.component.js"></script>
 
 <script>
+  //import * as FroalaEditor from './node_modules/froala-editor/js/froala_editor.pkgd.min.js';
   var ref = {}
   var docproperties = []
   var docevents = []
@@ -41,10 +46,16 @@
         text: 'All',
         children: data
       };
-      var treeStore = Ext.create('Ext.data.TreeStore', {
+      // var treeStore = Ext.create('Ext.data.TreeStore', {
+      //   rootVisible: true,
+      //   root: navTreeRoot
+      // });
+
+      var treeStore = {
+        xtype: 'tree',
         rootVisible: true,
         root: navTreeRoot
-      });
+      };
       ref.treelist.setStore(treeStore);
       var hash = window.location.hash.substr(1);
       if (hash == '') {
@@ -53,8 +64,102 @@
       var node = ref.treelist.getStore().findNode('xtype', hash);
       ref.treelist.setSelection(node);
       window.location.hash = '#' + hash;
+
+
+      var sample =
+`Ext.application({
+    name: 'Fiddle',
+
+    launch: function () {
+        Ext.create('Ext.data.Store', {
+
+            // Named Store
+            storeId: "simpsonsStore",
+
+            fields: ['name', 'email', 'phone'],
+            data: [{
+                'name': 'Lisa',
+                "email": "lisa@simpsons.com",
+                "phone": "555-111-1224"
+            }, {
+                'name': 'Bart',
+                "email": "bart@simpsons.com",
+                "phone": "555-222-1234"
+            }, {
+                'name': 'Homer',
+                "email": "home@simpsons.com",
+                "phone": "555-222-1244"
+            }, {
+                'name': 'Marge',
+                "email": "marge@simpsons.com",
+                "phone": "555-222-1254"
+            }]
+        });
+
+        var columns = [{
+            text: 'Name',
+            dataIndex: 'name',
+            flex: 1
+        }, {
+            text: 'Email',
+            dataIndex: 'email',
+            flex: 1
+        }, {
+            text: 'Phone',
+            dataIndex: 'phone',
+            flex: 1
+        }];
+
+        var grid = Ext.create('Ext.grid.Grid', {
+            title: 'Simpsons',
+
+            // Using the Named Store
+            store: "simpsonsStore",
+
+            columns: columns,
+            layout: 'fit',
+            fullscreen: true
+        });
+
+    }
+});
+`
+var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.application({name: 'MyApp',launch: function() {Ext.Viewport.add([button]);}})"
+
+
+      ref.list.setData([
+        { title: 'Item 1', example: sample},
+        { title: 'Item 2', example: sample2 },
+        { title: 'Item 3', example: 'c' },
+        { title: 'Item 4', example: 'd' },
+      ])
+
+
+      var x = document.getElementById("exampleframe");
+      var y = (x.contentWindow || x.contentDocument);
+      if (y.document)y = y.document;
+      window.y = y
+      window.y.body.innerHTML ='example will be here...'
+
+
+
+
+
+      //var sample = "var button=Ext.create({xtype: 'button', text: 'another Button'});\nExt.application({\nname: 'MyApp',\nlaunch: function() {Ext.Viewport.add([button]);}\n})"
+      ref.exampletext.setValue(sample)
+
     });
   }
+
+  function listSelect(event) {
+    var sender = event.detail.sender;
+    var selected = event.detail.selected;
+    console.log(sender)
+    console.log(selected)
+    ref.exampletext.setValue(selected.data.example)
+
+  }
+
 
   function treelistSelectionChange(event) {
     var data = event.detail.record.data;
@@ -66,17 +171,27 @@
     .then((data) => {
       docproperties = data.docProperties
       docevents = data.docEvents
-      console.log(data);
-      ref.title.setHtml(data.title)
+      //console.log(data);
+      //ref.title.setHtml(data.title)
+      ref.ExtWebComponentsTitle.setHtml('ExtWebComponents: ' + data.ExtWebComponentsTitle)
+      //ref.ExtAngularTitle.setHtml('ExtAngular: ' + data.ExtAngularTitle)
+      //ref.ExtReactTitle.setHtml('ExtReact: ' + data.ExtReactTitle)
+
       ref.first.setHtml(data.first)
       ref.text.setHtml(data.text)
-      console.log(ref.tabPanel.getTabBar())
-      ref.tabPanel.getTabBar()._items.items[1].setBadgeText(docproperties.length)
-      ref.tabPanel.getTabBar()._items.items[2].setBadgeText('0')
-      ref.tabPanel.getTabBar()._items.items[3].setBadgeText(docevents.length)
+      //console.log(ref.tabPanel.getTabBar().getTabs())
+      ref.tabPanel.getTabBar().getTabs()[1].setBadgeText(docproperties.length)
+      ref.tabPanel.getTabBar().getTabs()[2].setBadgeText('0')
+      ref.tabPanel.getTabBar().getTabs()[3].setBadgeText(docevents.length)
+      //console.log(ref.tabPanel)
+      //ref.tabPanel.tabBar.tabs[1].setBadgeText(docproperties.length)
+      //ref.tabPanel.getTabBar()._items.items[1].setBadgeText(docproperties.length)
+      //ref.tabPanel.getTabBar()._items.items[2].setBadgeText('0')
+      //ref.tabPanel.getTabBar()._items.items[3].setBadgeText(docevents.length)
 
       //console.log(ref.text.setBadgeText)
       //ref.text.setBadgeText("8")
+
       ref.properties.setHtml(data.propertyString)
       //ref.properties.setBadgeText("8")
       ref.events.setHtml(data.eventString)
@@ -146,7 +261,21 @@
   }
 
   onTap = function() {
-    console.log('onTap')
+    var x = document.getElementById("exampleframe");
+    var theExample = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.application({name: 'MyApp',launch: function() {Ext.Viewport.add([button]);}})"
+    x.src ='frame.html?example=' + escape(theExample)
+  }
+
+  onTap2 = function() {
+    var x = document.getElementById("exampleframe");
+    var theExample = ref.exampletext.getValue()
+    x.src ='frame.html?example=' + escape(theExample)
+  }
+
+  onRun = function() {
+    var x = document.getElementById("exampleframe");
+    var theExample = ref.exampletext.getValue()
+    x.src ='frame.html?example=' + escape(theExample)
   }
 
 </script>
@@ -156,6 +285,7 @@
 
     <ext-toolbar docked="top">
       <ext-button extname="button" text="Tap Me" shadow="true" ontap="onTap"></ext-button>
+      <ext-button extname="button" text="Tap Me" shadow="true" ontap="onTap2"></ext-button>
     </ext-toolbar>
 
     <ext-panel
@@ -189,7 +319,9 @@
 
     <ext-container extname="main" layout="vbox">
       <ext-container>
-        <ext-container cls="title" extname="title"></ext-container>
+        <ext-container cls="title" extname="ExtWebComponentsTitle"></ext-container>
+        <!-- <ext-container cls="title" extname="ExtAngularTitle"></ext-container>
+        <ext-container cls="title" extname="ExtReactTitle"></ext-container> -->
         <ext-container cls="first" extname="first"></ext-container>
       </ext-container>
 
@@ -225,25 +357,42 @@
         }'
         iconAlign= "top"
         iconCls='x-fa fa-home'
+        userSelectable="true"
 
         title="Details" extname="text" bodyPadding="10px" bodyCls="text" scrollable="y">
        </ext-panel>
         <ext-panel title="Properties" extname="properties" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
         </ext-panel>
+
         <ext-panel title="Methods" extname="methoss" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
         </ext-panel>
+
         <ext-panel
         tabConfig='{"cls": "heading", "badgeText": "hello", "title": "Custom Title"}'
-
         title="Events" extname="events" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
         </ext-panel>
+
+        <ext-panel
+        title="Examples"
+        iconAlign= "top" iconCls='x-fa fa-home'
+        border="true"
+        resizable='{"edges": "north", "dynamic": "true"}'
+        extname="examples"
+        html="<iframe style='margin:10px;width:90%;height:90%;' id='exampleframe'></iframe>">
+      </ext-panel>
+
       </ext-tabpanel>
+
+
+
     </ext-container>
 
     <ext-panel
+      layout="vbox"
       title="context"
       cls="contextpanel"
       weight="10"
+      bodyPadding="10"
       extname="context"
       bodyPadding="10px"
       docked="right"
@@ -254,7 +403,61 @@
       width="400px"
       collapsed="false"
     >
+
+
+    <!-- <ext-formpanel
+    layout="fit"
+    height="100%"
+    title="Ext.froala.EditorField insde a form panel"
+    xonready="froalaeditor.parentFormPanelReady"
+  >
+    <ext-froalaeditorfield
+      name="html"
+      margin="2"
+      xonready="onEditorFieldReady"
+      xonChange="froalaTextChange"
+      editor='{
+          "autofocus": true,
+          "fontSize": [10, 12, 16, 24]
+      }'
+    >
+    </ext-froalaeditorfield>
+  </ext-formpanel> -->
+
+
+  <!-- <ext-froalaeditor
+  extname="froala"
+
+  margin="2"
+  toolbarButtons="['bold', 'italic', 'html']"
+  editor='{
+      "autofocus": true,
+      "fontSize": [10, 12, 16, 24]
+  }'
+>
+</ext-froalaeditor> -->
+<!-- data='[
+{ "title": "Item 1" },
+{ "title": "Item 2" },
+{ "title": "Item 3" },
+{ "title": "Item 4" }
+]' -->
+
+<ext-list onselect="listSelect" extname="list" itemTpl='{title}'
+
+height="200"></ext-list>
+
+<ext-container cls="exampletext" extname="exampletext"></ext-container>
+
+      <ext-button extname="runbutton" text="Run" shadow="true" ontap="onRun"></ext-button>
+
+      <ext-textareafield extname="exampletext" flex="1" maxRows="10" label='Example' labelAlign="top" placeHolder='Enter an Ext JS Example...'></ext-textareafield>
+
+
+
     </ext-panel>
+
+
 
     <ext-panel cls="footer" docked="bottom" bodyStyle="background:lightgray">
     </ext-panel>

@@ -2,7 +2,7 @@ exports.setGlobals =() => {
 
   //global["docs"]      = [];
 
-  // for prod
+  // // for prod
   global["doWebComponents"]      = true;
   global["doAngular"]            = true;
   global["doReact"]              = true;

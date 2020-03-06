@@ -3722,10 +3722,10 @@
     padding: 4px;
     max-width: 75%;
     font: 400 12px/16px Roboto, sans-serif;
-    background-image: -webkit-linear-gradient(top, #2735bd, #1e2993 50%, #1a237e 51%, #161d69);
-    background-image: -moz-linear-gradient(top, #2735bd, #1e2993 50%, #1a237e 51%, #161d69);
-    background-image: -o-linear-gradient(top, #2735bd, #1e2993 50%, #1a237e 51%, #161d69);
-    background-image: -ms-linear-gradient(top, #2735bd, #1e2993 50%, #1a237e 51%, #161d69);
+    background-image: -webkit-linear-gradient(top, #5fb222, #48871a 50%, #3d7216 51%, #325d12);
+    background-image: -moz-linear-gradient(top, #5fb222, #48871a 50%, #3d7216 51%, #325d12);
+    background-image: -o-linear-gradient(top, #5fb222, #48871a 50%, #3d7216 51%, #325d12);
+    background-image: -ms-linear-gradient(top, #5fb222, #48871a 50%, #3d7216 51%, #325d12);
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/Button.scss:1429 */
 .x-big .x-tab .x-badge-el {
@@ -3738,7 +3738,7 @@
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/Button.scss:1442 */
 .x-tab.x-hovered .x-inner-el {
-    background-color: #e6e6e6;
+    background-color: #fff;
     background-image: none;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/Button.scss:1447 */
@@ -3843,41 +3843,41 @@
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1474 */
 .x-tab.x-active {
-    color: #163d72;
+    color: #72163d;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1478 */
 .x-tab.x-active .x-inner-el {
-    background-color: #d9d9d9;
+    background-color: #fff;
     background-image: none;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1483 */
 .x-tab.x-active .x-icon-el {
-    color: #163d72;
+    color: #72163d;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1487 */
 .x-tab.x-active .x-arrow-el {
-    color: #163d72;
+    color: #72163d;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1491 */
 .x-tab.x-active .x-active-indicator-el {
-    background-color: #163d72;
+    background-color: #72163d;
     height: 4px;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1512 */
 .x-tab.x-active.x-focused {
-    color: #163d72;
+    color: #72163d;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1521 */
 .x-tab.x-active.x-focused .x-icon-el {
-    color: #163d72;
+    color: #72163d;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1525 */
 .x-tab.x-active.x-focused .x-arrow-el {
-    color: #163d72;
+    color: #72163d;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1530 */
 .x-keyboard-mode .x-tab.x-active.x-focused:after {
-    border-color: #3d5c87;
+    border-color: #8e4564;
 }
 /* /Volumes/BOOTCAMP/_testers/docs-theme-app/node_modules/@sencha/ext-modern-theme-neptune/sass/var/tab/Tab.scss:1562 */
 .x-tab.x-tab-rotate-left .x-text-el {

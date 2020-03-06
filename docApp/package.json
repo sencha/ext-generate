@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "@sencha/ext-web-components-modern": "~7.2.0",
+    "froala-editor": "^3.1.1",
     "servor": "~3.1.0"
   },
   "author": "",

@@ -28,10 +28,13 @@
 }
 
 .title {
+  line-height: normal;
+  font-style: italic;
   font-size: 24px;
   background: white;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  border-bottom: 1px solid lightgray;
+  color:#163d72;
+  margin: 20px 10px 20px 0;
   padding:0 10px 10px 5px;
   cursor: pointer;
 }
@@ -39,8 +42,7 @@
 .first {
   font-size: 18px;
   background: white;
-  padding:0 10px 10px 5px;
-  xwhite-space:pre-wrap;
+  padding:0 10px 20px 5px;
 }
 
 .text {

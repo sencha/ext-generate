@@ -147,6 +147,7 @@ function oneItem(item) {
       var pathprefix = ''
       var v = {}
       var parts = name.split(".")
+      //console.log(name)
       for (var j = 0; j < parts.length-1; j++) {
           thePath = thePath + parts[j] + '/'
           pathprefix = pathprefix + '../'
@@ -185,6 +186,7 @@ function oneItem(item) {
             sEVENTS: info.eventObj.sEVENTS
         }
       }
+      //console.log(filename)
       writeTemplateFile(`${webComponentsTemplateFolder}runtime/${templateFile}`, `${folder}${filename}.js`, v)
     }
 
@@ -602,37 +604,8 @@ function shouldProcessIt(o) {
     // }
     return processIt
   }
-
   if (info.toolkit == 'modern') {
-
-    var localxtypes = [];
-    if (o.alias != undefined) {
-      //if (item.alias.substring(0, 6) == 'widget') {
-        var aliases = o.alias.split(",")
-        for (alias = 0; alias < aliases.length; alias++) {
-          if (aliases[alias].substring(0, 6) == 'widget') {
-            var xtypelocal = aliases[alias].substring(7)
-            localxtypes.push(xtypelocal)
-          }
-        //}
-      }
-    }
-
-    if (localxtypes.length == 0) {
-      processIt = false;
-      return processIt;
-    }
-
-
-
-
-
-
-    if (o.alias == undefined) {
-      processIt = false;
-    }
-
-    else if (o.extended == undefined) {
+    if (o.extended == undefined) {
       processIt = false;
     }
     else {
@@ -658,6 +631,64 @@ function shouldProcessIt(o) {
     }
     return processIt
   }
+
+
+
+  // if (info.toolkit == 'modern') {
+
+  //   // var localxtypes = [];
+  //   // if (o.alias != undefined) {
+  //   //   //if (item.alias.substring(0, 6) == 'widget') {
+  //   //     var aliases = o.alias.split(",")
+  //   //     for (alias = 0; alias < aliases.length; alias++) {
+  //   //       if (aliases[alias].substring(0, 6) == 'widget') {
+  //   //         var xtypelocal = aliases[alias].substring(7)
+  //   //         localxtypes.push(xtypelocal)
+  //   //       }
+  //   //     //}
+  //   //   }
+  //   // }
+
+  //   // if (localxtypes.length == 0) {
+  //   //   processIt = false;
+  //   //   return processIt;
+  //   // }
+
+
+
+
+
+
+  //   if (o.alias == undefined) {
+  //     processIt = false;
+  //   }
+
+  //   else if (o.extended == undefined) {
+  //     processIt = false;
+  //   }
+  //   else {
+  //       var n = o.extended.indexOf("Ext.Widget");
+  //       if (n != -1) {
+  //           processIt = true;
+  //       }
+  //       else {
+  //           processIt = false;
+  //       }
+  //   }
+  //   if (o.name == 'Ext.Widget') {
+  //       processIt = true
+  //   }
+  //   if (o.name == 'Ext.Evented') {
+  //       processIt = true
+  //   }
+  //   if (o.name == 'Ext.Base') {
+  //       processIt = true
+  //   }
+  //   if (o.items == undefined) {
+  //       processIt = false
+  //   }
+  //   return processIt
+  // }
 }
 
 function log(val) {

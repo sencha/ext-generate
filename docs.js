@@ -1,33 +1,24 @@
 exports.doDocStuff =(xtype, info, item) => {
-  var docData = {}
-  global.docMenu
-
-
   var XtypeForDoc = xtype.charAt(0).toUpperCase() + xtype.slice(1).replace(/-/g,'_')
 
+  global.docMenu
   if (global.docMenu == undefined) {
     global.docMenu = []
   }
 
   let obj = global.docMenu.find(o => o.xtype === xtype);
-  if (obj !== undefined) {
-    //console.log(obj.xtype)
-  }
-  else {
+  if (obj == undefined) {
     var oMenu = {}
     oMenu.text = XtypeForDoc;
     oMenu.xtype = xtype;
+    oMenu.extends = item.extends;
+    oMenu.name = item.name;
     oMenu.iconCls = 'x-fa fa-cog';
     oMenu.leaf = true;
     global.docMenu.push(oMenu);
   }
 
-
-
-
-
-
-
+  //item.propertyString = '<pre style="user-select: text;">'
   item.propertyString = ''
   item.docProperties = []
   var ewcProperties = ''
@@ -47,18 +38,15 @@ exports.doDocStuff =(xtype, info, item) => {
 
       ewcProperties = ewcProperties + property.ewc + '\n';
   });
+  //item.propertyString = item.propertyString + '</pre>'
 
-  //item.eventsArrayForDoc = []
-  item.eventString = ''
   item.docEvents = []
   var ewcEvents = ''
   info.eventObj.eventsArray.forEach(event => {
-
     var o = {}
     o.name = event.name
     o.parameters = event.parameters
     item.docEvents.push(o)
-
       var parameters = ''
       event.parameters.forEach(parameter => {
           if (parameter != undefined) {
@@ -68,39 +56,14 @@ exports.doDocStuff =(xtype, info, item) => {
       const EventName = event.name.charAt(0).toUpperCase() + event.name.slice(1).toLowerCase();
       const Parameters = parameters.replace(/,\s*$/, "");
       event.ewc = `on${EventName} = ( {detail: { ${Parameters} }} ) => {}<br/>`;
-
       //var reactEvents = require("./docs").getReactEvents(EventName, XtypeForDoc, Parameters);
       item.eventString = item.eventString + require("./docs").getReactEvents(EventName, Parameters, XtypeForDoc);
-
       ewcEvents = ewcEvents + event.ewc + '\n'
   });
 
-
-
-  //var e = item.text.indexOf(`\n\n`)
-  //console.log(item.text)
   var res = 'undef'
   var restOfText = ''
   if (item.text !== undefined) {
-
-
-    // var re = new RegExp(/\{@.*?\}/g);
-    // var allMatches = item.text.match(re)
-    // if (allMatches != null) {
-    //   allMatches.forEach(match => {
-    //     console.log(match)
-    //   })
-    // }
-
-    //if (item.xtypes[0] == 'button') {
-
-      // function replacerLink(match) {
-      //   console.log(match)
-      //   var s = match.indexOf('!')
-      //   var e = match.lastIndexOf('#')
-      //   var val = match.substring(s+1,e-1)
-      //   return `[link ${val}]`
-      // }
 
       function replacerCfgLink(match) {
         //console.log(match)
@@ -108,18 +71,13 @@ exports.doDocStuff =(xtype, info, item) => {
         var e = match.lastIndexOf('#')
         var val = match.substring(s+1,e-1)
         return `<a href="javascript:sendToContext('cfg','${val}');">${val}</a>`
-
-
-
         //return `<span class="tooltip" xstyle="background:lightgray;border-bottom: 1px dotted black;">${val}<span class="tooltiptext">Tooltip text</span></span>`
       }
 
       function replacerHeader2(match) {
-        //console.log(match)
         var s = match.indexOf(' ')
-
         var val = match.substring(s+1)
-        return `<div><span style="background:yellow;padding: 10px 10px 10px 0;font-size:24px;">${val}</span></div>`
+        return `<div><span style="font-weight:bold;color:#163d72;background:white;padding: 5px 5px 5px 0;font-size:18px;">${val}</span></div>`
       }
 
       function replacerGlobalCssLink(match) {
@@ -130,37 +88,104 @@ exports.doDocStuff =(xtype, info, item) => {
         return `[global css link ${val}]`
       }
 
-      function replacerJavaScript(match, p1, p2, p3, offset, string) {
-        //console.log(match.length)
-        return `<div style="background:lightgray">${match}</div>`
-        //return 'javascript example here...'
-        //console.log(p1)
-        //console.log(string)
-        // p1 is nondigits, p2 digits, and p3 non-alphanumerics
-        //return [p1, p2, p3].join(' - ');
+      function replacerExtJS(match) {
+        var s = match.search(/[}][ ]*?[)]\n/);
+        var e = match.lastIndexOf("```");
+        match = match.substring(s+3,e)
+
+        //return `<textarea readonly style="background:red;margin:10px;padding:10px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;">${match}</textarea>`
+        return `<textarea style="background:red;resize:none;margin:10px;padding:10px;font-size:16px;width:90%;height:400px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;" >${match}</textarea>`
+
       }
 
-      function replacerHTML(match) {
-        //console.log(match)
-        return 'html example here...'
+      function replacerReact(match) {
+        var s = match.search(/[}][ ]*?[)]\n/);
+        var e = match.lastIndexOf("```");
+        match = match.substring(s+3,e)
+        //match = 'React'
+        //match = escape(match)
+        return `<textarea style="background:blue;resize:none;margin:10px;padding:10px;font-size:16px;width:90%;height:100%;border-radius:15px;box-shadow: 5px 10px 18px #163d72;" >${match}</textarea>`
+        //return `<div style="background:green;margin:10px;padding:10px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;"><textarea readonly>${match}</textarea></div>`
       }
+
+      function replacerAngular(match) {
+        var s = match.search(/[}][ ]*?[)]\n/);
+        var e = match.lastIndexOf("```");
+        match = match.substring(s+3,e)
+        //match = 'Angular'
+        //match = escape(match)
+        return `<textarea style="background:purple;resize:none;margin:10px;padding:10px;font-size:16px;width:90%;height:100%;border-radius:15px;box-shadow: 5px 10px 18px #163d72;" >${match}</textarea>`
+        //return `<div style="background:blue;margin:10px;padding:10px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;"><textarea style="width:100%;height:100%;" readonly>${match}</textarea></div>`
+      }
+
+
+
+      function replacerHTML(match) {
+        var s = match.search(/[}][ ]*?[)]\n/);
+        var e = match.lastIndexOf("```");
+        match = match.substring(s+3,e)
+        //console.log(match)
+        return `<textarea style="background:yellow;resize:none;margin:10px;padding:10px;font-size:16px;width:90%;height:100%;border-radius:15px;box-shadow: 5px 10px 18px #163d72;" >${match}</textarea>`
+        //return `<div style="background:green;margin:10px;padding:10px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;"><textarea style="width:100%;height:100%;" readonly>${match}</textarea></div>`
+        //return 'html example here...'
+      }
+
+      function replacerWebComponents(match) {
+        var s = match.search(/[}][ ]*?[)]\n/);
+        var e = match.lastIndexOf("```");
+        match = match.substring(s+3,e)
+        //match = 'WebComponents'
+        //match = escape(match)
+        return `<textarea style="background:green;resize:none;margin:10px;padding:10px;font-size:16px;width:90%;height:100%;border-radius:15px;box-shadow: 5px 10px 18px #163d72;" >${match}</textarea>`
+        //return `<div style="background:yellow;margin:10px;padding:10px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;"><textarea readonly>${match}</textarea></div>`
+      }
+
+
+      // function replacerJavaScript(match) {
+      //   //console.log(match.length)
+      //   console.log(match)
+      //   return `<div style="margin:10px;padding:10px;border-radius:15px;box-shadow: 5px 10px 18px #163d72;background:lightgray">${match}</div>`
+      //   //return 'javascript example here...'
+      //   //console.log(p1)
+      //   //console.log(string)
+      //   // p1 is nondigits, p2 digits, and p3 non-alphanumerics
+      //   //return [p1, p2, p3].join(' - ');
+      // }
+
+
 
       //{@link #cfg!iconAlign #iconAlign}
 
-      var afterCfgLink = item.text.replace( new RegExp( /[{]@link #cfg(.)*?[}]/g) , replacerCfgLink )
+      if (xtype == 'accordion') {
+        console.log(item.text)
 
-      var afterHeader2 = afterCfgLink.replace( new RegExp( /## (.)*?[\n]/g) , replacerHeader2 )
+      //var afterCfgLink = item.text.replace( new RegExp( /[{]@link #cfg(.)*?[}]/g) , replacerCfgLink )
+      //var afterHeader2 = afterCfgLink.replace( new RegExp( /## (.)*?[\n]/g) , replacerHeader2 )
+      //var afterGlobalCssLink = afterHeader2.replace( new RegExp( /[{]@link Global_CSS\#var(.)*?[}]/g) , replacerGlobalCssLink )
 
-      var afterGlobalCssLink = afterHeader2.replace( new RegExp( /[{]@link Global_CSS\#var(.)*?[}]/g) , replacerGlobalCssLink )
+      var afterExtJS = item.text.replace( new RegExp( /```javascript\n[ ]*@example[(][ ]*{[ ]*framework:[ ]*'extjs'(.|\n)*?```/g ) , replacerExtJS )
+      var afterReact = afterExtJS.replace( new RegExp( /```javascript\n[ ]*@example[(][ ]*{[ ]*framework:[ ]*'ext-react'(.|\n)*?```/g ) , replacerReact )
+      var afterAngular = afterReact.replace( new RegExp( /```javascript\n[ ]*@example[(][ ]*{[ ]*framework:[ ]*'ext-angular'(.|\n)*?```/g ) , replacerAngular )
+      var afterHTML = afterAngular.replace( new RegExp( /```html(.|\n)*?(.|\n)*?```/g ) , replacerHTML )
+      var afterWebComponents = afterHTML.replace( new RegExp( /```javascript\n[ ]*@example[(][ ]*{[ ]*framework:[ ]*'ext-web-components'(.|\n)*?```/g ) , replacerWebComponents )
 
-      var afterJavasSript = afterGlobalCssLink.replace( new RegExp( /```javascript(.|\n)*?```/g) , replacerJavaScript )
-      //console.log(examples)
 
-      var afterHTML = afterJavasSript.replace( new RegExp( /```html(.|\n)*?```/g) , replacerHTML )
-      //console.log(afterHTML)
 
-      res = afterHTML.substring(0, afterHTML.indexOf(`\n\n`))
-      restOfText = afterHTML.slice(afterHTML.indexOf(`\n\n`)+2)
+
+
+
+
+      var afterAll = afterWebComponents
+      res = afterAll.substring(0, afterAll.indexOf(`\n\n`))
+
+
+
+      restOfText = '<div style="user-select: text;">' + afterAll.slice(afterAll.indexOf(`\n\n`)+2) + '</div>'
+      }
+      else {
+        res = 'hi'
+        restOfText = 'hi'
+      }
 
 
 
@@ -216,6 +241,9 @@ exports.doDocStuff =(xtype, info, item) => {
   var xtypeName = `Ext${xtype.charAt(0).toUpperCase() + xtype.slice(1).toLowerCase()}`
   var values = {
     title: `&lt;${xtypeName}&gt;&lt;/${xtypeName}&gt;`,
+    ExtWebComponentsTitle:`&lt;ext-${xtype}&gt;&lt;/ext-${xtype}&gt;`,
+    ExtAngularTitle: `&lt;${xtypeName}&gt;&lt;/${xtypeName}&gt;`,
+    ExtReactTitle: `&lt;${xtypeName}/&gt;`,
     docProperties: item.docProperties,
     docEvents: item.docEvents,
     eventString : item.eventString,
@@ -223,11 +251,12 @@ exports.doDocStuff =(xtype, info, item) => {
     first: res,
     text: restOfText
   }
-  fs.writeFileSync(`${docPackageFolder}ext-react-${info.toolkit}-${xtype}.json`, JSON.stringify(values, null, ' '));
+  var docPackageFolder2 = `/Volumes/BOOTCAMP/_git/sencha/ext-generate/docApp/data/doc-modern/`
+  fs.writeFileSync(`${docPackageFolder2}ext-react-${info.toolkit}-${xtype}.json`, JSON.stringify(values, null, ' '));
   //writeTemplateFile(`./filetemplates/docs/docTest.tpl`, `${docPackageFolder}ext-react-${info.toolkit}-${xtype}.doc.html`, values)
 
 
-  fs.writeFileSync(`${docPackageFolder}ext-react-${info.toolkit}-aamenu.json`, JSON.stringify(global.docMenu, null, ' '));
+  fs.writeFileSync(`${docPackageFolder2}ext-react-${info.toolkit}-aamenu.json`, JSON.stringify(global.docMenu, null, ' '));
 
 
   // var n = 0
