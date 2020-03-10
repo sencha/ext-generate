@@ -160,7 +160,7 @@ const ElementParser = (() => {
 
                           const { ownerDocument } = self;
                           init.set(self, false);
-                          if (ownerDocument.readyState === 'complete' || isParsed(self))
+                          if (ownerDocument.readyState === 'interactive' || ownerDocument.readyState === 'complete' || isParsed(self))
                           {
                             parsedCallback(self);
                           }

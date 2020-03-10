@@ -94,6 +94,7 @@ info.wantedxtypes = require(`./npmpackage/${toolkit}/${info.suffixParm}`).getXty
 global["moduleVars"] = { imports: "", declarations: "", exports: "" };
 
 info.webComponentsImports = []
+info.webComponentsImportsPlain = []
 info.angularImports = []
 info.allExtended = '';
 info.imports = ''

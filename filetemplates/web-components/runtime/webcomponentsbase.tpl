@@ -317,11 +317,13 @@ export default class WebComponentsBaseComponent extends HTMLElement {
         else {
           w = Ext.create({xtype:'widget', element: el});
         }
+        w.child = '' //temp mjg
         this.A.ITEMS.push(w);
       }
       else {
         var g = {};
         g.type = 'ext';
+        g.child = child;
         this.A.ITEMS.push(g);
       }
     }
@@ -332,10 +334,15 @@ export default class WebComponentsBaseComponent extends HTMLElement {
 
     if (me.parentNode != null && me.parentNode.nodeName.substring(0, 4) === 'EXT-') {
       if (me.parentNode.A.ext !== undefined) {
+        var found = false;
         for (var i = 0; i < me.parentNode.A.ITEMS.length; i++) {
           if (me.parentNode.A.ITEMS[i].child.outerHTML == me.A.ext.childouterHTML) {
+            found = true;
             me.addTheChild(me.parentNode.A.ext, me.A.ext, i);
           }
+        }
+        if (found == false) {
+          me.addTheChild(me.parentNode.A.ext, me.A.ext);
         }
       }
       else {

@@ -232,6 +232,8 @@ function oneItem(item) {
           var capclassname = classname2.charAt(0).toUpperCase() + classname2.slice(1);
 
           info.webComponentsImports.push(`import EWC${capclassname} from './dist/ext-${xt}.component.js';export { EWC${capclassname} };\n`)
+          info.webComponentsImportsPlain.push(`import './src/ext-${xt}.component.js';\n`)
+
           moduleVars.imports = moduleVars.imports +`import { Ext${capclassname}Component } from './dist/ext-${xt}.component.js';\n`;
           info.angularImports.push(`import { Ext${capclassname}Component } from './src/Ext${capclassname}';\n`)
 
@@ -338,6 +340,7 @@ function createWebComponents() {
       return self.indexOf(value) === index;
     }
     info.webComponentsImportsUnique = info.webComponentsImports.filter( onlyUnique ).join('')
+    info.webComponentsImportsUniquePlain = info.webComponentsImportsPlain.filter( onlyUnique ).join('')
 
     //const webComponentsTemplateFolder = `./filetemplates/web-components/`;
 
@@ -350,6 +353,7 @@ function createWebComponents() {
     writeTemplateFile(`${webComponentsTemplateFolder}runtime/ext-web-components.js.tpl`,`${webComponentsPackageFolder}bin/ext-web-components.js`,info);
 
     writeTemplateFile(`${webComponentsTemplateFolder}index.js.tpl`,`${webComponentsPackageFolder}index.js`,info);
+    writeTemplateFile(`${webComponentsTemplateFolder}imports.js.tpl`,`${webComponentsPackageFolder}imports.js`,info);
     writeTemplateFile(`${webComponentsTemplateFolder}package.json.tpl`,`${webComponentsPackageFolder}package.json`,info);
     writeTemplateFile(`${webComponentsTemplateFolder}${info.toolkit}/${info.suffixParm}/README.md.tpl`,`${webComponentsPackageFolder}README.md`,info);
     copyFileSync(`${webComponentsTemplateFolder}.babelrc`, `${webComponentsPackageFolder}.babelrc`);

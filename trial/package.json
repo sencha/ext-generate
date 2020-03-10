@@ -7,6 +7,9 @@
   },
   "devDependencies": {
     "@sencha/ext-web-components-modern": "~7.2.0",
+    "showdown": "^1.9.1",
+    "node-fetch": "^2.6.0",
+    "@webcomponents/webcomponentsjs": "^2.4.2",
     "servor": "~3.2.0"
   },
   "author": "",

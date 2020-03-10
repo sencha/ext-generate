@@ -1,0 +1,66 @@
+
+# ExtReactModern Quick Start :smile:
+
+<hr>
+
+
+## Your npm {feed} credentials
+
+## Username: {username}
+## Password: {password}
+## Email:    {email}
+## Login:    npm login --registry=https://sencha.myget.org/F/{feed}/npm/ --scope=@sencha
+
+
+
+<button id="b1" class="button" onclick="copyToClipboard('npx npm-cli-login -u {username} -p {password} -e {email} -r https://sencha.myget.org/F/{feed}/npm/ -s @sencha —quotes')">Copy to Clipboard</button>
+
+npx npm-cli-login -u {username} -p {password} -e {email} -r https://sencha.myget.org/F/{feed}/npm/ -s @sencha —quotes
+- The following message will appear in the termanal/command window after successful login
+
+<div class="border">http 201 https://sencha.myget.org/F/{feed}/npm/-/user/org.couchdb.user:{username}</div>
+
+#### option A:
+
+- Enter Username, Password and Email
+
+<button onclick="copyToClipboard('npm login --registry=https://sencha.myget.org/F/trial/npm/ --scope=@sencha')">Copy to Clipboard</button>
+```
+npm login --registry=https://sencha.myget.org/F/trial/npm/ --scope=@sencha
+```
+
+- the image below shows the termanal/command window after successful login
+
+![npm](assets/npm.png)
+
+
+  // https://github.com/showdownjs/showdown
+  // var showdownGlobalOptions = showdown.getOptions();
+  // console.log(showdownGlobalOptions)
+
+  // var converter = new showdown.Converter()
+  // var thisConverterSpecificOptions = converter.getOptions();
+  // console.log(thisConverterSpecificOptions)
+
+  // var defaultOptions = showdown.getDefaultOptions();
+  // console.log(defaultOptions)
+
+  //showdown.setOption('emoji', true);
+
+// function getSelectionText() {
+//   var text = "";
+//   if (window.getSelection) {
+//       text = window.getSelection().toString();
+//   } else if (document.selection && document.selection.type != "Control") {
+//       text = document.selection.createRange().text;
+//   }
+//   return text;
+// }
+
+        // //var npmLogin = require('npm-cli-login'),
+        // var username = response.data.username,
+        // password = response.data.username,
+        // email = ref.email.getValue(),
+        // registry = 'https://sencha.myget.org/F/trial/npm/',
+        // scope = '@sencha'
+        // npmLogin(username, password, email, registry, scope)

@@ -1,18 +1,177 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=10,user-scalable=yes">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=10,user-scalable=yes">
 </head>
+<!-- <style>
+  .popup {
+    color: yellow;
+  }
+</style> -->
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<script src="modern.engine.enterprise.js"></script>
-<link rel="stylesheet" type="text/css" href="material/material-all.css"></link>
+<link rel="stylesheet" type="text/css" href="runtime/material-all-debug.css"></link>
 <link rel="stylesheet" type="text/css" href="style.css"></link>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
-<script type="module" src="imports.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
+<script src="runtime/modern.engine.enterprise.js"></script>
+<script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+<script src="node_modules/showdown/dist/showdown.js"></script>
+<script src="imports.js" type="module"></script>
+<script src="importsApp.js" type="module"></script>
+<script src="util.js"></script>
+
+<script src="popup.min.js"></script>
+<script src="./panel.component.js" type="module"></script>
+
+<script src="//www.socialintents.com/api/socialintents.1.3.js#2c9fa23c70a851f90170bcd0d16d0c1e" async="async"></script>
+
 <script>
 var ref = {}
+var toast = null;
+var feed = 'trial';
+var values = null;
+//var feed = 'early-adopter';
+//var product = 'ExtJS';var tagLine = `The Most Comprehensive JavaScript Framework and UI Component Library`;
+var product = 'ExtReact';var tagLine = `The Most Comprehensive UI Component Library for React`;
+var start
+var end
+
+osStore()
+usCountryStore()
+usStateStore()
+caProvinceStore()
+mxStateStore()
+brStateStore()
+
+function panelReady(event) {
+  for (var prop in event.detail.cmpObj) {
+    ref[prop] = event.detail.cmpObj[prop];
+  }
+  ref.feed.setHtml(feed + ' feed')
+
+  var tryText = `
+  <div style="text-align: center">
+    <div class="dlTrialH1">Try Sencha ${product}</div>
+    <div class="dlTrialH2">${tagLine}<div>
+  </div>
+  `
+  ref.tryText.setHtml(tryText)
+
+  var getText = `
+  <div class="dlTrialTXT">
+    <div class="dlTrialH3">What You Get with Your Free Sencha ${product} Trial</div>
+    <ul class="dlTrialUL">
+      <li>Access to Sencha hosted npm repository containing Ext JS Premium* edition for 30-days</li>
+      <li>140+ high-performance, pre-integrated UI components</li>
+      <li>Tips and best practices to help you get started quickly</li>
+      <li>Full access to Sencha documentation, forums, and resources</li>
+    </ul>
+    <p class="dlTrialFooter">*Includes: D3 Adapter, Pivot Grid, Calendar, Exporter,Themer, Architect, ExtGen, ExtBuild, JetBrains, Visual Studio, Eclipse IDE Plugins, VIsual Studio Code Plugin, Stencils and Inspector</p>
+  </div>
+  `
+  ref.getText.setHtml(getText)
+}
+
+function startTrial() {
+  start = new Date();
+  if (!ref.formpanel.validate()) {
+    Ext.Msg.alert('Form not Valid', 'Please enter all fields on the form');
+    return
+  }
+
+  values = ref.formpanel.getValues({nameless: false})
+  console.log(values)
+  ref.mask.setHidden(false);
+  let data = {
+    first: values.first,
+    last: values.last,
+    company: values.company,
+    email: values.email,
+    title: values.title,
+    phone: values.phone,
+    country: values.country ? values.country : '',
+    state_us: values.usstate ? values.usstate : '',
+    province_ca: values.caprovince ? values.caprovince : '',
+    state_mx: values.mxstate ? values.mxstate : '',
+    state_br: values.brstate  ? values.brstate : '',
+    agree_receive_email: values.agreeemail ? values.agreeemail : false,
+    agree_sla: values.agreesla ? values.agreesla : false,
+    agree_terms: values.agreeterms ? values.agreeterms : false,
+    agree_marketing: values.agreemarketing ? values.agreemarketing : false,
+    student: values.agreestudent ? values.agreestudent : false,
+    customer: values.agreecustomer? values.agreecustomer : false,
+    os: values.os,
+    feed: feed,
+    product: 'extreact'
+  };
+  console.log('data being sent to the server')
+  console.log(data)
+  postData('https://test-api.sencha.com/v1/myget/', data)
+    .then((serverResponse) => {
+      console.log(serverResponse)
+      if (serverResponse.success == true) {
+        end = new Date();
+        var dataForTemplate = processResponseData(serverResponse.responseData)
+        fetch(`templates/QUICKSTART${product.toUpperCase()}.md.tpl.js`)
+        .then((response2) => {
+          return response2.text()
+        })
+        .then((quickStartText) => {
+          var t = writeTemplateFile(quickStartText, dataForTemplate)
+          var converter = new showdown.Converter()
+          // https://github.com/showdownjs/showdown/wiki/Emojis
+          console.log('a')
+          converter.setOption('emoji', true);
+          var result = converter.makeHtml(t);
+
+          ref.quickstart.setHtml(result)
+          ref.mask.setHidden(true);
+          ref.formpanelcontainer.setHidden(true);
+          ref.quickstartpanel.setHidden(false);
+          ref.headingtitle.setHtml(`Follow the ${product} QuickStart Guide`)
+
+          ref.diff.setHtml(dataForTemplate.diff)
+
+        });
+      }
+      else {
+        ref.mask.setHidden(true);
+        Ext.Msg.alert('Error Occurred', `Your credentials were not created.  The server reported: ${response.success}`);
+      }
+    })
+    .catch(error => {
+      ref.mask.setHidden(true);
+      Ext.Msg.alert('Error Occurred', error);
+    });
+}
+
+async function postData(url = '', data = {}) {
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic aHR0cHdhd0cHdhd0cHdhdGNoOmYNoOmYNoOmY=',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  });
+  if (response.statusText != 'OK') {
+    throw new Error('Your credentials were not created.<br><br>The server reported: ' + response.statusText)
+  }
+  else {
+    let result = await response.json();
+    return result;
+  }
+}
+
+function processResponseData(responseData) {
+  responseData.email = values.email;
+  responseData.feed = feed;
+  responseData.product = product;
+  responseData.start = start;
+  responseData.end = end;
+  responseData.diff = end-start + ' milliseconds';
+  console.log('data from the server - for the template')
+  console.log(responseData)
+  return responseData;
+}
 
 const copyToClipboard = str => {
   const el = document.createElement('textarea');  // Create a <textarea> element
@@ -32,130 +191,159 @@ const copyToClipboard = str => {
     document.getSelection().removeAllRanges();    // Unselect everything on the HTML document
     document.getSelection().addRange(selected);   // Restore the original selection
   }
+
+  if (toast == null) {
+    toast = Ext.create('Ext.Toast', {
+      xwidth: '100%',
+      cls: 'message',
+      centered: true,
+      side: 'bottom',
+    })
+  }
+  toast.showToast({
+    message: '<div class="message"><br>Copied the following to the clipboard:<br><br><b>' + str + '</b><br><br>paste into terminal/console window<br><br></div>',
+    timeout: 5000
+  })
 };
 
-function panelReady(event) {
-    for (var prop in event.detail.cmpObj) {
-      ref[prop] = event.detail.cmpObj[prop];
-    }
-}
 
-function _createAccount1() {
-  if (!ref.form.validate()) {
-    Ext.Msg.alert('Form not Valid', 'Please enter all fields on the form');
-    return
+function countryChanged(event) {
+  var country = event.detail.newValue
+  switch(country) {
+  case 'UNITED STATES':
+    ref.usstate.setHidden(false)
+    ref.caprovince.setHidden(true)
+    ref.mxstate.setHidden(true)
+    ref.brstate.setHidden(true)
+
+    ref.usstate.setRequired(true)
+    ref.caprovince.setRequired(false)
+    ref.mxstate.setRequired(false)
+    ref.brstate.setRequired(false)
+    break;
+    case 'CANADA':
+    ref.usstate.setHidden(true)
+    ref.caprovince.setHidden(false)
+    ref.mxstate.setHidden(true)
+    ref.brstate.setHidden(true)
+
+    ref.usstate.setRequired(false)
+    ref.caprovince.setRequired(true)
+    ref.mxstate.setRequired(false)
+    ref.brstate.setRequired(false)
+    break;
+  case 'BRAZIL':
+    ref.usstate.setHidden(true)
+    ref.caprovince.setHidden(true)
+    ref.mxstate.setHidden(true)
+    ref.brstate.setHidden(false)
+
+    ref.usstate.setRequired(false)
+    ref.caprovince.setRequired(false)
+    ref.mxstate.setRequired(false)
+    ref.brstate.setRequired(true)
+    break;
+  case 'MEXICO':
+    ref.usstate.setHidden(true)
+    ref.caprovince.setHidden(true)
+    ref.mxstate.setHidden(false)
+    ref.brstate.setHidden(true)
+
+    ref.usstate.setRequired(false)
+    ref.caprovince.setRequired(false)
+    ref.mxstate.setRequired(true)
+    ref.brstate.setRequired(false)
+    break;
+  default:
+    ref.usstate.setHidden(true)
+    ref.caprovince.setHidden(true)
+    ref.mxstate.setHidden(true)
+    ref.brstate.setHidden(true)
+
+    ref.usstate.setRequired(false)
+    ref.caprovince.setRequired(false)
+    ref.mxstate.setRequired(false)
+    ref.brstate.setRequired(false)
   }
-  ref.mask.setHidden(false);
-  let data = {
-    first: ref.first.getValue(),
-    last: ref.last.getValue(),
-    email: ref.email.getValue()
-  };
-  postData('https://test-api.sencha.com/v1/trial', data)
-    .then((response) => {
-      if (response.data.created == true) {
-        ref.username.setHtml('Username: ' + response.data.username);
-        ref.password.setHtml('Password: ' + response.data.password);
-        ref.mask.setHidden(true);
-        ref.form.setHidden(true);
-        ref.quickstart.setHidden(false);
-        ref.step2.setHidden(false);
-      }
-      else {
-        alert('not created!')
-      }
-    });
 }
 
-async function postData(url = '', data = {}) {
-  let response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Basic aHR0cHdhd0cHdhd0cHdhdGNoOmYNoOmYNoOmY=',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data)
-  });
-  let result = await response.json();
-  return result;
-}
 
-function getSelectionText() {
-    var text = "";
-    if (window.getSelection) {
-        text = window.getSelection().toString();
-    } else if (document.selection && document.selection.type != "Control") {
-        text = document.selection.createRange().text;
-    }
-    return text;
-}
 
+writeTemplateFile =(inData, vars) => {
+  var tpl = new Ext.XTemplate(inData);
+  var t = tpl.apply(vars);
+  delete tpl;
+  return t
+}
 </script>
 
 <body>
-  <ext-panel viewport="true" layout="fit" onReady="panelReady" weighted="true" bodyStyle="margin-left:0">
-    <ext-container xcls="title" weight="20" docked="top" html="<div style='display:flex;align-items: baseline;background:rgb(9 64 88);color:white;'><img src='sencha.png'><h1 class='heading'>Sign up for a trial of Sencha ExtReact</h1></div>"></ext-container>
-    <ext-container
-      xautoSize="true"
-      cls="b"
-      layout="hbox"
-      defaults='{"bodyPadding": "10","shadow": "true","margin": "30 10 10 10"}'
-    >
+  <ext-container viewport="true" bodyCls="maincontainer" xlayout='{"type": "vbox", "xalign": "stretch"}' layout="fit" onReady="panelReady">
 
-      <ext-container
-        extname="quickstart"
-        cls="quickstart"
-        hidden="true"
-        flex="3"
-        scrollable="true"
-        html='<zero-md style="background:white;padding:10px;"" src="README.md"></zero-md>'
-      >
-      </ext-container>
-
-      <ext-formpanel
-        cls="c"
-        hidden="false"
-        extname="form"
-        width="400"
-        bodyPadding="10"
-        shadow="true"
-      >
-        <ext-container cls="title" docked="top" html="<div>Complete the form and provide a valid email address to start your evaluation</div>"></ext-container>
-        <ext-fieldset defaults='{"labelAlign": "placeholder"}' defaults='{ "errorTarget": "under" }'>
-          <ext-textfield  extname="first" label="First Name" required="true" placeholder="Enter your first name"  ></ext-textfield>
-          <ext-textfield  extname="last"  label="Last Name"  required="true" placeholder="Enter your last name"  > </ext-textfield>
-          <ext-emailfield extname="email" label="Email"      required="true" validators="email"  placeholder="me@sencha.com">         </ext-emailfield>
-          <div>&nbsp;</div>
-          <ext-button onTap="_createAccount1" text="Start Trial" shadow="true" arrowAlign="bottom"></ext-button>
-          <ext-loadmask extname="mask" hidden="true" message='Starting...' />
-        </ext-fieldset>
-      </ext-formpanel>
-
-      <ext-panel
-        cls="c"
-        hidden="true"
-        width="400"
-        xstyle='display: none'
-        extname="step2"
-        xref='step2'
-        xid='step2'
-        layout='{"type": "vbox", "align": "stretch"}'
-        bodyPadding="10"
-        xtitle="Step 2"
-        shadow="true"
-      >
-        <ext-container cls="title" docked="top" html="<div>Your login has been created.<br/>Please follow the Quick Start Guide</div>"></ext-container>
-        <ext-label cls="response" html="npm repo access credentials"></ext-label>
-        <ext-label html="<hr>&nbsp;"></ext-label>
-        <ext-label cls="response" extname="username"></ext-label>
-        <ext-label html="&nbsp;"></ext-label>
-        <ext-label cls="response" extname="password"></ext-label>
-      </ext-panel>
-
+    <ext-container docked="top" layout="hbox" cls="heading">
+      <ext-container html="<img src='assets/sencha.png'>"></ext-container>
+      <ext-container extname="headingtitle" cls="headingtitle" html="Sign up for a trial of Sencha ExtReact"></ext-container>
+      <ext-spacer></ext-spacer>
+      <ext-container extname="feed" cls="feed" [html]="feed"></ext-container>
     </ext-container>
 
-    <ext-panel cls="footer" docked="bottom" bodyStyle="background:lightgray"></ext-panel>
+    <ext-container extname="formpanelcontainer" layout="hbox" autoSize="true">
+      <ext-container margin="0 0 20 20" width="800" layout="vbox" xlayout='{"type": "vbox", "halign": "stretch"}' extname="quickstartside" cls="quickstartside">
+        <ext-container extname="tryText" xwidth="100%"></ext-container>
+        <ext-container extname="getText" xwidth="100%" style="background:white;" flex="1"></ext-container>
+      </ext-container>
+      <ext-container extname="formcontainer" cls="formcontainer" hidden="false" layout="fit" flex="1">
+        <ext-container cls="title" docked="top" html="Complete the form and provide a valid email address to start your evaluation"></ext-container>
+        <ext-formpanel extname="formpanel" layout='{"type": "vbox", "align": "stretch"}' autoSize="true" cls="formpanel" hidden="false" bodyPadding="10">
+          <ext-fieldset defaults='{"labelAlign": "placeholder"}'>
+            <ext-textfield  name="first" label="First Name" required="true" placeholder="Enter your first name" ></ext-textfield>
+            <ext-textfield  name="last"  label="Last Name"  required="true" placeholder="Enter your last name" ></ext-textfield>
+            <ext-textfield  name="company"  label="Company"  required="true" placeholder="Enter your company" ></ext-textfield>
+            <ext-emailfield name="email" label="Email"      required="true" placeholder="Enter email - format is me@sencha.com" validators="email"></ext-emailfield>
+            <ext-textfield  name="title"  label="Title"  required="true" placeholder="Enter your title" ></ext-textfield>
+            <ext-textfield  name="phone"  label="Phone"  required="true" placeholder="Enter your phone" validators="phone"></ext-textfield>
 
-  </ext-panel>
+            <!--
+            <sencha-field-country-us id="myget_country"></sencha-field-country-us>
+            <sencha-field-state-us id="myget_state_us" style="display: none;"></sencha-field-state-us>
+            <sencha-field-province-ca id="myget_province_ca" style="display: none;"></sencha-field-province-ca>
+            <sencha-field-state-mx id="myget_state_mx" style="display: none;"></sencha-field-state-mx>
+            <sencha-field-state-br id="myget_state_br" style="display: none;"></sencha-field-state-br>
+            <sencha-field-os id="myget_os"></sencha-field-os>
+            -->
+
+            <ext-comboboxfield name="os" store="osStore" label="Operating System" placeholder="Choose your Operating System" displayField="text" valueField="text" required="true"></ext-comboboxfield>
+            <ext-comboboxfield onChange="countryChanged" name="country" store="usCountryStore" label="Country" placeholder="Choose your Country" displayField="text" valueField="text" required="true"></ext-comboboxfield>
+            <ext-comboboxfield hidden="true" extname="usstate" name="usstate" store="usStateStore" label="US State" placeholder="Choose your US State" displayField="text" valueField="text" required="true"></ext-comboboxfield>
+            <ext-comboboxfield hidden="true" extname="caprovince" name="caprovince" store="caProvinceStore" label="CA Province" placeholder="Choose your CA Province" displayField="text" valueField="text" required="true"></ext-comboboxfield>
+            <ext-comboboxfield hidden="true" extname="mxstate" name="mxstate" store="mxStateStore" label="MX State" placeholder="Choose your MX State" displayField="text" valueField="text" required="true"></ext-comboboxfield>
+            <ext-comboboxfield hidden="true" extname="brstate" name="brstate" store="brStateStore" label="BR State" placeholder="Choose your BR State" displayField="text" valueField="text" required="true"></ext-comboboxfield>
+
+            <br>
+            <ext-checkbox name="agreeemail" boxlabel="I agree to receive e-mail notifications. See our Privacy Policy for more details."></ext-checkbox>
+            <ext-checkbox name="agreesla" boxlabel="I agree to terms of the Software License Agreement."></ext-checkbox>
+            <ext-checkbox name="agreeterms" boxlabel="I have read, understand and agree to Idera's terms and conditions and privacy statement."></ext-checkbox>
+            <ext-checkbox name="agreemarketing" boxlabel="I agree to receive Idera marketing communications via email and phone call."></ext-checkbox>
+            <ext-checkbox name="agreestudent" boxlabel="Are you a student?"></ext-checkbox>
+            <ext-checkbox name="agreecustomer" boxlabel="Are you a Sencha customer?"></ext-checkbox>
+
+            <div>&nbsp;</div>
+            <ext-button onTap="startTrial" text="Start Trial" shadow="true" arrowAlign="bottom"></ext-button>
+            <ext-loadmask extname="mask" hidden="true" message='Starting...' />
+          </ext-fieldset>
+        </ext-formpanel>
+      </ext-container>
+    </ext-container>
+
+    <ext-container extname="quickstartpanel" cls="quickstartpanel" hidden="true" layout="hbox">
+      <ext-container width="900" xflex="2" extname="quickstart" cls="quickstart" bodyCls="quickstartbody" scrollable="true">
+        <ext-container cls="title" docked="top" html="Your login has been created.<br/>ExtReactModern Quick Start Guide"></ext-container>
+      </ext-container>
+      <ext-container flex="1" extname="quickstartside" cls="quickstartside">
+        <ext-container extname="diff" cls="text"></ext-container>
+      </ext-container>
+    </ext-container>
+
+  </ext-container>
 </body>
 </html>

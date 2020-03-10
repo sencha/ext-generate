@@ -1,62 +1,260 @@
+body html {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.outer
+{
+  text-align: left;
+}
+
+.copy {
+  background: rgb(245, 134, 31);
+  color: white;
+  margin: 0 0 0 10px;
+  padding: 5px 10px 5px 10px;
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.example {
+  display: inline-block;
+  font-family: monospace;
+  padding: 5px 5px 5px 5px;
+  margin: 0 0 0 40px;
+  font-size: 14px;
+  color: rgb(245, 134, 31);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+pre {
+  display: inline-block;
+  font-family: monospace;
+  white-space: pre;
+  padding: 10px 10px 10px 10px;
+  font-size: 18px;
+  color: rgb(245, 134, 31);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.x-root{
+  font:400 14px/1.25 'Source Sans Pro', Roboto, sans-serif;
+  color:#111;
+}
+
+img[alt=npm] { width: 60%; }
+
+.border {
+  margin-left: 40px;
+  color: rgb(245, 134, 31);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+
+.message {
+  background-image:linear-gradient(rgb(245, 134, 31) 0%, rgb(238, 92, 13) 100%);
+  border: 0;
+  width: '100%';
+  font-size:18px;
+}
+
 .title {
-background-image:linear-gradient(rgb(245, 134, 31) 0%, rgb(238, 92, 13) 100%);
-box-sizing:border-box;
-color:rgb(255, 255, 255);
-display:block;
-font-family:"Source Sans Pro", sans-serif;
-font-size:18px;
-font-weight:600;
-height:76px;
-line-height:19px;
-padding-bottom:22px;
-padding-left:15px;
-padding-right:15px;
-padding-top:16px;
-text-align:center;
-text-rendering:geometricprecision;
-text-size-adjust:100%;
-width:348px;
-zoom:1;
--webkit-font-smoothing:antialiased;
--webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+  background-image:linear-gradient(rgb(245, 134, 31) 0%, rgb(238, 92, 13) 100%);
+  box-sizing:border-box;
+  color:rgb(255, 255, 255);
+  display:block;
+  xfont-family:"Source Sans Pro", sans-serif;
+  font-size:18px;
+  xfont-weight:600;
+  height:76px;
+  line-height:19px;
+  padding-bottom:22px;
+  padding-left:15px;
+  padding-right:15px;
+  padding-top:16px;
+  text-align:center;
+  text-rendering:geometricprecision;
+  text-size-adjust:100%;
+  width:348px;
+  zoom:1;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
 }
 
 .heading {
-font-family:"Source Sans Pro", sans-serif;
-font-size:36px;
-margin:auto;
+  background:rgb(9 64 88);
+  color:white;
+
 }
 
-.detail {
-font-family:"Source Sans Pro", sans-serif;
-font-size:24px;
+.feed {
+  margin: 15px 10px 10px 10px;
+  xfont-family:"Source Sans Pro", sans-serif;
+  xfont-style: italic;
+  font-size: 32px;
 }
 
-.responseheader {
-  font-family: "Source Sans Pro", sans-serif;
-  font-weight: bold;
-  font-size: 24px;
-  width: 200px;
-  }
+.headingtitle {
+  margin: 15px 10px 10px 10px;
+  xfont-family:"Source Sans Pro", sans-serif;
+  xfont-style: italic;
+  font-size: 32px;
+}
 
-.response {
-font-family:"Source Sans Pro", sans-serif;
-font-size:24px;
+.maincontainer {
+  background-image: url("assets/HomePageBackground-v3.png");
+}
+
+.formcontainer {
+  border: 0px white solid;
+  border-radius: 3px;
+  box-shadow: 2px 2px 8px 0 white;
+  margin:20px 20px 20px 20px;
+  xwidth: 500px;
 }
 
 
-.b {
-  background-image: url("https://www.sencha.com/wp-content/uploads/2019/06/HomePageBackground-v3.png");
+
+.quickstartpanel {
+  margin: 20px 20px 20px 20px;
 }
 
 .quickstart {
-  border: 1px white solid;
-  border-radius: 3px;
+  border-radius: 13px;
   box-shadow: 2px 2px 8px 0 white;
+  xpadding: 0 0 0 0;
+  background: white;
 }
 
-.c {
-  border: 1px white solid;
-  border-radius: 3px;
-  box-shadow: 2px 2px 8px 0 white;
+.quickstartbody {
+  padding: 1px 10px 10px 10px;
+}
+
+.quickstartside {
+  padding: 10px 10px 10px 10px;
+  background-image: url("assets/HomePageBackground-v3.png");
+  color: white;
+}
+
+.text {
+  font-size: 16px;
+  xfont-style: normal;
+}
+
+.hhh {
+  color: #333;
+  xfont-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  line-height: 1.2;
+  margin: 4px 0 13px;
+}
+
+.dlTrialH1 {
+  display: inline-block;
+  color: #d8d8d8 !important;
+  width: 490px;
+  font-size: 55px;
+  line-height: 60px;
+  padding: 25px 0px 10px 0px;
+  margin: 0px;
+  letter-spacing: 2px;
+  font-weight: 300;
+}
+
+.dlTrialH2 {
+  display: inline-block;
+  color: #a0b2ba !important;
+  width: 490px;
+  font-size: 19px;
+  line-height: 29px;
+  padding: 0px 0px 40px 5px;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+.dlTrialTXT {
+  background: white;
+  text-align: center;
+  margin-top:20px;
+}
+
+.xdlTrialTXT {
+  background: white;
+  padding-top: 0px;
+  float: left;
+  width: 500px;
+}
+
+
+.dlTrialH3 {
+  display: inline-block;
+  width: 490px;
+
+  box-sizing: border-box;
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+  font-weight: 100;
+  color: #f5861f;
+  font-size: 40px;
+  line-height: 50px;
+}
+
+ul.dlTrialUL {
+  display: inline-block;
+  width: 490px;
+
+  box-sizing: border-box;
+  margin: 0px 0px 0px 0px !important;
+  padding: 30px 0px 0px 0px !important;
+  list-style: none !important;
+}
+
+ul.dlTrialUL li {
+  display: block;
+  box-sizing: border-box;
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #043f59;
+  background-image: url(assets/icon-checkmark-circle-orange.png);
+  background-repeat: no-repeat;
+  background-position: left top 2px;
+  background-size: 18px 18px;
+  height: auto;
+  padding: 0px 0px 0px 30px !important;
+  margin: 0px 0px 30px 0px !important;
+  text-align: left;
+}
+
+.dlTrialFooter {
+  width: 490px;display: inline-block;padding:0px; margin:20px 0px 20px 0px; font-size:10px; line-height:14px; color:#043f59;"
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
