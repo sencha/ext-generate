@@ -63,8 +63,8 @@ cd ext-web-components-{toolkit}{bundle}-demo
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <!--
-<script src="./node_modules/@sencha/ext-web-components-{toolkit}{bundle}/ext-runtime-{toolkit}{bundle}/{toolkit}{bundle}.engine.enterprise.js"></script>
-<link rel="stylesheet" type="text/css" href="node_modules/@sencha/ext-web-components-{toolkit}{bundle}/ext-runtime-{toolkit}{bundle}/material/material-all.css"></link>
+<script src="node_modules/@sencha/ext-web-components-classic/ext-runtime-classic/classic.engine.enterprise.js"></script>
+<link  href="node_modules/@sencha/ext-web-components-classic/ext-runtime-classic/material/material-all.css" rel="stylesheet" type="text/css"></link>
 -->
 
 <script type="module" src="./node_modules/@sencha/ext-web-components-{toolkit}{bundle}/src/ext-toolbar.component.js"></script>

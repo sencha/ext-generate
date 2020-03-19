@@ -1,3 +1,103 @@
+export function addRuntime(toolkit, theme) {
+  var xhrObj = new XMLHttpRequest();
+
+  var nodeLocationBlank = ``
+  var nodeLocation =`node_modules/@sencha/ext-web-components-${ toolkit }/`
+  var runtimeLocation = `ext-runtime-${ toolkit }/`
+
+  function linkIt(num) {
+    var xhrLink = new XMLHttpRequest();
+    xhrLink.open('GET', `${ nodeLocation }${ runtimeLocation }${ theme }/${ theme }-all_${ num }.css`, false);
+    xhrLink.send('');
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = xhrLink.responseText;
+    document.getElementsByTagName('head')[0].appendChild(style);
+  }
+
+  function scriptIt() {
+    xhrObj.open('GET', `${ nodeLocationBlank }${ runtimeLocation }${ toolkit }.engine.pro.js`, false);
+    xhrObj.send('');
+    if (xhrObj.status == 404) {
+      xhrObj.open('GET', `${ nodeLocation }${ runtimeLocation }${ toolkit }.engine.pro.js`, false);
+      xhrObj.send('');
+      if (xhrObj.status == 404) {
+        showError();return -100;
+      }
+    }
+    else {
+      nodeLocation = nodeLocationBlank
+    }
+    if (xhrObj.responseText.substring(0, 3) != 'var') {showError();return -100;}
+    var se;
+    se = document.createElement('script');
+    se.type = "text/javascript";
+    se.text = xhrObj.responseText;
+    document.getElementsByTagName('head')[0].appendChild(se);
+    return 0;
+  }
+
+  var showError = function showError() {
+    document.body.innerHTML = `
+    <div>
+    <h1>An error has occurred</h1>
+    The ExtWebComponents runtime cannot be found
+    <p>Solutions:<br>
+    <ul>
+    <li>add @sencha/ext-web-components-${ toolkit } to package.json
+    <li>copy ext-runtime-${ toolkit } to the root
+    </ul>
+    </div>;
+    `
+    window.stop();
+  };
+  if (scriptIt() != 0) {return}
+
+  console.warn('[Deprecation] error below is expected');
+
+  switch (window['ExtFramework']) {
+    case 'react':
+      console.log('react')
+      console.warn('ext-react runtime not defined in index.html');
+      console.warn('to fix, add following 2 lines to public/index.html');
+      console.warn('<link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/ext-runtime-${ toolkit }/${ theme }/${ theme }-all.css"></link>');
+      console.warn('<script src="%PUBLIC_URL%/ext-runtime-${ toolkit }/${ toolkit }.engine.enterprise.js"></script>');
+      linkIt(1)
+      linkIt(2)
+      //scriptIt()
+      break;
+
+    case 'angular':
+      console.log('angular')
+      console.warn('ext-angular runtime not defined in index.html');
+      console.warn('to fix, add following 2 items to angular.json');
+      console.warn('"styles": ["ext-runtime-${ toolkit }/${ theme }/${ theme }-all.css]');
+      console.warn('"scripts": ["ext-runtime-${ toolkit }/${ toolkit }.engine.enterprise.js]');
+      linkIt(1)
+      linkIt(2)
+      //scriptIt()
+      break;
+
+    case 'vue':
+      console.warn('native vue not yet supported, use ext-web-components');
+      break;
+
+    case undefined:
+      console.warn('ext-web-components runtime not defined in index.html');
+      console.warn('to fix, add following 2 lines to index.html');
+      console.warn(`<script src="${ nodeLocation }${ runtimeLocation }${ toolkit }.engine.enterprise.js"></script>`);
+      console.warn(`<link rel="stylesheet" type="text/css" href="${ nodeLocation }${ runtimeLocation }${ theme }/${ theme }-all.css"></link>`);
+      linkIt(1)
+      linkIt(2)
+      //scriptIt()
+      break;
+
+    default:
+      console.error('ERROR');
+      break;
+  }
+}
+
 export function doProp(me, prop) {
   try {
     Object.defineProperty(me, prop, {

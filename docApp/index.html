@@ -4,14 +4,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=10,user-scalable=yes">
 </head>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<script src="./node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
-<script src="./node_modules/@sencha/ext-web-components-modern/ext-runtime-modern/modern.engine.enterprise.js"></script>
-<link rel="stylesheet" type="text/css" href="/material/material-all.css"></link>
-<link rel="stylesheet" type="text/css" href="./node_modules/froala-editor/css/froala_editor.pkgd.min.css"></link>
 <link rel="stylesheet" type="text/css" href="styles.css"></link>
 <link rel="stylesheet" type="text/css" href="tabs.css"></link>
 
-<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-list.component.js"></script>
+<script src="./node_modules/@sencha/ext-web-components-modern/ext-runtime-modern/modern.engine.enterprise.js"></script>
+<link rel="stylesheet" type="text/css" href="node_modules/@sencha/ext-web-components-modern/ext-runtime-modern/material/material-all.css"></link>
+
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-panel.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-toolbar.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-button.component.js"></script>
@@ -19,278 +17,37 @@
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-treelist.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-container.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-tabpanel.component.js"></script>
+<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-list.component.js"></script>
 <script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-textareafield.component.js"></script>
-<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-froalaeditorfield.component.js"></script>
-<script type="module" src="./node_modules/@sencha/ext-web-components-modern/src/ext-froalaeditor.component.js"></script>
 
-<script>
-  //import * as FroalaEditor from './node_modules/froala-editor/js/froala_editor.pkgd.min.js';
-  var ref = {}
-  var docproperties = []
-  var docevents = []
+<!-- <script type="text/javascript" src="dist/ext-web-components-modern-all.js"></script> -->
+<!-- <script type="text/javascript" src="https://se.sencha.com/ext-web-components-modern-all.js"></script> -->
 
-  function panelReady(event) {
-    for (var prop in event.detail.cmpObj) {
-      ref[prop] = event.detail.cmpObj[prop];
-    }
-    fetch('./data/doc-modern/ext-react-modern-aamenu.json')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      data.sort((a, b) => (a.xtype > b.xtype) ? 1 : -1)
-      var navTreeRoot = {
-        hash: 'all',
-        iconCls: 'x-fa fa-home',
-        leaf: false,
-        text: 'All',
-        children: data
-      };
-      // var treeStore = Ext.create('Ext.data.TreeStore', {
-      //   rootVisible: true,
-      //   root: navTreeRoot
-      // });
+<script src="./app.js"></script>
 
-      var treeStore = {
-        xtype: 'tree',
-        rootVisible: true,
-        root: navTreeRoot
-      };
-      ref.treelist.setStore(treeStore);
-      var hash = window.location.hash.substr(1);
-      if (hash == '') {
-        hash = 'accordion';
-      }
-      var node = ref.treelist.getStore().findNode('xtype', hash);
-      ref.treelist.setSelection(node);
-      window.location.hash = '#' + hash;
+<style>
+:root {
+  --base-color: #024059;
+  --base-foreground-color: white;
+  --background-color: white;
+  --color: black;
+}
+</style>
 
 
-      var sample =
-`Ext.application({
-    name: 'Fiddle',
-
-    launch: function () {
-        Ext.create('Ext.data.Store', {
-
-            // Named Store
-            storeId: "simpsonsStore",
-
-            fields: ['name', 'email', 'phone'],
-            data: [{
-                'name': 'Lisa',
-                "email": "lisa@simpsons.com",
-                "phone": "555-111-1224"
-            }, {
-                'name': 'Bart',
-                "email": "bart@simpsons.com",
-                "phone": "555-222-1234"
-            }, {
-                'name': 'Homer',
-                "email": "home@simpsons.com",
-                "phone": "555-222-1244"
-            }, {
-                'name': 'Marge',
-                "email": "marge@simpsons.com",
-                "phone": "555-222-1254"
-            }]
-        });
-
-        var columns = [{
-            text: 'Name',
-            dataIndex: 'name',
-            flex: 1
-        }, {
-            text: 'Email',
-            dataIndex: 'email',
-            flex: 1
-        }, {
-            text: 'Phone',
-            dataIndex: 'phone',
-            flex: 1
-        }];
-
-        var grid = Ext.create('Ext.grid.Grid', {
-            title: 'Simpsons',
-
-            // Using the Named Store
-            store: "simpsonsStore",
-
-            columns: columns,
-            layout: 'fit',
-            fullscreen: true
-        });
-
-    }
-});
-`
-var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.application({name: 'MyApp',launch: function() {Ext.Viewport.add([button]);}})"
-
-
-      ref.list.setData([
-        { title: 'Item 1', example: sample},
-        { title: 'Item 2', example: sample2 },
-        { title: 'Item 3', example: 'c' },
-        { title: 'Item 4', example: 'd' },
-      ])
-
-
-      var x = document.getElementById("exampleframe");
-      var y = (x.contentWindow || x.contentDocument);
-      if (y.document)y = y.document;
-      window.y = y
-      window.y.body.innerHTML ='example will be here...'
-
-
-
-
-
-      //var sample = "var button=Ext.create({xtype: 'button', text: 'another Button'});\nExt.application({\nname: 'MyApp',\nlaunch: function() {Ext.Viewport.add([button]);}\n})"
-      ref.exampletext.setValue(sample)
-
-    });
-  }
-
-  function listSelect(event) {
-    var sender = event.detail.sender;
-    var selected = event.detail.selected;
-    console.log(sender)
-    console.log(selected)
-    ref.exampletext.setValue(selected.data.example)
-
-  }
-
-
-  function treelistSelectionChange(event) {
-    var data = event.detail.record.data;
-    window.location.hash = '#' + data.xtype;
-    fetch('./data/doc-modern/ext-react-modern-' + data.xtype + '.json')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      docproperties = data.docProperties
-      docevents = data.docEvents
-      //console.log(data);
-      //ref.title.setHtml(data.title)
-      ref.ExtWebComponentsTitle.setHtml('ExtWebComponents: ' + data.ExtWebComponentsTitle)
-      //ref.ExtAngularTitle.setHtml('ExtAngular: ' + data.ExtAngularTitle)
-      //ref.ExtReactTitle.setHtml('ExtReact: ' + data.ExtReactTitle)
-
-      ref.first.setHtml(data.first)
-      ref.text.setHtml(data.text)
-      //console.log(ref.tabPanel.getTabBar().getTabs())
-      ref.tabPanel.getTabBar().getTabs()[1].setBadgeText(docproperties.length)
-      ref.tabPanel.getTabBar().getTabs()[2].setBadgeText('0')
-      ref.tabPanel.getTabBar().getTabs()[3].setBadgeText(docevents.length)
-      //console.log(ref.tabPanel)
-      //ref.tabPanel.tabBar.tabs[1].setBadgeText(docproperties.length)
-      //ref.tabPanel.getTabBar()._items.items[1].setBadgeText(docproperties.length)
-      //ref.tabPanel.getTabBar()._items.items[2].setBadgeText('0')
-      //ref.tabPanel.getTabBar()._items.items[3].setBadgeText(docevents.length)
-
-      //console.log(ref.text.setBadgeText)
-      //ref.text.setBadgeText("8")
-
-      ref.properties.setHtml(data.propertyString)
-      //ref.properties.setBadgeText("8")
-      ref.events.setHtml(data.eventString)
-    });
-  }
-
-  function containsMatches(node){
-    const found =
-      node.data.text.match(this.filterRegex) ||
-      node.childNodes.some(child => containsMatches(child));
-    if (found) node.expand();
-    return found;
-  };
-
-  function filterNav(event){
-    var value = event.detail.newValue;
-    this.filterRegex = new RegExp(
-      `(${Ext.String.escapeRegex(value)})`,
-      'i'
-    );
-    ref.treelist
-      .getStore()
-      .filterBy(record => containsMatches(record));
-  };
-
-  function toggleIt(what, id) {
-    sendToContext(what,id)
-    var x = document.getElementById(id);
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  }
-
-  sendToContext = function(what, val) {
-    if (what == 'cfg') {
-      var s = ''
-      docproperties.find(function(element, index, array) {
-        //console.log(element.name)
-        if (element.name == val) {
-          //console.log(element.text)
-          s = '<div class="propertyheader">' + element.name + '</div>' +
-              '<div class="propertydetail">' + element.text + '</div>'
-        }
-
-      })
-      ref.context.setTitle('Property Detail')
-      ref.context.setHtml(s)
-    }
-
-    if (what == 'event') {
-      //console.log(val)
-      var s = ''
-      docevents.find(function(element, index, array) {
-        //console.log(element.name)
-        if (element.name == val.toLowerCase()) {
-          //console.log(element.text)
-          s = '<div class="propertyheader">' + element.name + '</div>' +
-              '<div class="propertydetail">' + element.parameters + '</div>'
-        }
-      })
-      //s = val
-      ref.context.setTitle('Event Detail')
-      ref.context.setHtml(s)
-    }
-  }
-
-  onTap = function() {
-    var x = document.getElementById("exampleframe");
-    var theExample = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.application({name: 'MyApp',launch: function() {Ext.Viewport.add([button]);}})"
-    x.src ='frame.html?example=' + escape(theExample)
-  }
-
-  onTap2 = function() {
-    var x = document.getElementById("exampleframe");
-    var theExample = ref.exampletext.getValue()
-    x.src ='frame.html?example=' + escape(theExample)
-  }
-
-  onRun = function() {
-    var x = document.getElementById("exampleframe");
-    var theExample = ref.exampletext.getValue()
-    x.src ='frame.html?example=' + escape(theExample)
-  }
-
-</script>
+<!-- <script type="module" src="index.js"></script> -->
 
 <body>
-  <ext-panel title="docs" viewport="true" layout="fit" onReady="panelReady" weighted="true" bodyStyle="margin-left:10">
-
+  <ext-panel viewport="true" layout="fit" title="docs" onReady="panelReady" weighted="true" bodyStyle="margin-left:10">
     <ext-toolbar docked="top">
       <ext-button extname="button" text="Tap Me" shadow="true" ontap="onTap"></ext-button>
       <ext-button extname="button" text="Tap Me" shadow="true" ontap="onTap2"></ext-button>
     </ext-toolbar>
 
+
     <ext-panel
-      weight="10"
       docked="left"
+      weight="10"
       border="true"
       shadow="true"
       scrollable="y"
@@ -301,8 +58,8 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
       collapsed="false"
     >
       <ext-searchfield
-        flex="1"
         docked="top"
+        flex="1"
         ui="faded"
         margin="7px"
         onchange="filterNav"
@@ -316,7 +73,7 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
         onselectionchange="treelistSelectionChange">
       </ext-treelist>
     </ext-panel>
-
+    
     <ext-container extname="main" layout="vbox">
       <ext-container>
         <ext-container cls="title" extname="ExtWebComponentsTitle"></ext-container>
@@ -324,10 +81,8 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
         <ext-container cls="title" extname="ExtReactTitle"></ext-container> -->
         <ext-container cls="first" extname="first"></ext-container>
       </ext-container>
-
       <ext-tabpanel
         extname="tabPanel"
-        xshadow="true"
         flex="1"
         cls='tab'
         xbodyCls = 'navigationTabPanelBody'
@@ -342,7 +97,6 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
         }'
         tabBarPosition="top"
         tabBar='{"defaults": {"iconAlign": "top"},    "fontSize": "24px", "xheight": "60px", "layout": {"pack": "space-around"}}'
-
       >
         <ext-panel tabConfig='{
           "closable": "true",
@@ -354,40 +108,33 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
           "title": "Custom Title"
           "tooltip": "A button tooltip".
           "margin": "0 0 0 -15"
-        }'
-        iconAlign= "top"
-        iconCls='x-fa fa-home'
-        userSelectable="true"
-
-        title="Details" extname="text" bodyPadding="10px" bodyCls="text" scrollable="y">
-       </ext-panel>
+          }'
+          iconAlign= "top"
+          iconCls='x-fa fa-home'
+          userSelectable="true"
+          title="Details" extname="text" bodyPadding="10px" bodyCls="text" scrollable="y"
+        >
+        </ext-panel>
         <ext-panel title="Properties" extname="properties" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
         </ext-panel>
-
         <ext-panel title="Methods" extname="methoss" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
         </ext-panel>
-
         <ext-panel
-        tabConfig='{"cls": "heading", "badgeText": "hello", "title": "Custom Title"}'
-        title="Events" extname="events" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
+          tabConfig='{"cls": "heading", "badgeText": "hello", "title": "Custom Title"}'
+          title="Events" extname="events" iconAlign= "top" iconCls='x-fa fa-home' bodyPadding="10px" xbodyCls="text" scrollable="y">
         </ext-panel>
-
         <ext-panel
-        title="Examples"
-        iconAlign= "top" iconCls='x-fa fa-home'
-        border="true"
-        resizable='{"edges": "north", "dynamic": "true"}'
-        extname="examples"
-        html="<iframe style='margin:10px;width:90%;height:90%;' id='exampleframe'></iframe>">
-      </ext-panel>
-
+          title="Examples"
+          iconAlign= "top" iconCls='x-fa fa-home'
+          border="true"
+          resizable='{"edges": "north", "dynamic": "true"}'
+          extname="examples"
+          html="<iframe style='margin:10px;width:90%;height:90%;' id='exampleframe'></iframe>">
+        </ext-panel>
       </ext-tabpanel>
-
-
-
     </ext-container>
-
     <ext-panel
+      docked="right"
       layout="vbox"
       title="context"
       cls="contextpanel"
@@ -395,7 +142,6 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
       bodyPadding="10"
       extname="context"
       bodyPadding="10px"
-      docked="right"
       border="true"
       shadow="true"
       scrollable="y"
@@ -403,65 +149,12 @@ var sample2 = "var button = Ext.create({xtype: 'button', text: 'Button'});Ext.ap
       width="400px"
       collapsed="false"
     >
-
-
-    <!-- <ext-formpanel
-    layout="fit"
-    height="100%"
-    title="Ext.froala.EditorField insde a form panel"
-    xonready="froalaeditor.parentFormPanelReady"
-  >
-    <ext-froalaeditorfield
-      name="html"
-      margin="2"
-      xonready="onEditorFieldReady"
-      xonChange="froalaTextChange"
-      editor='{
-          "autofocus": true,
-          "fontSize": [10, 12, 16, 24]
-      }'
-    >
-    </ext-froalaeditorfield>
-  </ext-formpanel> -->
-
-
-  <!-- <ext-froalaeditor
-  extname="froala"
-
-  margin="2"
-  toolbarButtons="['bold', 'italic', 'html']"
-  editor='{
-      "autofocus": true,
-      "fontSize": [10, 12, 16, 24]
-  }'
->
-</ext-froalaeditor> -->
-<!-- data='[
-{ "title": "Item 1" },
-{ "title": "Item 2" },
-{ "title": "Item 3" },
-{ "title": "Item 4" }
-]' -->
-
-<ext-list onselect="listSelect" extname="list" itemTpl='{title}'
-
-height="200"></ext-list>
-
-<ext-container cls="exampletext" extname="exampletext"></ext-container>
-
+      <ext-list onselect="listSelect" extname="list" itemTpl='{title}' height="200"></ext-list>
+      <ext-container cls="exampletext" extname="exampletext"></ext-container>
       <ext-button extname="runbutton" text="Run" shadow="true" ontap="onRun"></ext-button>
-
       <ext-textareafield extname="exampletext" flex="1" maxRows="10" label='Example' labelAlign="top" placeHolder='Enter an Ext JS Example...'></ext-textareafield>
-
-
-
     </ext-panel>
-
-
-
-    <ext-panel cls="footer" docked="bottom" bodyStyle="background:lightgray">
-    </ext-panel>
-
+    <ext-panel docked="bottom" weight="20" cls="footer" bodyStyle="background:lightgray"></ext-panel>
   </ext-panel>
 </body>
 </html>

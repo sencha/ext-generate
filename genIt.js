@@ -30,8 +30,12 @@ function doCreateFolders() {
     mkdirp.sync(`${webComponentsPackageFolder}src`);
     mkdirp.sync(`${webComponentsPackageFolder}src/overrides`);
     mkdirp.sync(`${webComponentsPackageFolder}src/runtime`);
+    mkdirp.sync(`${webComponentsPackageFolder}src/runtime/engine`);
+    //mkdirp.sync(`${webComponentsPackageFolder}src/runtime/engine/${toolkit}`);
+    //mkdirp.sync(`${webComponentsPackageFolder}src/runtime/engine/${toolkit}/themes`);
     mkdirp.sync(`${webComponentsPackageFolder}bin`);
     mkdirp.sync(`${webComponentsPackageFolder}guides`);
+    mkdirp.sync(`${webComponentsPackageFolder}config`);
   }
 
   if (doAngular == true) {
@@ -67,6 +71,7 @@ function doCreateFolders() {
 function doLaunch(item) {
   var processIt = shouldProcessIt(item)
   if (processIt == true) {
+
     //get all names and eliminate duplicates
 
     item.names = []
@@ -249,7 +254,9 @@ function oneItem(item) {
         }
 
         if (doDoc == true) {
+
           require("./docs").doDocStuff(xtypes[j], info, item);
+
         }
 
       }
@@ -346,7 +353,10 @@ function createWebComponents() {
 
     writeTemplateFile(`${webComponentsTemplateFolder}runtime/webcomponentsbase.tpl`,`${webComponentsPackageFolder}src/runtime/webcomponentsbase.js`, info);
     writeTemplateFile(`${webComponentsTemplateFolder}runtime/ElementParser.js.tpl`, `${webComponentsPackageFolder}src/runtime/ElementParser.js`, info);
-    //copyFileSync(`${webComponentsTemplateFolder}ElementCell.js`, `${webComponentsPackageFolder}src/ElementCell.js`);
+
+    //copyFileSync(`${webComponentsTemplateFolder}runtime/engine/${toolkit}/${toolkit}.engine.pro.import.js`, `${webComponentsPackageFolder}src/runtime/engine/${toolkit}/${toolkit}.engine.pro.import.js`);
+    //copyFileSync(`${webComponentsTemplateFolder}runtime/engine/${toolkit}/themes/${toolkit}.material.fewest.js`, `${webComponentsPackageFolder}src/runtime/engine/${toolkit}/themes/${toolkit}.material.fewest.js`);
+
     copyFileSync(`${webComponentsTemplateFolder}runtime/util.js`, `${webComponentsPackageFolder}src/runtime/util.js`);
     writeTemplateFile(`${webComponentsTemplateFolder}runtime/router.tpl`, `${webComponentsPackageFolder}src/ext-router.component.js`, info);
 
@@ -368,6 +378,10 @@ function createWebComponents() {
     writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_SVELTE.tpl`,`${webComponentsPackageFolder}guides/USING_SVELTE.md`,info);
     writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_VUE.tpl`,`${webComponentsPackageFolder}guides/USING_VUE.md`,info);
     writeTemplateFile(`${webComponentsTemplateFolder}guides/WHATS_NEW.tpl`,`${webComponentsPackageFolder}guides/WHATS_NEW.md`,info);
+
+    writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.common.js.tpl`,`${webComponentsPackageFolder}config/webpack.common.js`,info);
+    writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.dev.js.tpl`,`${webComponentsPackageFolder}config/webpack.dev.js`,info);
+    writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.prod.js.tpl`,`${webComponentsPackageFolder}config/webpack.prod.js`,info);
 }
 
 function createAngular() {
@@ -582,6 +596,9 @@ async function doCopy() {
 function shouldProcessIt(o) {
   var processIt = false;
 
+
+
+
   if (info.toolkit == 'classic') {
     var item = o
     if (item.alias != undefined) {
@@ -606,6 +623,7 @@ function shouldProcessIt(o) {
     // if (o.name == 'Ext.grid.column.Column') {
     //   processIt = false
     // }
+
     return processIt
   }
   if (info.toolkit == 'modern') {

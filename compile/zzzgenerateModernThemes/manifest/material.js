@@ -1,1 +1,0 @@
-import '../build/testing/generateModernThemes/resources/generateModernThemes-all.css';

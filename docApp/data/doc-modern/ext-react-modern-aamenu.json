@@ -1101,7 +1101,81 @@
   "extends": "Ext.dataview.List",
   "name": "Ext.grid.Grid",
   "iconCls": "x-fa fa-cog",
-  "leaf": true
+  "leaf": false,
+  "children": [
+   {
+    "text": "Editing",
+    "iconCls": "icon-layout-card",
+    "children": [
+     {
+      "text": "Basic Editing",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Batch Editing",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Pop Up Editing",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Form Editing",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Edit-based Editing",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Widget-based Editing",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Data Validation",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     }
+    ]
+   },
+   {
+    "text": "Drag & Drop",
+    "iconCls": "icon-layout-card",
+    "children": [
+     {
+      "text": "Within Grid",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Grid to Grid",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Grid to Form",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Form to Grid",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     },
+     {
+      "text": "Field to Grid",
+      "iconCls": "icon-layout-center",
+      "leaf": true
+     }
+    ]
+   }
+  ]
  },
  {
   "text": "Headercontainer",

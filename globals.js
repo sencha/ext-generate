@@ -4,8 +4,8 @@ exports.setGlobals =() => {
 
   // // for prod
   global["doWebComponents"]      = true;
-  global["doAngular"]            = true;
-  global["doReact"]              = true;
+  global["doAngular"]            = false;
+  global["doReact"]              = false;
   global["doDoc"]                = false;
 
   global["createFolders"]        = true;
@@ -15,7 +15,7 @@ exports.setGlobals =() => {
   global["npmPublishRightAfter"] = false;
   global["copy"]                 = true;
 
-  // for doc testing
+  // //for doc testing
   // global["doWebComponents"]      = false;
   // global["doAngular"]            = false;
   // global["doReact"]              = false;
@@ -24,6 +24,19 @@ exports.setGlobals =() => {
   // global["createFolders"]        = true;
   // global["launch"]               = true;
   // global["postLaunch"]           = false;
+  // global["npmInstall"]           = false;
+  // global["npmPublishRightAfter"] = false;
+  // global["copy"]                 = false;
+
+  //   // for doc testing
+  // global["doWebComponents"]      = true;
+  // global["doAngular"]            = false;
+  // global["doReact"]              = false;
+  // global["doDoc"]                = false;
+
+  // global["createFolders"]        = true;
+  // global["launch"]               = true;
+  // global["postLaunch"]           = true;
   // global["npmInstall"]           = false;
   // global["npmPublishRightAfter"] = false;
   // global["copy"]                 = false;

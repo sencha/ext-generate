@@ -333,6 +333,10 @@ export default class WebComponentsBaseComponent extends HTMLElement {
     });
 
     if (me.parentNode != null && me.parentNode.nodeName.substring(0, 4) === 'EXT-') {
+      if (me.parentNode.A === undefined) {
+        console.error('import for ' + me.parentNode.nodeName.toLowerCase() + ' is missing')
+        return
+      }
       if (me.parentNode.A.ext !== undefined) {
         var found = false;
         for (var i = 0; i < me.parentNode.A.ITEMS.length; i++) {
@@ -544,7 +548,8 @@ export default class WebComponentsBaseComponent extends HTMLElement {
                   propertyVal = this.attributeObjects[attr];
                 }
               }
-              if (newVal == '[object Object]') {
+              //if (newVal == '[object Object]') {
+              if (newVal.includes('[object Object]')) {
                 propertyVal = this.attributeObjects[attr]
               }
               if (newVal == 'object') {

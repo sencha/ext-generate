@@ -8,13 +8,39 @@ exports.doDocStuff =(xtype, info, item) => {
 
   let obj = global.docMenu.find(o => o.xtype === xtype);
   if (obj == undefined) {
+
     var oMenu = {}
-    oMenu.text = XtypeForDoc;
-    oMenu.xtype = xtype;
-    oMenu.extends = item.extends;
-    oMenu.name = item.name;
-    oMenu.iconCls = 'x-fa fa-cog';
-    oMenu.leaf = true;
+      oMenu.text = XtypeForDoc;
+      oMenu.xtype = xtype;
+      oMenu.extends = item.extends;
+      oMenu.name = item.name;
+      oMenu.iconCls = 'x-fa fa-cog';
+    if (xtype == 'grid') {
+      oMenu.leaf = false;
+
+      oMenu.children = [
+        { text: 'Editing', iconCls: 'icon-layout-card', children: [
+          { text: 'Basic Editing', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Batch Editing', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Pop Up Editing', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Form Editing', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Edit-based Editing', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Widget-based Editing', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Data Validation', iconCls: 'icon-layout-center', leaf: true },
+        ]},
+        { text: 'Drag & Drop', iconCls: 'icon-layout-card', children: [
+          { text: 'Within Grid', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Grid to Grid', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Grid to Form', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Form to Grid', iconCls: 'icon-layout-center', leaf: true },
+          { text: 'Field to Grid', iconCls: 'icon-layout-center', leaf: true },
+        ]},
+      ]
+
+    }
+    else {
+      oMenu.leaf = true;
+    }
     global.docMenu.push(oMenu);
   }
 
@@ -156,8 +182,8 @@ exports.doDocStuff =(xtype, info, item) => {
 
       //{@link #cfg!iconAlign #iconAlign}
 
-      if (xtype == 'accordion') {
-        console.log(item.text)
+//      if (xtype == 'accordion') {
+        //console.log(item.text)
 
       //var afterCfgLink = item.text.replace( new RegExp( /[{]@link #cfg(.)*?[}]/g) , replacerCfgLink )
       //var afterHeader2 = afterCfgLink.replace( new RegExp( /## (.)*?[\n]/g) , replacerHeader2 )
@@ -169,23 +195,17 @@ exports.doDocStuff =(xtype, info, item) => {
       var afterHTML = afterAngular.replace( new RegExp( /```html(.|\n)*?(.|\n)*?```/g ) , replacerHTML )
       var afterWebComponents = afterHTML.replace( new RegExp( /```javascript\n[ ]*@example[(][ ]*{[ ]*framework:[ ]*'ext-web-components'(.|\n)*?```/g ) , replacerWebComponents )
 
-
-
-
-
-
-
       var afterAll = afterWebComponents
       res = afterAll.substring(0, afterAll.indexOf(`\n\n`))
 
 
 
       restOfText = '<div style="user-select: text;">' + afterAll.slice(afterAll.indexOf(`\n\n`)+2) + '</div>'
-      }
-      else {
-        res = 'hi'
-        restOfText = 'hi'
-      }
+      // }
+      // else {
+      //   res = 'hi'
+      //   restOfText = 'hi'
+      // }
 
 
 

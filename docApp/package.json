@@ -3,7 +3,7 @@
   "version": "7.2.0",
   "description": "docApp",
   "scripts": {
-    "start": "npx servor . index.html 8080 --reload --browse"
+    "start": "npx servor . index.html 8081 --reload --browse"
   },
   "devDependencies": {
     "@sencha/ext-web-components-modern": "~7.2.0",

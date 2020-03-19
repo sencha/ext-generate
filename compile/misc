@@ -1,7 +1,0 @@
-sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic appClassic ./appClassic
-
-https://github.com/VincentGarreau/particles.js/issues/123
-
-
-classic/theme-base/sass/etc/mixins/slicer.scss
-  in sliceit function line 18
