@@ -1,0 +1,11 @@
+import '@sencha/ext-web-components-modern/src/ext-actionsheet.component.js';
+import '@sencha/ext-web-components-modern/src/ext-panel.component.js';
+import '@sencha/ext-web-components-modern/src/ext-toolbar.component.js';
+import '@sencha/ext-web-components-modern/src/ext-button.component.js';
+import '@sencha/ext-web-components-modern/src/ext-searchfield.component.js';
+import '@sencha/ext-web-components-modern/src/ext-treelist.component.js';
+import '@sencha/ext-web-components-modern/src/ext-container.component.js';
+import '@sencha/ext-web-components-modern/src/ext-tabpanel.component.js';
+import '@sencha/ext-web-components-modern/src/ext-list.component.js';
+import '@sencha/ext-web-components-modern/src/ext-textareafield.component.js';
+import './app.js'

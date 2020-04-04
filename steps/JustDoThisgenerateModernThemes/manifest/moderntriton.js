@@ -1,0 +1,1 @@
+import '../build/production/generateModernThemes/resources/generateModernThemes-all.css';

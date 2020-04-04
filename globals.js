@@ -3,15 +3,15 @@ exports.setGlobals =() => {
   //global["docs"]      = [];
 
   // // for prod
-  global["doWebComponents"]      = true;
+  global["doWebComponents"]      = false;
   global["doAngular"]            = false;
-  global["doReact"]              = false;
+  global["doReact"]              = true;
   global["doDoc"]                = false;
 
   global["createFolders"]        = true;
   global["launch"]               = true;
   global["postLaunch"]           = true;
-  global["npmInstall"]           = true;
+  global["npmInstall"]           = false;
   global["npmPublishRightAfter"] = false;
   global["copy"]                 = true;
 
@@ -53,6 +53,10 @@ exports.setGlobals =() => {
   console.log(`npmPublishRightAfter:\t${npmPublishRightAfter}`)
   console.log(`copy:\t\t\t${copy}`)
   console.log(`\n`)
+
+
+  global["ext-tree"] = []
+  global["xtype-tree"] = []
 
   global["toolkit"] = process.argv[3];
   var toolkits = ['modern', 'classic'];
@@ -108,6 +112,8 @@ global["moduleVars"] = { imports: "", declarations: "", exports: "" };
 
 info.webComponentsImports = []
 info.webComponentsImportsPlain = []
+info.reactImportsArray = []
+info.reactImportsArrayPlain = []
 info.angularImports = []
 info.allExtended = '';
 info.imports = ''

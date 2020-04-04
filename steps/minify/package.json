@@ -1,0 +1,11 @@
+{
+  "name": "minify",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "uglify-js": "^3.7.6"
+  },
+  "scripts": {
+    "start": "node ./index.js"
+  }
+}

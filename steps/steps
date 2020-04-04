@@ -1,0 +1,141 @@
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -modern generateModernThemes ./generateModernThemes
+
+cd generateThemes
+node ./index.js
+  creates build folder
+
+
+
+create mainfest folder
+
+add 1 file for each theme
+
+ios.js
+material.js
+neptune.js
+triton.js
+
+contents:
+import '../build/testing/generateModernThemes/resources/generateModernThemes-all.css';
+
+package.json
+{
+  "name": "modern-theme-bundler",
+  "version": "7.1.0",
+  "description": "modern-theme-bundler",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack"
+  },
+  "author": "Marc Gusmano",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "~4.41.5",
+    "webpack-cli": "~3.3.10",
+    "script-loader": "~0.7.2",
+    "url-loader": "~3.0.0",
+    "file-loader": "~5.0.2",
+    "style-loader": "~1.1.3",
+    "css-loader": "~3.4.2"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mgusmano"
+  }
+}
+
+webpack.config.js:
+
+var name = 'ios';
+//var name = 'material';
+//var name = 'neptune';
+//var name = 'triton';
+const path = require('path');
+module.exports = function(env) {
+  return {
+    mode: 'production',
+    context: path.join(__dirname, './'),
+    entry: { css: './manifest/' + name + '.js'},
+    output: {
+      path: path.join(__dirname, 'modern/css'),
+      filename: '[name]' + '.modern.' + name + '.js'
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: ['style-loader','css-loader'],
+        },
+        {
+          test: /\.(png|svg|jpg|gif)$/,
+          use: ['url-loader'],
+        },
+        // {
+        //   test: /\.(woff|woff2|eot|ttf|otf)$/,
+        //   use: ['file-loader'],
+        // },
+        {
+          test: /\.(eot|woff|woff2|ttf)$/,
+          loaders: ['url-loader']
+        }
+       ]
+    }
+  }
+}
+
+npm install
+
+run for each theme
+
+do 4 runs...
+
+change first line in webpack.config.js
+var name = 'ios';
+var name = 'material';
+var name = 'neptune';
+var name = 'triton';
+
+run npm start
+
+4 files:
+css/css.modern.ios.js
+css/css.modern.material.js
+css/css.modern.neptune.js
+css/css.modern.triton.js
+
+
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic aria ./aria
+  sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic classic ./classic
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic classic-sandbox ./classic-sandbox
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic crisp ./crisp
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic crisp-touch ./crisp-touch
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic graphite ./graphite
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic gray ./gray
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic material ./material
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic neptune ./neptune
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic neptune-touch ./neptune-touch
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -classic triton ./triton
+
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -modern ios ./ios
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -modern material ./material
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -modern neptune ./neptune
+sencha -sdk /Volumes/BOOTCAMP/aaExt/ext-7.1.0.46 generate app -modern triton ./triton
+
+in app.json
+
+    "theme": 'zzz',
+    "requires": [
+      "font-ext",
+      "ux",
+      "d3",
+      "pivot-d3",
+      "font-awesome",
+      "exporter",
+      "pivot",
+      "calendar",
+      "charts"
+    ],
+
+sencha app build production
+

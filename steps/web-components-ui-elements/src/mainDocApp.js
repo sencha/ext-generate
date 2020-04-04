@@ -1,0 +1,9 @@
+import './components/ext-panel.component.js';
+import './components/ext-toolbar.component.js';
+import './components/ext-button.component.js';
+import './components/ext-searchfield.component.js';
+import './components/ext-treelist.component.js';
+import './components/ext-container.component.js';
+import './components/ext-tabpanel.component.js';
+import './components/ext-list.component.js';
+import './components/ext-textareafield.component.js';

@@ -1,0 +1,47 @@
+#mygetroot .x-formpanel-body-el {
+  background-color: #fff;
+  background-color: var(--background-color);
+  padding: 0 0;
+}
+#mygetroot .x-form-fieldset .x-form-fieldset-body-el {
+  border-style: none;
+  padding: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+
+#mygetroot .x-checkboxfield .x-box-label-el {
+  color: rgba(17, 17, 17, 0.54);
+  color: var(--highlight-color);
+  padding: 12px 0 0 5px;
+  font: 400 8px Roboto, sans-serif;
+}
+
+.dlFormStylingNew {
+  display: block;
+  box-sizing: border-box;
+  width: 100% !important;
+  height: auto;
+  float: right;
+  padding: 0px 0px 0px 0px;
+  margin: -280px 0px 0px 0px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0px 2px 2px rgba(0,0,0,0.33);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dlTrialFormBoxNew {
+  display: block;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+  padding: 0px 0px 0px 10px;
+  background-image: url(/wp-content/uploads/2018/03/calloutArrow2.png);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 25%;
+}

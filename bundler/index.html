@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Froala Webpack Example Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
+  </head>
+  <script src="./index.js" type="module"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="node_modules/@sencha/ext-web-components-modern/ext-runtime-modern/material/material-all.css"></link> -->
+  <body>
+
+    <script>
+
+      function theFunction() {
+        console.log('hi')
+        var element = document.createElement('EXT-BUTTON');
+        //console.log(element)
+        element.setAttribute('text', 'ext-button here')
+        element.setAttribute('shadow', 'true')
+        document.body.appendChild(element)
+
+      }
+
+    </script>
+
+    <!-- The Froala Editor -->
+    <div id='editor' style='margin: 20px;' onclick="theFunction()">
+click
+    </div>
+    <ext-panel title="panel" html="html" border="true"></ext-panel>
+  </body>
+</html>

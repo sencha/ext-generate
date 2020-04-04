@@ -27,7 +27,7 @@ npm login --registry=https://sencha.myget.org/F/early-adopter/npm/ --scope=@senc
 npm install -g @angular/cli
 ```
 
-should be @angular/cli@9.0.x
+should be @angular/cli@9.1.x
 
 
 #### Create a new Angular CLI application
@@ -177,7 +177,7 @@ import { Component } from '@angular/core';
     flex="1"
     [title]="title"
     extname="grid"
-    columns='[
+    [columns]='[
       { "text":"name", "dataIndex":"name" },
       { "text":"email", "dataIndex":"email", "flex": "1" }
     ]'

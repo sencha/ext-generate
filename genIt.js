@@ -2,6 +2,7 @@
 // node ./genIt.js blank modern
 // node ./genIt.js blank classic
 // node ./genIt.js button classic
+//node ./genIt.js grid classic
 
 async function go() {
   require("./globals").setGlobals();
@@ -13,8 +14,14 @@ async function go() {
     }
   }
   if (postLaunch == true) { doPostLaunch() }
+  if (info.suffixParm != 'blank') {
+    doTrim()
+  }
   if (npmInstall == true) { await doNpmInstall() }
-  if (copy       == true) { await doCopy() }
+  if (info.suffixParm != 'blank') {
+    rimraf.sync(`${webComponentsPackageFolder}src2`);
+  }
+  if (copy == true) { await doCopy() }
   doEnd()
 }
 go()
@@ -27,35 +34,36 @@ function doCreateFolders() {
   if (doWebComponents == true) {
     rimraf.sync(`${webComponentsPackageFolder}`);
     mkdirp.sync(`${webComponentsPackageFolder}`);
-    mkdirp.sync(`${webComponentsPackageFolder}src`);
-    mkdirp.sync(`${webComponentsPackageFolder}src/overrides`);
-    mkdirp.sync(`${webComponentsPackageFolder}src/runtime`);
-    mkdirp.sync(`${webComponentsPackageFolder}src/runtime/engine`);
-    //mkdirp.sync(`${webComponentsPackageFolder}src/runtime/engine/${toolkit}`);
-    //mkdirp.sync(`${webComponentsPackageFolder}src/runtime/engine/${toolkit}/themes`);
     mkdirp.sync(`${webComponentsPackageFolder}bin`);
+    //mkdirp.sync(`${webComponentsPackageFolder}config`);
     mkdirp.sync(`${webComponentsPackageFolder}guides`);
-    mkdirp.sync(`${webComponentsPackageFolder}config`);
+    //mkdirp.sync(`${webComponentsPackageFolder}runtime`);
+    mkdirp.sync(`${webComponentsPackageFolder}src`);
+    if (info.suffixParm != 'blank') {
+      mkdirp.sync(`${webComponentsPackageFolder}src2`);
+    }
+    mkdirp.sync(`${webComponentsPackageFolder}src/common`);
+    mkdirp.sync(`${webComponentsPackageFolder}src/overrides`);
   }
 
   if (doAngular == true) {
     rimraf.sync(`${angularPackageFolder}`);
     mkdirp.sync(`${angularPackageFolder}`);
-    mkdirp.sync(`${angularPackageFolder}src`);
-    mkdirp.sync(`${angularPackageFolder}src/overrides`);
-    mkdirp.sync(`${angularPackageFolder}src/runtime`);
     mkdirp.sync(`${angularPackageFolder}bin`);
     mkdirp.sync(`${angularPackageFolder}guides`);
+    mkdirp.sync(`${angularPackageFolder}src`);
+    mkdirp.sync(`${angularPackageFolder}src/common`);
+    mkdirp.sync(`${angularPackageFolder}src/overrides`);
   }
 
   if (doReact == true) {
     rimraf.sync(`${reactPackageFolder}`);
     mkdirp.sync(`${reactPackageFolder}`);
-    mkdirp.sync(`${reactPackageFolder}src`);
-    mkdirp.sync(`${reactPackageFolder}src/overrides`);
-    mkdirp.sync(`${reactPackageFolder}src/runtime`);
     mkdirp.sync(`${reactPackageFolder}bin`);
     mkdirp.sync(`${reactPackageFolder}guides`);
+    mkdirp.sync(`${reactPackageFolder}src`);
+    mkdirp.sync(`${reactPackageFolder}src/common`);
+    mkdirp.sync(`${reactPackageFolder}src/overrides`);
   }
 
   if (doDoc == true) {
@@ -71,7 +79,7 @@ function doCreateFolders() {
 function doLaunch(item) {
   var processIt = shouldProcessIt(item)
   if (processIt == true) {
-
+    //console.log(item.name)
     //get all names and eliminate duplicates
 
     item.names = []
@@ -133,6 +141,7 @@ function oneItem(item) {
   //   console.log(item)
   //   console.log('*****')
   // }
+  //console.log(item.names)
 
   var names = item.names;
   var xtypes = item.xtypes;
@@ -152,12 +161,16 @@ function oneItem(item) {
       var pathprefix = ''
       var v = {}
       var parts = name.split(".")
-      //console.log(name)
       for (var j = 0; j < parts.length-1; j++) {
           thePath = thePath + parts[j] + '/'
           pathprefix = pathprefix + '../'
       }
-      folder = `${webComponentsPackageFolder}src/${thePath}`
+      if (info.suffixParm == 'blank') {
+        folder = `${webComponentsPackageFolder}src/${thePath}`
+      }
+      else {
+        folder = `${webComponentsPackageFolder}src2/${thePath}`
+      }
       if (!fs.existsSync(folder)) {
         mkdirp.sync(folder)
       }
@@ -170,29 +183,38 @@ function oneItem(item) {
 
       var templateFile = ''
       if (item.name == 'Ext.Base') {
-          templateFile = 'base.tpl';
-          v = {
-              shortname: info.shortname,
-              Shortname: info.Shortname,
-              classname: classname,
-              sPROPERTIES: info.propertyObj.sPROPERTIES,
-              sEVENTS: info.eventObj.sEVENTS
-          }
-      }
-      else {
-          templateFile = 'class.tpl';
-          v = {
-            extendsclassname: item.extends.replace(/\./g, "_"),
-            pathprefix: pathprefix,
-            extendpath: extendpath,
-            classextendsfilename: extendparts[extendparts.length-1],
-            classname: classname,
-            sPROPERTIES: info.propertyObj.sPROPERTIES,
-            sEVENTS: info.eventObj.sEVENTS
+        templateFile = 'base.tpl';
+        v = {
+          shortname: info.shortname,
+          Shortname: info.Shortname,
+          classname: classname,
+          sPROPERTIES: info.propertyObj.sPROPERTIES,
+          sEVENTS: info.eventObj.sEVENTS
         }
       }
-      //console.log(filename)
-      writeTemplateFile(`${webComponentsTemplateFolder}runtime/${templateFile}`, `${folder}${filename}.js`, v)
+      else {
+        templateFile = 'class.tpl';
+        v = {
+          extendsclassname: item.extends.replace(/\./g, "_"),
+          pathprefix: pathprefix,
+          extendpath: extendpath,
+          classextendsfilename: extendparts[extendparts.length-1],
+          classname: classname,
+          sPROPERTIES: info.propertyObj.sPROPERTIES,
+          sEVENTS: info.eventObj.sEVENTS
+        }
+      }
+
+      var childfull = `${folder}${filename}`
+      var child = childfull.replace(`${webComponentsPackageFolder}src2/`,'')
+      var parent = `${v.extendpath}${v.classextendsfilename}`
+
+      var o = {
+        child: child,
+        parent: parent
+      }
+      global["ext-tree"].push(o)
+      writeTemplateFile(`${webComponentsTemplateFolder}templates/${templateFile}`, `${folder}${filename}.js`, v)
     }
 
     var Xtype;
@@ -217,15 +239,44 @@ function oneItem(item) {
         }
 
         if (doWebComponents == true) {
-          writeTemplateFile(`./filetemplates/web-components/runtime/web-components.tpl`, `${webComponentsPackageFolder}src/ext-${xtypes[j]}.component.js`, values)
+          if (info.suffixParm == 'blank') {
+            writeTemplateFile(`${webComponentsTemplateFolder}/templates/web-components.tpl`, `${webComponentsPackageFolder}src/ext-${xtypes[j]}.component.js`, values)
+          }
+          else {
+            if (info.wantedxtypes.includes(`${xtypes[j]}`)) {
+              var parent = values.folder.replace('./','')
+              //console.log(`${values.xtype} ${values.classname}  ${parent}`)
+              var o = {
+                xtype: values.xtype,
+                classname: values.classname,
+                parent: parent
+              }
+              global['xtype-tree'].push(o)
+              writeTemplateFile(`${webComponentsTemplateFolder}templates/web-components.tpl`, `${webComponentsPackageFolder}src/ext-${xtypes[j]}.component.js`, values)
+            }
+          }
         }
 
         if (doAngular == true) {
-          writeTemplateFile(`./filetemplates/angular/runtime/angular.tpl`, `${angularPackageFolder}src/Ext${values.Xtype}.ts`, values)
+          if (info.suffixParm == 'blank') {
+            writeTemplateFile(`${angularTemplateFolder}templates/angular.tpl`, `${angularPackageFolder}src/Ext${values.Xtype}.ts`, values)
+          }
+          else {
+            if (info.wantedxtypes.includes(`${xtypes[j]}`)) {
+              writeTemplateFile(`${angularTemplateFolder}templates/angular.tpl`, `${angularPackageFolder}src/Ext${values.Xtype}.ts`, values)
+            }
+          }
         }
 
         if (doReact == true) {
-          writeTemplateFile(`./filetemplates/react/runtime/react.tpl`, `${reactPackageFolder}src/Ext${values.Xtype}.js`, values)
+          if (info.suffixParm == 'blank') {
+            writeTemplateFile(`${reactTemplateFolder}templates/react.tpl`, `${reactPackageFolder}src/Ext${values.Xtype}.js`, values)
+          }
+          else {
+            if (info.wantedxtypes.includes(`${xtypes[j]}`)) {
+              writeTemplateFile(`${reactTemplateFolder}templates/react.tpl`, `${reactPackageFolder}src/Ext${values.Xtype}.js`, values)
+            }
+          }
         }
 
         xt = values.xtype
@@ -236,11 +287,14 @@ function oneItem(item) {
           var classname2 = xt.replace(/-/g, "_");
           var capclassname = classname2.charAt(0).toUpperCase() + classname2.slice(1);
 
-          info.webComponentsImports.push(`import EWC${capclassname} from './dist/ext-${xt}.component.js';export { EWC${capclassname} };\n`)
+          info.webComponentsImports.push(`import EWC${capclassname} from './ext-${xt}.component.js';export { EWC${capclassname} };\n`)
           info.webComponentsImportsPlain.push(`import './src/ext-${xt}.component.js';\n`)
 
           moduleVars.imports = moduleVars.imports +`import { Ext${capclassname}Component } from './dist/ext-${xt}.component.js';\n`;
+
           info.angularImports.push(`import { Ext${capclassname}Component } from './src/Ext${capclassname}';\n`)
+          //info.reactImportsArray.push(`import { Ext${capclassname}Component } from './dist/Ext${capclassname}';\n`)
+          info.reactImportsArray.push(`import { Ext${capclassname} } from './dist/Ext${capclassname}';\n`)
 
           moduleVars.declarations = moduleVars.declarations + `    Ext${capclassname}Component,\n`;
           moduleVars.exports = moduleVars.exports + `    Ext${capclassname}Component,\n`;
@@ -254,17 +308,12 @@ function oneItem(item) {
         }
 
         if (doDoc == true) {
-
           require("./docs").doDocStuff(xtypes[j], info, item);
-
         }
 
       }
   }
 
-
-
-  //mjg
   if (doDoc == true) {
     all.push({
       xtypes: item.xtypes,
@@ -275,8 +324,6 @@ function oneItem(item) {
       eventsArrayForDoc: item.eventsArrayForDoc
     })
   }
-
-
 
 }
 
@@ -292,132 +339,89 @@ function doPostLaunch() {
     createReact()
   }
   if (doDoc == true) {
-    //docs
-    fs.writeFileSync(`${docFolder}data.js`,'window.xtypemenu = ' + JSON.stringify(docs, null, ' '));
-    //doc
-    info.includedxtypes = `<div>\n`
-    fs.readdirSync(`${docStagingFolder}`).forEach(function(file) {
-        var f = file.split('.')
-        var xtype = f[0].substring(4)
-        if (file == 'docdetail.html' || file == 'doc.html' || file == 'docstyle.css') { return }
-        if (info.wantedxtypes.indexOf(xtype) != -1) {
-            fs.copySync(`${docStagingFolder}/${file}`,`${docFolder}/${file}`)
-            info.includedxtypes = info.includedxtypes + `  <div onclick="selectDoc('${xtype}')">ext-${xtype}</div><br>\n`
-        }
-    });
-    info.includedxtypes = info.includedxtypes + `</div>\n`
-    writeTemplateFile(`${templateFolder}docs/doc.tpl`, `${docFolder}doc.html`, info)
-    writeTemplateFile(`${templateFolder}docs/doc-z-tabs.tpl`, `${docFolder}z-tabs.js`, info)
-    writeTemplateFile(`${templateFolder}docs/doc-style.tpl`, `${docFolder}style.css`, info)
-    writeTemplateFile(`${templateFolder}docs/docstyle.tpl`, `${docFolder}docstyle.css`, info)
-    //rimraf.sync(docStagingFolder);
+    createDoc()
   }
-
-  // function writeTheUniqueOnes() {
-  //   var allExtendedArray = info.allExtended.split(",");
-  //   let uniqueAllExtendedArray = [...new Set(allExtendedArray)];
-  //   uniqueAllExtendedArray.forEach((extended) => {
-  //       if (extended == '') { return }
-  //       var folder = ''
-  //       var fromFolder = ''
-  //       var toFolder = ''
-  //       var parts = extended.split(".")
-  //       var thePath = ''
-  //       var pathprefix = ''
-  //       for (var j = 0; j < parts.length-1; j++) {
-  //           thePath = thePath + parts[j] + '/'
-  //           pathprefix = pathprefix + '../'
-  //       }
-  //       folder = `${outputSrcFolder}${thePath}`
-  //       if (!fs.existsSync(folder)) {
-  //         console.log(folder)
-  //         mkdirp.sync(folder)
-  //       }
-  //       filename = parts[parts.length-1]
-  //       fromFolder = `${srcStagingFolder}${thePath}${filename}.js`
-  //       toFolder = `${outputSrcFolder}${thePath}${filename}.js`
-  //       copyFileSync(fromFolder, toFolder);
-  //   })
-  // }
-  //writeTheUniqueOnes()
 }
-
 function createWebComponents() {
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
-    info.webComponentsImportsUnique = info.webComponentsImports.filter( onlyUnique ).join('')
-    info.webComponentsImportsUniquePlain = info.webComponentsImportsPlain.filter( onlyUnique ).join('')
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+  info.webComponentsImportsUnique = info.webComponentsImports.filter( onlyUnique ).join('')
+  info.webComponentsImportsUniquePlain = info.webComponentsImportsPlain.filter( onlyUnique ).join('')
 
-    //const webComponentsTemplateFolder = `./filetemplates/web-components/`;
+  writeTemplateFile(`${webComponentsTemplateFolder}bin/ext-web-components.js.tpl`,`${webComponentsPackageFolder}bin/ext-web-components.js`,info);
 
-    writeTemplateFile(`${webComponentsTemplateFolder}runtime/webcomponentsbase.tpl`,`${webComponentsPackageFolder}src/runtime/webcomponentsbase.js`, info);
-    writeTemplateFile(`${webComponentsTemplateFolder}runtime/ElementParser.js.tpl`, `${webComponentsPackageFolder}src/runtime/ElementParser.js`, info);
+  // writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.common.js.tpl`,`${webComponentsPackageFolder}config/webpack.common.js`,info);
+  // writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.dev.js.tpl`,`${webComponentsPackageFolder}config/webpack.dev.js`,info);
+  // writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.prod.js.tpl`,`${webComponentsPackageFolder}config/webpack.prod.js`,info);
 
-    //copyFileSync(`${webComponentsTemplateFolder}runtime/engine/${toolkit}/${toolkit}.engine.pro.import.js`, `${webComponentsPackageFolder}src/runtime/engine/${toolkit}/${toolkit}.engine.pro.import.js`);
-    //copyFileSync(`${webComponentsTemplateFolder}runtime/engine/${toolkit}/themes/${toolkit}.material.fewest.js`, `${webComponentsPackageFolder}src/runtime/engine/${toolkit}/themes/${toolkit}.material.fewest.js`);
+  //fs.copySync(`./ext-runtime/ext-runtime-${info.toolkit}`,`${webComponentsPackageFolder}ext-runtime-${info.toolkit}`)
 
-    copyFileSync(`${webComponentsTemplateFolder}runtime/util.js`, `${webComponentsPackageFolder}src/runtime/util.js`);
-    writeTemplateFile(`${webComponentsTemplateFolder}runtime/router.tpl`, `${webComponentsPackageFolder}src/ext-router.component.js`, info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/GETTING_STARTED.tpl`,`${webComponentsPackageFolder}guides/GETTING_STARTED.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/MIGRATE.tpl`,`${webComponentsPackageFolder}guides/MIGRATE.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/README.tpl`,`${webComponentsPackageFolder}README.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/UNDERSTANDING_AN_APP.tpl`,`${webComponentsPackageFolder}guides/UNDERSTANDING_AN_APP.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_EXT_WEBPACK_PLUGIN.tpl`,`${webComponentsPackageFolder}guides/USING_EXT_WEBPACK_PLUGIN.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_SVELTE.tpl`,`${webComponentsPackageFolder}guides/USING_SVELTE.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_VUE.tpl`,`${webComponentsPackageFolder}guides/USING_VUE.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}guides/WHATS_NEW.tpl`,`${webComponentsPackageFolder}guides/WHATS_NEW.md`,info);
 
-    writeTemplateFile(`${webComponentsTemplateFolder}runtime/ext-web-components.js.tpl`,`${webComponentsPackageFolder}bin/ext-web-components.js`,info);
+  //copyFileSync(`${webComponentsTemplateFolder}runtime/${toolkit}/${toolkit}.enterprise.SDK_FULL.js`, `${webComponentsPackageFolder}runtime/${toolkit}.enterprise.SDK_FULL.js`);
+  //copyFileSync(`${webComponentsTemplateFolder}runtime/${toolkit}/${toolkit}.enterprise.SDK_EMPTY.js`, `${webComponentsPackageFolder}runtime/${toolkit}.enterprise.SDK_EMPTY.js`);
+  //copyFileSync(`${webComponentsTemplateFolder}runtime/${toolkit}/${toolkit}.material.fewest.SDK_FULL.js`, `${webComponentsPackageFolder}runtime/${toolkit}.material.fewest.SDK_FULL.js`);
+  //copyFileSync(`${webComponentsTemplateFolder}runtime/${toolkit}/${toolkit}.material.fewest.SDK_EMPTY.js`, `${webComponentsPackageFolder}runtime/${toolkit}.material.fewest.SDK_EMPTY.js`);
 
-    writeTemplateFile(`${webComponentsTemplateFolder}index.js.tpl`,`${webComponentsPackageFolder}index.js`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}imports.js.tpl`,`${webComponentsPackageFolder}imports.js`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}package.json.tpl`,`${webComponentsPackageFolder}package.json`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}${info.toolkit}/${info.suffixParm}/README.md.tpl`,`${webComponentsPackageFolder}README.md`,info);
-    copyFileSync(`${webComponentsTemplateFolder}.babelrc`, `${webComponentsPackageFolder}.babelrc`);
+  // if (toolkit == 'classic') {
+  //   copyFileSync(`${webComponentsTemplateFolder}runtime/${toolkit}/${toolkit}.triton.fewest.SDK_FULL.js`, `${webComponentsPackageFolder}runtime/${toolkit}.triton.fewest.SDK_FULL.js`);
+  // }
 
-    fs.copySync(`./ext-runtime/ext-runtime-${info.toolkit}`,`${webComponentsPackageFolder}ext-runtime-${info.toolkit}`)
+  writeTemplateFile(`${webComponentsTemplateFolder}src/ext-router.component.tpl`, `${webComponentsPackageFolder}src/ext-router.component.js`, info);
+  writeTemplateFile(`${webComponentsTemplateFolder}src/index.js.tpl`,`${webComponentsPackageFolder}src/index.js`,info);
 
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/README.tpl`,`${webComponentsPackageFolder}README.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/GETTING_STARTED.tpl`,`${webComponentsPackageFolder}guides/GETTING_STARTED.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/MIGRATE.tpl`,`${webComponentsPackageFolder}guides/MIGRATE.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/UNDERSTANDING_AN_APP.tpl`,`${webComponentsPackageFolder}guides/UNDERSTANDING_AN_APP.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_EXT_WEBPACK_PLUGIN.tpl`,`${webComponentsPackageFolder}guides/USING_EXT_WEBPACK_PLUGIN.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_SVELTE.tpl`,`${webComponentsPackageFolder}guides/USING_SVELTE.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/USING_VUE.tpl`,`${webComponentsPackageFolder}guides/USING_VUE.md`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}guides/WHATS_NEW.tpl`,`${webComponentsPackageFolder}guides/WHATS_NEW.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}src/common/ElementParser.js.tpl`,`${webComponentsPackageFolder}src/common/ElementParser.js`, info);
+  writeTemplateFile(`${webComponentsTemplateFolder}src/common/util.js.tpl`,`${webComponentsPackageFolder}src/common/util.js`, info);
+  writeTemplateFile(`${webComponentsTemplateFolder}src/common/webcomponentsbase.tpl`,`${webComponentsPackageFolder}src/common/webcomponentsbase.js`, info);
 
-    writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.common.js.tpl`,`${webComponentsPackageFolder}config/webpack.common.js`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.dev.js.tpl`,`${webComponentsPackageFolder}config/webpack.dev.js`,info);
-    writeTemplateFile(`${webComponentsTemplateFolder}config/webpack.prod.js.tpl`,`${webComponentsPackageFolder}config/webpack.prod.js`,info);
+  copyFileSync(`${webComponentsTemplateFolder}.babelrc`, `${webComponentsPackageFolder}.babelrc`);
+  //writeTemplateFile(`${webComponentsTemplateFolder}imports.js.tpl`,`${webComponentsPackageFolder}imports.js`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}package.json.tpl`,`${webComponentsPackageFolder}package.json`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}README.md.tpl`,`${webComponentsPackageFolder}README.md`,info);
+  writeTemplateFile(`${webComponentsTemplateFolder}webpack.config.js.tpl`,`${webComponentsPackageFolder}webpack.config.js`,info);
 }
 
 function createAngular() {
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
-    info.angularImportsUnique = info.angularImports.filter( onlyUnique ).join('')
-    moduleVars.angularImportsUnique = info.angularImportsUnique;
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+  info.angularImportsUnique = info.angularImports.filter( onlyUnique ).join('')
+  moduleVars.angularImportsUnique = info.angularImportsUnique;
 
-    copyFileSync(`${angularTemplateFolder}runtime/angularbase.ts`, `${angularPackageFolder}src/runtime/angularbase.ts`);
+  writeTemplateFile(`${angularTemplateFolder}bin/ext-angular.js.tpl`,`${angularPackageFolder}bin/ext-angular.js`,info);
 
-    writeTemplateFile(`${angularTemplateFolder}runtime/ext-angular.js.tpl`,`${angularPackageFolder}bin/ext-angular.js`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/Adding_ExtAngular_to_Angular_CLI_project.tpl`,`${angularPackageFolder}guides/Adding_ExtAngular_to_Angular_CLI_project.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/Creating_Angular_CLI_ExtAngular.tpl`,`${angularPackageFolder}guides/Creating_Angular_CLI_ExtAngular.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/MIGRATE.tpl`,`${angularPackageFolder}guides/MIGRATE.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/README.tpl`,`${angularPackageFolder}README.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/UNDERSTANDING_AN_APP.tpl`,`${angularPackageFolder}guides/UNDERSTANDING_AN_APP.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/USING_EXT_WEBPACK_PLUGIN.tpl`,`${angularPackageFolder}guides/USING_EXT_WEBPACK_PLUGIN.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}guides/WHATS_NEW.tpl`,`${angularPackageFolder}guides/WHATS_NEW.md`,info);
 
-    copyFileSync(`${angularTemplateFolder}overrides/AngularXTemplate.ts`, `${angularPackageFolder}src/overrides/AngularXTemplate.ts`);
-    copyFileSync(`${angularTemplateFolder}overrides/AngularCell.ts`, `${angularPackageFolder}src/overrides/AngularCell.ts`);
+  copyFileSync(`${angularTemplateFolder}src/common/angularbase.ts`, `${angularPackageFolder}src/common/angularbase.ts`);
 
-    writeTemplateFile(`${angularTemplateFolder}package.tpl`,`${angularPackageFolder}package.json`,info);
-    writeTemplateFile(`${angularTemplateFolder}module.tpl`,`${angularPackageFolder}ext-angular${info.toolkitshown}${info.bundle}.module.ts`,moduleVars);
-    writeTemplateFile(`${angularTemplateFolder}public_api.tpl`,`${angularPackageFolder}public_api.ts`,info);
-    copyFileSync(`${angularTemplateFolder}tsconfig.json`, `${angularPackageFolder}tsconfig.json`);
-    copyFileSync(`${angularTemplateFolder}tsconfig.lib.json`, `${angularPackageFolder}tsconfig.lib.json`);
-    copyFileSync(`${angularTemplateFolder}ng-package.json`, `${angularPackageFolder}ng-package.json`);
-    copyFileSync(`${angularTemplateFolder}postinstall.js`, `${angularPackageFolder}postinstall.js`);
+  copyFileSync(`${angularTemplateFolder}src/overrides/AngularXTemplate.ts`, `${angularPackageFolder}src/overrides/AngularXTemplate.ts`);
+  copyFileSync(`${angularTemplateFolder}src/overrides/AngularCell.ts`, `${angularPackageFolder}src/overrides/AngularCell.ts`);
 
-    writeTemplateFile(`${angularTemplateFolder}guides/README.tpl`,`${angularPackageFolder}README.md`,info);
-    writeTemplateFile(`${angularTemplateFolder}guides/Adding_ExtAngular_to_Angular_CLI_project.tpl`,`${angularPackageFolder}guides/Adding_ExtAngular_to_Angular_CLI_project.md`,info);
-    writeTemplateFile(`${angularTemplateFolder}guides/Creating_Angular_CLI_ExtAngular.tpl`,`${angularPackageFolder}guides/Creating_Angular_CLI_ExtAngular.md`,info);
-    writeTemplateFile(`${angularTemplateFolder}guides/MIGRATE.tpl`,`${angularPackageFolder}guides/MIGRATE.md`,info);
-    writeTemplateFile(`${angularTemplateFolder}guides/UNDERSTANDING_AN_APP.tpl`,`${angularPackageFolder}guides/UNDERSTANDING_AN_APP.md`,info);
-    writeTemplateFile(`${angularTemplateFolder}guides/USING_EXT_WEBPACK_PLUGIN.tpl`,`${angularPackageFolder}guides/USING_EXT_WEBPACK_PLUGIN.md`,info);
-    writeTemplateFile(`${angularTemplateFolder}guides/WHATS_NEW.tpl`,`${angularPackageFolder}guides/WHATS_NEW.md`,info);
+  writeTemplateFile(`${angularTemplateFolder}module.tpl`,`${angularPackageFolder}ext-angular${info.toolkitshown}${info.bundle}.module.ts`,moduleVars);
+  copyFileSync(`${angularTemplateFolder}ng-package.json`, `${angularPackageFolder}ng-package.json`);
+  writeTemplateFile(`${angularTemplateFolder}package.json.tpl`,`${angularPackageFolder}package.json`,info);
+  copyFileSync(`${angularTemplateFolder}postinstall.js`, `${angularPackageFolder}postinstall.js`);
+  writeTemplateFile(`${angularTemplateFolder}public_api.ts.tpl`,`${angularPackageFolder}public_api.ts`,info);
+  copyFileSync(`${angularTemplateFolder}tsconfig.json`, `${angularPackageFolder}tsconfig.json`);
+  copyFileSync(`${angularTemplateFolder}tsconfig.lib.json`, `${angularPackageFolder}tsconfig.lib.json`);
 }
 
 function createReact() {
-
-    info.reactImports =`import ExtReactDOM from "./runtime/ExtReactDOM";\nexport default ExtReactDOM;\n`
+    info.reactImports =`import ExtReactDOM from "./common/ExtReactDOM";\nexport default ExtReactDOM;\n`
     info.wantedxtypes.forEach(xtype => {
       var Xtype = xtype.charAt(0).toUpperCase() + xtype.slice(1).replace(/-/g,'_');
       info.reactImports = info.reactImports + `import Ext${Xtype}_ from "./Ext${Xtype}";\n`;
@@ -425,32 +429,59 @@ function createReact() {
       info.reactExports70 = info.reactExports70 + `export const ${Xtype} = Ext${Xtype}_;\n`;
     })
 
-    writeTemplateFile(`${reactTemplateFolder}runtime/ext-react.js.tpl`,`${reactPackageFolder}bin/ext-react.js`,info);
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    info.reactImportsArrayUnique = info.reactImportsArray.filter( onlyUnique ).join('')
 
-    copyFileSync(`${reactTemplateFolder}runtime/ExtReactDOM.js`, `${reactPackageFolder}src/runtime/ExtReactDOM.js`);
-    copyFileSync(`${reactTemplateFolder}runtime/reactize.js`, `${reactPackageFolder}src/runtime/reactize.js`);
-
-    copyFileSync(`${reactTemplateFolder}overrides/ReactXTemplate.js`, `${reactPackageFolder}src/overrides/ReactXTemplate.js`);
-    copyFileSync(`${reactTemplateFolder}overrides/ReactCell.js`, `${reactPackageFolder}src/overrides/ReactCell.js`);
-
-    writeTemplateFile(`${reactTemplateFolder}index.js.tpl`, `${reactPackageFolder}src/index.js`, info);
-
-    writeTemplateFile(`${reactTemplateFolder}package.tpl`,`${reactPackageFolder}package.json`,info);
-    copyFileSync(`${reactTemplateFolder}.babelrc`, `${reactPackageFolder}.babelrc`);
+    writeTemplateFile(`${reactTemplateFolder}bin/ext-react.js.tpl`,`${reactPackageFolder}bin/ext-react.js`,info);
 
     const examples = require(reactTemplateFolder + "examples/" + info.suffixParm).examples;
     info.component = examples('component');
 
-    copyFileSync(`${reactTemplateFolder}postinstall.js`, `${reactPackageFolder}postinstall.js`);
-
-    writeTemplateFile(`${reactTemplateFolder}guides/README.tpl`,`${reactPackageFolder}README.md`,info);
     writeTemplateFile(`${reactTemplateFolder}guides/Adding_ExtReact_to_create-react-app_project.tpl`,`${reactPackageFolder}guides/Adding_ExtReact_to_create-react-app_project.md`,info);
     writeTemplateFile(`${reactTemplateFolder}guides/Creating_create-react-app_ExtReact.tpl`,`${reactPackageFolder}guides/Creating_create-react-app_ExtReact.md.md`,info);
     writeTemplateFile(`${reactTemplateFolder}guides/MIGRATE.tpl`,`${reactPackageFolder}guides/MIGRATE.md`,info);
+    writeTemplateFile(`${reactTemplateFolder}guides/README.tpl`,`${reactPackageFolder}README.md`,info);
     writeTemplateFile(`${reactTemplateFolder}guides/UNDERSTANDING_AN_APP.tpl`,`${reactPackageFolder}guides/UNDERSTANDING_AN_APP.md`,info);
     writeTemplateFile(`${reactTemplateFolder}guides/USING_EXT_WEBPACK_PLUGIN.tpl`,`${reactPackageFolder}guides/USING_EXT_WEBPACK_PLUGIN.md`,info);
     writeTemplateFile(`${reactTemplateFolder}guides/WHATS_NEW.tpl`,`${reactPackageFolder}guides/WHATS_NEW.md`,info);
-  }
+
+    writeTemplateFile(`${reactTemplateFolder}src/index.js.tpl`, `${reactPackageFolder}src/index.js`, info);
+    copyFileSync(`${reactTemplateFolder}src/common/ExtReactDOM.js`, `${reactPackageFolder}src/common/ExtReactDOM.js`);
+    copyFileSync(`${reactTemplateFolder}src/common/reactize.js`, `${reactPackageFolder}src/common/reactize.js`);
+    copyFileSync(`${reactTemplateFolder}src/overrides/ReactCell.js`, `${reactPackageFolder}src/overrides/ReactCell.js`);
+    copyFileSync(`${reactTemplateFolder}src/overrides/ReactXTemplate.js`, `${reactPackageFolder}src/overrides/ReactXTemplate.js`);
+
+    copyFileSync(`${reactTemplateFolder}.babelrc`, `${reactPackageFolder}.babelrc`);
+    writeTemplateFile(`${reactTemplateFolder}imports.js.tpl`,`${reactPackageFolder}imports.js`,info);
+    writeTemplateFile(`${reactTemplateFolder}package.json.tpl`,`${reactPackageFolder}package.json`,info);
+    copyFileSync(`${reactTemplateFolder}postinstall.js`, `${reactPackageFolder}postinstall.js`);
+    writeTemplateFile(`${reactTemplateFolder}webpack.config.js.tpl`,`${reactPackageFolder}webpack.config.js`,info);
+}
+
+
+function createDoc() {
+  //docs
+  fs.writeFileSync(`${docFolder}data.js`,'window.xtypemenu = ' + JSON.stringify(docs, null, ' '));
+  //doc
+  info.includedxtypes = `<div>\n`
+  fs.readdirSync(`${docStagingFolder}`).forEach(function(file) {
+      var f = file.split('.')
+      var xtype = f[0].substring(4)
+      if (file == 'docdetail.html' || file == 'doc.html' || file == 'docstyle.css') { return }
+      if (info.wantedxtypes.indexOf(xtype) != -1) {
+          fs.copySync(`${docStagingFolder}/${file}`,`${docFolder}/${file}`)
+          info.includedxtypes = info.includedxtypes + `  <div onclick="selectDoc('${xtype}')">ext-${xtype}</div><br>\n`
+      }
+  });
+  info.includedxtypes = info.includedxtypes + `</div>\n`
+  writeTemplateFile(`${templateFolder}docs/doc.tpl`, `${docFolder}doc.html`, info)
+  writeTemplateFile(`${templateFolder}docs/doc-z-tabs.tpl`, `${docFolder}z-tabs.js`, info)
+  writeTemplateFile(`${templateFolder}docs/doc-style.tpl`, `${docFolder}style.css`, info)
+  writeTemplateFile(`${templateFolder}docs/docstyle.tpl`, `${docFolder}docstyle.css`, info)
+  //rimraf.sync(docStagingFolder);
+}
 
 async function doNpmInstall() {
   console.log('doNpmInstall')
@@ -624,6 +655,23 @@ function shouldProcessIt(o) {
     //   processIt = false
     // }
 
+    var aliases = []
+    item.xtypes = []
+    if (item.alias != undefined) {
+      aliases = item.alias.split(",")
+      for (alias = 0; alias < aliases.length; alias++) {
+        if (aliases[alias].substring(0, 6) == 'widget') {
+          var xtypelocal = aliases[alias].substring(7)
+          item.xtypes.push(xtypelocal)
+        }
+      }
+    }
+
+
+    // if (processIt == true) {
+    //   console.log(item.alias)
+    // }
+
     return processIt
   }
   if (info.toolkit == 'modern') {
@@ -651,6 +699,8 @@ function shouldProcessIt(o) {
     if (o.items == undefined) {
         processIt = false
     }
+
+
     return processIt
   }
 
@@ -747,3 +797,91 @@ function doEnd() {
   }
   console.log('\n')
 }
+
+function doTrim() {
+
+  function findIt(item) {
+    console.log(item)
+    const found = global["ext-tree"].find(element => element.child == item);
+    console.log(found)
+    console.log(require("path").dirname(`${webComponentsPackageFolder}src/${found.child}.js`))
+    fs.promises.mkdir(require("path").dirname(`${webComponentsPackageFolder}src/${found.child}.js`), {recursive: true})
+    .then(x => copyFileSync(`${webComponentsPackageFolder}src2/${found.child}.js`, `${webComponentsPackageFolder}src/${found.child}.js`));
+    if (found.parent != 'undefinedundefined') {
+      findIt(found.parent)
+    }
+  }
+
+  console.log(global["ext-tree"])
+  console.log(global["xtype-tree"])
+  global["xtype-tree"].forEach(xtypeitem => {
+    findIt(xtypeitem.parent)
+  })
+  //setTimeout(function(){
+  //  console.log("delete");
+  //}, 10000);
+}
+
+  // function writeTheUniqueOnes() {
+  //   var allExtendedArray = info.allExtended.split(",");
+  //   let uniqueAllExtendedArray = [...new Set(allExtendedArray)];
+  //   uniqueAllExtendedArray.forEach((extended) => {
+  //       if (extended == '') { return }
+  //       var folder = ''
+  //       var fromFolder = ''
+  //       var toFolder = ''
+  //       var parts = extended.split(".")
+  //       var thePath = ''
+  //       var pathprefix = ''
+  //       for (var j = 0; j < parts.length-1; j++) {
+  //           thePath = thePath + parts[j] + '/'
+  //           pathprefix = pathprefix + '../'
+  //       }
+  //       folder = `${outputSrcFolder}${thePath}`
+  //       if (!fs.existsSync(folder)) {
+  //         console.log(folder)
+  //         mkdirp.sync(folder)
+  //       }
+  //       filename = parts[parts.length-1]
+  //       fromFolder = `${srcStagingFolder}${thePath}${filename}.js`
+  //       toFolder = `${outputSrcFolder}${thePath}${filename}.js`
+  //       copyFileSync(fromFolder, toFolder);
+  //   })
+  // }
+  //writeTheUniqueOnes()
+
+
+
+
+
+      // console.log('\n***')
+      // console.log(child)
+      // console.log('imports')
+      // console.log(parent)
+
+
+
+
+     // console.log(`${folder}${filename}.js`)
+     // console.log('imports')
+     // console.log(`${webComponentsPackageFolder}src/${v.extendpath}${v.classextendsfilename}`)
+
+      //console.log(`${v.pathprefix}`)
+      //console.log(`${v.extendpath}`)
+      //console.log(`${v.classextendsfilename}`)
+
+     // var parent = `${v.pathprefix}${v.extendpath}${v.classextendsfilename}.js`
+     // var newparent = parent.replace(`${v.extendpath}`,`${webComponentsPackageFolder}src`)
+
+
+
+
+
+      //console.log(newparent)
+      //console.log(`${v.pathprefix}${v.extendpath}${v.classextendsfilename}.js`)
+
+      // console.log('***')
+      // console.log(`${folder}${filename}.js`)
+      // console.log('imports')
+      // console.log(`${v,extendpath}${v.classextendsfilename}.js`)
+
