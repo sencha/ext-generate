@@ -1,3 +1,11 @@
 https://medium.com/@joeclever/three-simple-ways-to-inspect-a-webpack-bundle-7f6a8fe7195d
 
 webpack --profile --json > webpack-stats.json
+
+
+    "@sencha/ext-{toolkit}-enterprise": "~7.2.0",
+    "@sencha/ext-{toolkit}-material": "~7.2.0",
+
+<script type="module" src="./node_modules/@sencha/ext-{toolkit}-enterprise/ext.{toolkit}.enterprise.js"></script>
+<script type="module" src="./node_modules/@sencha/ext-{toolkit}-material/ext.{toolkit}.material.js"></script>
+<script type="module" src="./node_modules/@sencha/ext-web-components-{toolkit}/ext-web-components-{toolkit}.js"></script>

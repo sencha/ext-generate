@@ -22,6 +22,7 @@ module.exports = function(env) {
   }
 
   var outFile;
+  //outFile = `ext.${env.toolkit}.${env.theme}.${env.type}.js`;
   outFile = `ext.${env.toolkit}.${env.theme}.js`;
   //console.log(outFile)
   // switch (env.theme) {
@@ -37,7 +38,7 @@ module.exports = function(env) {
 
 
   var o = {
-    mode: 'production',
+    mode: 'development',
     context: path.join(__dirname, './'),
     entry: { input: './manifest/' + name + '.js'},
     output: {
@@ -61,16 +62,52 @@ module.exports = function(env) {
         //   test: /\.(js)$/,
         //   use: 'imports-loader?this=>window',
         // },
+
         {
           test: /\.(eot|woff|woff2|ttf|otf)$/,
-          use: [loader]
-          //use: ['url-loader']
+          loader: loader,
+          options: {
+            limit: Infinity,
+            name: 'assets/fonts/[name].[ext]',
+            //outputPath: './node_modules/@sencha/ext-modern-material/assets/fonts',
+            // publicPath: function(url) {
+            //   var r = '../2' + url
+            //   console.log(r)
+            //   return r
+            //   //return url.replace(/public/, '..')
+            // },
+            //useRelativePath: true
+          }
         },
         {
           test: /\.(png|svg|jpg|gif)$/,
-          use: [loader]
-          //use: ['url-loader']
+          loader: loader,
+          options: {
+            name: 'assets/images/[name].[ext]'
+          }
         },
+
+
+
+
+
+        // {
+        //   test: /\.(eot|woff|woff2|ttf|otf)$/,
+        //   loader: loader,
+        //   options: {
+        //     name: 'assets/fonts/[name].[ext]',
+        //     outputPath: './node_modules/@sencha/ext-modern-material/assets/fonts',
+        //     //publicPath: 'https://cdn.sencha.com/internal_components/v1/resources/'
+        //     useRelativePath: true
+        //   }
+        // },
+        // {
+        //   test: /\.(png|svg|jpg|gif)$/,
+        //   loader: loader,
+        //   options: {
+        //     name: 'assets/images/[name].[ext]'
+        //   }
+        // },
         {
           test: /\.css$/,
           use: ['style-loader','css-loader'],

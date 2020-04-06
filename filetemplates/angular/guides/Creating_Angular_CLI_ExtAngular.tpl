@@ -42,6 +42,7 @@ ng new ext-angular-{toolkit}{bundle}-demo --minimal=true --interactive=false -g=
 
 ```sh
 cd ext-angular-{toolkit}-demo
+npm install @sencha/ext-{toolkit}-runtime --save
 npm install @sencha/ext-angular-{toolkit}{bundle} --save
 ```
 
@@ -228,9 +229,6 @@ export class AppComponent {
             "styles": [
               "src/styles.css",
               "ext-runtime-{toolkit}/material/material-all.css"
-              //"ext-runtime-{toolkit}/ios/ios-all.css"
-              //"ext-runtime-{toolkit}/material/material-all.css"
-              //"ext-runtime-{toolkit}/neptune/neptune-all.css"
               //"ext-runtime-{toolkit}/triton/triton-all.css"
             ],
 ```

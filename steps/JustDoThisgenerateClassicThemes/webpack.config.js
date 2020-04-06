@@ -40,15 +40,36 @@ module.exports = function(env) {
       //path: path.join(__dirname, 'dist/'),
       filename: outFile
     },
+    resolve: {
+      modules: [
+        path.join(__dirname),
+        'node_modules'
+      ]
+    },
     module: {
       rules: [
         {
           test: /\.(eot|woff|woff2|ttf|otf)$/,
-          use: [loader]
+          loader: loader,
+          options: {
+            limit: Infinity,
+            name: 'assets/fonts/[name].[ext]',
+            //outputPath: './node_modules/@sencha/ext-modern-material/assets/fonts',
+            // publicPath: function(url) {
+            //   var r = '../2' + url
+            //   console.log(r)
+            //   return r
+            //   //return url.replace(/public/, '..')
+            // },
+            //useRelativePath: true
+          }
         },
         {
           test: /\.(png|svg|jpg|gif)$/,
-          use: [loader]
+          loader: loader,
+          options: {
+            name: 'assets/images/[name].[ext]'
+          }
         },
         {
           test: /\.css$/,

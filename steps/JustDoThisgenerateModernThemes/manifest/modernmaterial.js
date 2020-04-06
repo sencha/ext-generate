@@ -1,1 +1,1 @@
-import '../build/production/generateModernThemes/resources/generateModernThemes-all.css';
+import '../../Step2Generatethemes/allOut/ext-runtime-modern/material/material-all.css';

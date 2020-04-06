@@ -7,6 +7,13 @@
     "classictritonfewest": "webpack --env.toolkit=classic --env.theme=triton --env.type=fewest",
     "classicmaterialfewest": "webpack --env.toolkit=classic --env.theme=material --env.type=fewest",
 
+
+
+    "classictritonsmallest": "webpack --env.toolkit=classic --env.theme=triton --env.type=smallest",
+    "classicmaterialsmallest": "webpack --env.toolkit=classic --env.theme=material --env.type=smallest",
+
+
+
     "tritonsmallest": "webpack --env.toolkit=classic --env.theme=triton --env.type=smallest",
     "materialsmallest": "webpack --env.toolkit=classic --env.theme=material --env.type=smallest",
     "graphitesmallest": "webpack --env.toolkit=classic --env.theme=graphite --env.type=smallest",

@@ -1,0 +1,1 @@
+import '../allOut/ext-runtime-classic/triton/triton-all.css';

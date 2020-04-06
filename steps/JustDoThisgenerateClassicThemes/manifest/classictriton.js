@@ -1,1 +1,1 @@
-import '../build/production/triton/resources/triton-all.css';
+import '../../Step2Generatethemes/allOut/ext-runtime-classic/triton/triton-all.css';

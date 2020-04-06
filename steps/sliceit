@@ -1,2 +1,8 @@
 classic/theme-base/sass/etc/mixins/slicer.scss
   in sliceit function line 18
+
+      @return 'images/magnify.png';
+    //@return $url;
+
+
+    

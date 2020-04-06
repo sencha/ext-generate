@@ -4,8 +4,13 @@
   "description": "modern-theme-bundler",
   "main": "index.js",
   "scripts": {
-    "modernmaterialfewest": "webpack --env.toolkit=modern --env.theme=material --env.type=fewest",
+    "xmodernmaterialfewest": "webpack --env.toolkit=modern --env.theme=material --env.type=fewest",
 
+
+    "modernmaterialsmallest": "webpack --env.toolkit=modern --env.theme=material --env.type=smallest",
+
+
+    
     "test": "webpack --env.toolkit=modern --env.theme=engine --env.type=fewest",
     "modernengine": "webpack --env.toolkit=modern --env.theme=engine --env.type=fewest",
     "classicengine": "webpack --env.toolkit=classic --env.theme=engine --env.type=fewest",

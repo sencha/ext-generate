@@ -44,8 +44,7 @@ cd ext-web-components-{toolkit}{bundle}-demo
   },
   "devDependencies": {
     "@sencha/ext-web-components-{toolkit}{bundle}": "~7.2.0",
-    "@sencha/ext-{toolkit}-enterprise": "~7.2.0",
-    "@sencha/ext-{toolkit}-material": "~7.2.0",
+    "@sencha/ext-{toolkit}-runtime": "~7.2.0",
     "servor": "~3.2.0"
   },
   "author": "",
@@ -64,8 +63,8 @@ cd ext-web-components-{toolkit}{bundle}-demo
 </head>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-<script type="module" src="./node_modules/@sencha/ext-{toolkit}-enterprise/ext.{toolkit}.enterprise.js"></script>
-<script type="module" src="./node_modules/@sencha/ext-{toolkit}-material/ext.{toolkit}.material.js"></script>
+<script src="./node_modules/@sencha/ext-{toolkit}-runtime/{toolkit}.engine.enterprise.js"></script>
+<link href="./node_modules/@sencha/ext-{toolkit}-runtime/material/material-all.css" rel="stylesheet" type="text/css"></link>
 <script type="module" src="./node_modules/@sencha/ext-web-components-{toolkit}/ext-web-components-{toolkit}.js"></script>
 
 <script>

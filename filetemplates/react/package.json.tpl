@@ -9,9 +9,9 @@
   "scripts": {
     "build": "npx babel ./src --out-dir ./dist && webpack",
     "prepare": "npm run build",
+    "postinstall": "npm run build & node ./postinstall.js",
 
     "xprepublish": "npm run build",
-    "xpostinstall": "npm run build & node ./postinstall.js",
     "xbuild": "npm run babel & npm run buildwebpack",
     "xwatch": "npx babel ./src --out-dir ./dist --watch",
     "xbabel": "npx babel ./src --out-dir ./dist",
@@ -32,15 +32,13 @@
     "url": "git+https://github.com/sencha/ext-react-{toolkit}{bundle}.git"
   },
   "peerDependencies": {
-    "@sencha/ext-web-components-{toolkit}{bundle}": "~7.2.0",
     "react": "~16.13.1",
     "react-dom": "~16.13.1"
   },
   "dependencies": {
-
+    "@sencha/ext-web-components-{toolkit}{bundle}": "~7.2.0"
   },
   "devDependencies": {
-    "@sencha/ext-web-components-{toolkit}{bundle}": "~7.2.0",
     "fs-extra": "~9.0.0",
     "react": "~16.13.1",
     "react-dom": "~16.13.1",

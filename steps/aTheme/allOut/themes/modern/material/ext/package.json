@@ -1,0 +1,92 @@
+{
+  "name": "ext",
+  "namespace": "Ext",
+  "format": "1",
+  "version": "7.2.0.67",
+  "compatVersion": "7.2.0",
+  "creator": "Sencha",
+  "summary": "Ext JS",
+  "detailedDescription": "Sencha Ext JS JavaScript Framework",
+  "type": "framework",
+  "signatures": [
+    {
+      "name": "Sencha",
+      "uuid": "1d6b0d9c-3333-4e65-885f-5b07a1fc3198",
+      "created": "2020-04-03T18:33:29Z",
+      "algorithm": "SHA1withRSA",
+      "nonce": "CMO+CD3CctE\u003d",
+      "signature": "NmEgWHNfhv80ItKvbqunlzl+iI9NzcjrzBeX2qSmV6ZwKRCYYXYqeiKdii8XkiLM6I2cl/U8dAyIqj7SdNqKF/qVoRzW8BrIKNW0xYw9O6qXQ9JXXKcaXwuvjoo1Na87rX8yhSq3tzakW6Qpg0P7nQOAEMAWZanHzSWuzW66oF4QUy8kYiVZegzYoWDAEbUgnNp/ZZz7keESBoosYmGbAwrPxq3ekc/oJkEA33c/5Jy65necRKnYJ3J5DZlW0ZATcOVtJhTJ/D5RjnJFnGwSI0ogC4A1HQDQ6oMOHnkoxuyWFuEGL3KnuABEEzMTJtRhMsMdjMst8+z+GgrdlpB+Yw\u003d\u003d"
+    }
+  ],
+  "output": "${package.dir}/build",
+  "build": {
+    "dir": "${package.output.base}"
+  },
+  "sass": {
+    "fashion": true,
+    "namespace": "Ext",
+    "etc": "${package.dir}/sass/etc/all.scss",
+    "var": "${package.dir}/sass/var",
+    "src": "${package.dir}/sass/src"
+  },
+  "classpath": "${package.dir}/src",
+  "overrides": "${package.dir}/overrides",
+  "resource": {
+    "paths": [
+      "resources"
+    ]
+  },
+  "example": {
+    "path": [
+      "examples",
+      "templates"
+    ],
+    "apps": [
+      "admin-dashboard",
+      "executive-dashboard",
+      "feed-viewer",
+      "kitchensink",
+      "calendar",
+      "classic/desktop",
+      "classic/ticket-app",
+      "classic/portal",
+      "classic/simple-tasks",
+      "classic/responsive-app",
+      "classic/aria",
+      "modern/addressbook",
+      "modern/blackberry",
+      "modern/energy",
+      "modern/stockapp",
+      "modern/states",
+      "modern/geocongress",
+      "modern/oreilly"
+    ]
+  },
+  "subpkgs": {
+    "dir": "${package.dir}",
+    "packages": [
+      "classic/classic",
+      "modern/modern",
+      "packages/charts",
+      "packages/amf",
+      "packages/soap",
+      "packages/ux",
+      "packages/google",
+      "packages/legacy",
+      "packages/font-awesome",
+      "packages/font-pictos",
+      "packages/font-ext"
+    ]
+  },
+  "language": {
+    "js": {
+      "input": {
+        "version": "ES5"
+      }
+    }
+  },
+  "properties": {
+    "skip.sass": 1,
+    "skip.slice": 1
+  }
+}
